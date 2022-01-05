@@ -1,0 +1,10 @@
+node_modules
+build
+.DS_Store
+artifacts/
+env/
+.env
+.history
+coverage*
+deployments
+typechain-types
