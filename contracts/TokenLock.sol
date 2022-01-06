@@ -22,7 +22,7 @@ contract TokenLock is OwnableUpgradeable {
   /// Deposit is not possible anymore because the deposit period is over
   error DepositPeriodOver();
   /// Withdraw is not possible because the lock period is not over yet
-  error WithdrawLocked();
+  error LockPeriodOngoing();
 
   function initialize(
     address _owner,
@@ -57,17 +57,18 @@ contract TokenLock is OwnableUpgradeable {
   }
 
   /// @dev Withdraw tokens after the end of the locking period
+  /// @param amount The amount of tokens to withdraw
   function withdraw(uint256 amount) public {
     if (block.timestamp < depositDeadline + lockDuration) {
-      revert WithdrawLocked();
+      revert LockPeriodOngoing();
     }
     if (balanceOf[msg.sender] < amount) {
       revert ExceedsBalance();
     }
 
     balanceOf[msg.sender] -= amount;
-    token.transferFrom(address(this), msg.sender, amount);
     totalSupply -= amount;
+    token.transfer(msg.sender, amount);
 
     emit Withdrawal(msg.sender, amount);
   }

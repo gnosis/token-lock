@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { deployments, ethers, upgrades } from "hardhat";
+import { deployments, ethers, upgrades, network } from "hardhat";
 import "@nomiclabs/hardhat-ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { TokenLock as TokenLockT } from "../typechain-types";
@@ -7,22 +7,22 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 describe("TokenLock", () => {
   let owner: SignerWithAddress;
-  let user1: SignerWithAddress;
-  let user2: SignerWithAddress;
+  let user: SignerWithAddress;
+
+  const ONE = BigNumber.from(10).pow(18);
 
   const now = Math.round(Date.now() / 1000);
   const oneWeek = 7 * 24 * 60 * 60;
 
   const setupTest = deployments.createFixture(async () => {
-    [owner, user1, user2] = await ethers.getSigners();
+    [owner, user] = await ethers.getSigners();
 
     await deployments.fixture();
     const Token = await ethers.getContractFactory("TestToken");
     const token = await Token.deploy(18);
     const TokenLock = await ethers.getContractFactory("TokenLock");
 
-    await token.mint(user1.address, BigNumber.from(10).pow(18));
-    await token.mint(user2.address, BigNumber.from(10).pow(18).mul(2));
+    await token.mint(user.address, ONE);
 
     return { Token, token, TokenLock };
   });
@@ -65,7 +65,7 @@ describe("TokenLock", () => {
     ])) as TokenLockT;
 
     const TokenLockV2 = await ethers.getContractFactory("TokenLock", {
-      signer: user1,
+      signer: user,
     });
 
     await expect(
@@ -108,7 +108,7 @@ describe("TokenLock", () => {
       ])) as TokenLockT;
 
       await expect(
-        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18).mul(2))
+        tokenLock.connect(user).deposit(ONE.mul(2))
       ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
     });
 
@@ -123,13 +123,11 @@ describe("TokenLock", () => {
         "LTT",
       ])) as TokenLockT;
 
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18).div(2));
+      await token.connect(user).approve(tokenLock.address, ONE.div(2));
 
-      await expect(
-        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
-      ).to.be.revertedWith("ERC20: transfer amount exceeds allowance");
+      await expect(tokenLock.connect(user).deposit(ONE)).to.be.revertedWith(
+        "ERC20: transfer amount exceeds allowance"
+      );
     });
 
     it("reverts if the deposit deadline has passed", async () => {
@@ -143,13 +141,11 @@ describe("TokenLock", () => {
         "LTT",
       ])) as TokenLockT;
 
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+      await token.connect(user).approve(tokenLock.address, ONE);
 
-      await expect(
-        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
-      ).to.be.revertedWith("DepositPeriodOver()");
+      await expect(tokenLock.connect(user).deposit(ONE)).to.be.revertedWith(
+        "DepositPeriodOver()"
+      );
     });
 
     it("transfers the deposited tokens into the lock contract", async () => {
@@ -163,17 +159,11 @@ describe("TokenLock", () => {
         "LTT",
       ])) as TokenLockT;
 
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+      await token.connect(user).approve(tokenLock.address, ONE);
 
       await expect(() =>
-        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
-      ).to.changeTokenBalances(
-        token,
-        [user1, tokenLock],
-        [BigNumber.from(10).pow(18).mul(-1), BigNumber.from(10).pow(18)]
-      );
+        tokenLock.connect(user).deposit(ONE)
+      ).to.changeTokenBalances(token, [user, tokenLock], [ONE.mul(-1), ONE]);
     });
 
     it("mints lock claim tokens to the sender equal to the deposited amount", async () => {
@@ -187,34 +177,13 @@ describe("TokenLock", () => {
         "LTT",
       ])) as TokenLockT;
 
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+      await token.connect(user).approve(tokenLock.address, ONE);
 
       await expect(() =>
-        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
-      ).to.changeTokenBalance(tokenLock, user1, BigNumber.from(10).pow(18));
-    });
+        tokenLock.connect(user).deposit(ONE)
+      ).to.changeTokenBalance(tokenLock, user, ONE);
 
-    it("increases the total supply of the lock token", async () => {
-      const { token, TokenLock } = await setupTest();
-      const tokenLock = (await upgrades.deployProxy(TokenLock, [
-        owner.address,
-        token.address,
-        now + oneWeek,
-        2 * oneWeek,
-        "Locked TestToken",
-        "LTT",
-      ])) as TokenLockT;
-
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18));
-
-      await tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18));
-      expect(await token.balanceOf(tokenLock.address)).to.equal(
-        BigNumber.from(10).pow(18)
-      );
+      expect(await tokenLock.totalSupply()).to.equal(ONE);
     });
 
     it("emits the Deposit event", async () => {
@@ -228,13 +197,73 @@ describe("TokenLock", () => {
         "LTT",
       ])) as TokenLockT;
 
-      await token
-        .connect(user1)
-        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+      await token.connect(user).approve(tokenLock.address, ONE);
 
-      await expect(tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18)))
+      await expect(tokenLock.connect(user).deposit(ONE))
         .to.emit(tokenLock, "Deposit")
-        .withArgs(user1.address, BigNumber.from(10).pow(18));
+        .withArgs(user.address, ONE);
+    });
+  });
+
+  describe("withdraw", () => {
+    const setupWithLocked = async (weeksSinceLockEnd: number) => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await token.connect(user).approve(tokenLock.address, ONE);
+      await tokenLock.connect(user).deposit(ONE);
+
+      await network.provider.send("evm_setNextBlockTimestamp", [
+        now + 3 * oneWeek + weeksSinceLockEnd * oneWeek,
+      ]);
+
+      return { tokenLock, token };
+    };
+
+    it("reverts if the lock period is not over yet", async () => {
+      const { tokenLock } = await setupWithLocked(-1);
+      await expect(tokenLock.connect(user).withdraw(ONE)).to.be.revertedWith(
+        "LockPeriodOngoing()"
+      );
+    });
+
+    it("reverts if the claimed amount exceeds the balance", async () => {
+      const { tokenLock } = await setupWithLocked(1);
+      await expect(
+        tokenLock.connect(user).withdraw(ONE.mul(2))
+      ).to.be.revertedWith("ExceedsBalance()");
+    });
+
+    it("transfers the locked token to the sender", async () => {
+      const { tokenLock, token } = await setupWithLocked(1);
+
+      await expect(() =>
+        tokenLock.connect(user).withdraw(ONE)
+      ).to.changeTokenBalance(token, user, ONE);
+    });
+
+    it("burns the redeemed lock tokens", async () => {
+      const { tokenLock } = await setupWithLocked(1);
+
+      await expect(() =>
+        tokenLock.connect(user).withdraw(ONE)
+      ).to.changeTokenBalance(tokenLock, user, ONE.mul(-1));
+      expect(await tokenLock.totalSupply()).to.equal(0);
+    });
+
+    it("emits the Withdrawal event", async () => {
+      const { tokenLock, token } = await setupWithLocked(1);
+
+      await expect(tokenLock.connect(user).withdraw(ONE))
+        .to.emit(tokenLock, "Withdrawal")
+        .withArgs(user.address, ONE);
     });
   });
 

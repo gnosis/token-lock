@@ -5,8 +5,8 @@
 
 Lock ERC-20 tokens for a pre-defined amount of time
 
-1. Deposit period that ends at the configured `depositEnd` timestamp.
-2. Deposited tokens are locked until the configured `lockEnd` timestamp.
+1. Deposit period that ends at the configured `depositDeadline` timestamp.
+2. Deposited tokens are locked for the configured `lockDuration` after the deposit deadline.
 3. After the end of the lock period, depositors can withdraw their tokens.
 
 ### Solidity Compiler
