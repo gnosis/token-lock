@@ -5,37 +5,51 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenLock is OwnableUpgradeable {
-  event TokenLockSetup(
+  ERC20 public token;
+  uint256 public depositDeadline;
+  uint256 public lockDuration;
+
+  bytes32 public name;
+  bytes32 public symbol;
+  uint256 public totalSupply;
+  mapping(address => uint256) public balanceOf;
+
+  event Deposit(address indexed holder, uint256 amount);
+  event Withdrawal(address indexed holder, uint256 amount);
+
+  event Setup(
     address indexed creator,
     address indexed owner,
     address token,
-    uint256 depositEnd,
-    uint256 lockEnd
+    uint256 depositDeadline,
+    uint256 lockDuration,
+    bytes32 name,
+    bytes32 symbol
   );
-  event TokenDeposited(address indexed holder, uint256 amount);
-  event TokenWithdrawn(address indexed holder, uint256 amount);
 
-  /// Deposit amount exceeds sender's balance
+  /// Deposit amount exceeds sender's balance of the token to lock or withdraw amount exceeds sender's balance of the locked token
   error ExceedsBalance();
   /// Deposit is not possible anymore because the deposit period is over
   error DepositPeriodOver();
   /// Withdraw is not possible because the lock period is not over yet
   error WithdrawLocked();
 
-  ERC20 public token;
-  uint256 public depositEnd;
-  uint256 public lockEnd;
-
-  /// @dev Allows looking up the amount of locked tokens for the given address
-  mapping(address => uint256) public lockedAmounts;
-
   constructor(
     address _owner,
     address _token,
-    uint256 _depositEnd,
-    uint256 _lockEnd
+    uint256 _depositDeadline,
+    uint256 _lockDuration,
+    bytes32 _name,
+    bytes32 _symbol
   ) {
-    bytes memory initParams = abi.encode(_owner, _token, _depositEnd, _lockEnd);
+    bytes memory initParams = abi.encode(
+      _owner,
+      _token,
+      _depositDeadline,
+      _lockDuration,
+      _name,
+      _symbol
+    );
     setUp(initParams);
   }
 
@@ -43,22 +57,39 @@ contract TokenLock is OwnableUpgradeable {
     (
       address _owner,
       address _token,
-      uint256 _depositEnd,
-      uint256 _lockEnd
-    ) = abi.decode(initializeParams, (address, address, uint256, uint256));
+      uint256 _depositDeadline,
+      uint256 _lockDuration,
+      bytes32 _name,
+      bytes32 _symbol
+    ) = abi.decode(
+        initializeParams,
+        (address, address, uint256, uint256, bytes32, bytes32)
+      );
     __Ownable_init();
     transferOwnership(_owner);
     token = ERC20(_token);
-    depositEnd = _depositEnd;
-    lockEnd = _lockEnd;
+    depositDeadline = _depositDeadline;
+    lockDuration = _lockDuration;
+    name = _name;
+    symbol = _symbol;
 
-    emit TokenLockSetup(msg.sender, _owner, _token, _depositEnd, _lockEnd);
+    totalSupply = 0;
+
+    emit Setup(
+      msg.sender,
+      _owner,
+      _token,
+      _depositDeadline,
+      _lockDuration,
+      _name,
+      _symbol
+    );
   }
 
   /// @dev Deposit tokens to be locked until the end of the locking period
   /// @param amount The amount of tokens to deposit
   function deposit(uint256 amount) public {
-    if (block.timestamp > depositEnd) {
+    if (block.timestamp > depositDeadline) {
       revert DepositPeriodOver();
     }
     if (token.balanceOf(msg.sender) < amount) {
@@ -66,22 +97,30 @@ contract TokenLock is OwnableUpgradeable {
     }
 
     token.transferFrom(msg.sender, address(this), amount);
-    lockedAmounts[msg.sender] += amount;
+    balanceOf[msg.sender] += amount;
+    totalSupply += amount;
 
-    emit TokenDeposited(msg.sender, amount);
+    emit Deposit(msg.sender, amount);
   }
 
   /// @dev Withdraw tokens after the end of the locking period
-  function withdraw() public {
-    if (block.timestamp < lockEnd) {
+  function withdraw(uint256 amount) public {
+    if (block.timestamp < depositDeadline + lockDuration) {
       revert WithdrawLocked();
     }
+    if (balanceOf[msg.sender] < amount) {
+      revert ExceedsBalance();
+    }
 
-    uint256 amount = lockedAmounts[msg.sender];
-
-    lockedAmounts[msg.sender] -= amount;
+    balanceOf[msg.sender] -= amount;
     token.transferFrom(address(this), msg.sender, amount);
+    totalSupply -= amount;
 
-    emit TokenWithdrawn(msg.sender, amount);
+    emit Withdrawal(msg.sender, amount);
+  }
+
+  /// @dev Returns the number of decimals of the locked token
+  function decimals() public view returns (uint8) {
+    return token.decimals();
   }
 }
