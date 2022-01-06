@@ -17,16 +17,6 @@ contract TokenLock is OwnableUpgradeable {
   event Deposit(address indexed holder, uint256 amount);
   event Withdrawal(address indexed holder, uint256 amount);
 
-  event Setup(
-    address indexed creator,
-    address indexed owner,
-    address token,
-    uint256 depositDeadline,
-    uint256 lockDuration,
-    string name,
-    string symbol
-  );
-
   /// Deposit amount exceeds sender's balance of the token to lock or withdraw amount exceeds sender's balance of the locked token
   error ExceedsBalance();
   /// Deposit is not possible anymore because the deposit period is over
@@ -50,16 +40,6 @@ contract TokenLock is OwnableUpgradeable {
     name = _name;
     symbol = _symbol;
     totalSupply = 0;
-
-    emit Setup(
-      msg.sender,
-      _owner,
-      _token,
-      _depositDeadline,
-      _lockDuration,
-      _name,
-      _symbol
-    );
   }
 
   /// @dev Deposit tokens to be locked until the end of the locking period

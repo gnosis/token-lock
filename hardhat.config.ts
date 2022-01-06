@@ -2,12 +2,13 @@ import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-etherscan";
+import "@openzeppelin/hardhat-upgrades";
 import "solidity-coverage";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import dotenv from "dotenv";
-import type { HttpNetworkUserConfig } from "hardhat/types";
 import yargs from "yargs";
+import { HttpNetworkUserConfig } from "hardhat/types";
 
 const argv = yargs
   .option("network", {
@@ -15,13 +16,15 @@ const argv = yargs
     default: "hardhat",
   })
   .help(false)
-  .version(false).argv;
+  .version(false).argv as { network: string };
 
 // Load environment variables.
 dotenv.config();
 const { INFURA_KEY, MNEMONIC, ETHERSCAN_API_KEY, PK } = process.env;
 
-import "./src/tasks/setup";
+import "./src/tasks/initialDeploy";
+import "./src/tasks/upgrade";
+import "./src/tasks/verify";
 
 const DEFAULT_MNEMONIC =
   "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
