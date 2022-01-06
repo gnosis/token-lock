@@ -1,15 +1,21 @@
 import { expect } from "chai";
-import { deployments, waffle, ethers, upgrades } from "hardhat";
+import { deployments, ethers, upgrades } from "hardhat";
 import "@nomiclabs/hardhat-ethers";
 import { BigNumber } from "@ethersproject/bignumber";
 import { TokenLock as TokenLockT } from "../typechain-types";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
-describe("TokenLock", async () => {
-  const [owner, user1, user2] = waffle.provider.getWallets();
+describe("TokenLock", () => {
+  let owner: SignerWithAddress;
+  let user1: SignerWithAddress;
+  let user2: SignerWithAddress;
+
   const now = Math.round(Date.now() / 1000);
   const oneWeek = 7 * 24 * 60 * 60;
 
   const setupTest = deployments.createFixture(async () => {
+    [owner, user1, user2] = await ethers.getSigners();
+
     await deployments.fixture();
     const Token = await ethers.getContractFactory("TestToken");
     const token = await Token.deploy(18);
@@ -43,7 +49,131 @@ describe("TokenLock", async () => {
     expect(await upgraded.name()).to.equal("Locked TestToken");
   });
 
-  describe("deposit()", async () => {
+  it("should not be upgradable by others", async () => {
+    const { token } = await setupTest();
+    const TokenLock = await ethers.getContractFactory("TokenLock", {
+      signer: owner,
+    });
+
+    const instance = (await upgrades.deployProxy(TokenLock, [
+      owner.address,
+      token.address,
+      now + oneWeek,
+      2 * oneWeek,
+      "Locked TestToken",
+      "LTT",
+    ])) as TokenLockT;
+
+    const TokenLockV2 = await ethers.getContractFactory("TokenLock", {
+      signer: user1,
+    });
+
+    await expect(
+      upgrades.upgradeProxy(instance.address, TokenLockV2)
+    ).to.be.revertedWith("Ownable: caller is not the owner");
+  });
+
+  describe("deposit()", () => {
+    it("should revert if the sender has no sufficient balance", async () => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await expect(
+        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18).mul(2))
+      ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
+    });
+
+    it("should revert if the sender has not provided sufficient allowance", async () => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await token
+        .connect(user1)
+        .approve(tokenLock.address, BigNumber.from(10).pow(18).div(2));
+
+      await expect(
+        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
+      ).to.be.revertedWith("ERC20: transfer amount exceeds allowance");
+    });
+
+    it("should revert if the deposit deadline has passed", async () => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now - oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await token
+        .connect(user1)
+        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+
+      await expect(
+        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
+      ).to.be.revertedWith("DepositPeriodOver()");
+    });
+
+    it("should transfer the deposited tokens into the lock contract", async () => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await token
+        .connect(user1)
+        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+
+      await expect(() =>
+        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
+      ).to.changeTokenBalances(
+        token,
+        [user1, tokenLock],
+        [BigNumber.from(10).pow(18).mul(-1), BigNumber.from(10).pow(18)]
+      );
+    });
+
+    it("should mint lock claim tokens to the depositor equal to the deposited amount", async () => {
+      const { token, TokenLock } = await setupTest();
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT;
+
+      await token
+        .connect(user1)
+        .approve(tokenLock.address, BigNumber.from(10).pow(18));
+
+      await expect(() =>
+        tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18))
+      ).to.changeTokenBalance(tokenLock, user1, BigNumber.from(10).pow(18));
+    });
+
     it("should emit Deposit event", async () => {
       const { token, TokenLock } = await setupTest();
       const tokenLock = (await upgrades.deployProxy(TokenLock, [
@@ -55,11 +185,13 @@ describe("TokenLock", async () => {
         "LTT",
       ])) as TokenLockT;
 
-      tokenLock.deposit(BigNumber.from(10).pow(18), { from: user1.address });
+      await token
+        .connect(user1)
+        .approve(tokenLock.address, BigNumber.from(10).pow(18));
 
-      await expect(tokenLock.deployTransaction)
-        .to.emit(module, "TokenLockSetup")
-        .withArgs(user1.address, user1.address, user1.address, user1.address);
+      await expect(tokenLock.connect(user1).deposit(BigNumber.from(10).pow(18)))
+        .to.emit(tokenLock, "Deposit")
+        .withArgs(user1.address, BigNumber.from(10).pow(18));
     });
   });
 });

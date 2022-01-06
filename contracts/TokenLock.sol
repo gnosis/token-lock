@@ -48,9 +48,6 @@ contract TokenLock is OwnableUpgradeable {
     if (block.timestamp > depositDeadline) {
       revert DepositPeriodOver();
     }
-    if (token.balanceOf(msg.sender) < amount) {
-      revert ExceedsBalance();
-    }
 
     token.transferFrom(msg.sender, address(this), amount);
     balanceOf[msg.sender] += amount;
