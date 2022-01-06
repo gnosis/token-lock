@@ -265,6 +265,15 @@ describe("TokenLock", () => {
         .to.emit(tokenLock, "Withdrawal")
         .withArgs(user.address, ONE);
     });
+
+    it("allows withdrawals during the deposit period", async () => {
+      // 2.5 weeks before the lock end, means 0.5 weeks before deposit deadline
+      const { tokenLock, token } = await setupWithLocked(-2.5);
+
+      await expect(tokenLock.connect(user).withdraw(ONE))
+        .to.emit(tokenLock, "Withdrawal")
+        .withArgs(user.address, ONE);
+    });
   });
 
   describe("decimals", () => {

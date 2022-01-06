@@ -59,7 +59,10 @@ contract TokenLock is OwnableUpgradeable {
   /// @dev Withdraw tokens after the end of the locking period
   /// @param amount The amount of tokens to withdraw
   function withdraw(uint256 amount) public {
-    if (block.timestamp < depositDeadline + lockDuration) {
+    if (
+      block.timestamp >= depositDeadline &&
+      block.timestamp < depositDeadline + lockDuration
+    ) {
       revert LockPeriodOngoing();
     }
     if (balanceOf[msg.sender] < amount) {
