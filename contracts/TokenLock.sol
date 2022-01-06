@@ -9,8 +9,8 @@ contract TokenLock is OwnableUpgradeable {
   uint256 public depositDeadline;
   uint256 public lockDuration;
 
-  bytes32 public name;
-  bytes32 public symbol;
+  string public name;
+  string public symbol;
   uint256 public totalSupply;
   mapping(address => uint256) public balanceOf;
 
@@ -23,8 +23,8 @@ contract TokenLock is OwnableUpgradeable {
     address token,
     uint256 depositDeadline,
     uint256 lockDuration,
-    bytes32 name,
-    bytes32 symbol
+    string name,
+    string symbol
   );
 
   /// Deposit amount exceeds sender's balance of the token to lock or withdraw amount exceeds sender's balance of the locked token
@@ -34,37 +34,14 @@ contract TokenLock is OwnableUpgradeable {
   /// Withdraw is not possible because the lock period is not over yet
   error WithdrawLocked();
 
-  constructor(
+  function initialize(
     address _owner,
     address _token,
     uint256 _depositDeadline,
     uint256 _lockDuration,
-    bytes32 _name,
-    bytes32 _symbol
-  ) {
-    bytes memory initParams = abi.encode(
-      _owner,
-      _token,
-      _depositDeadline,
-      _lockDuration,
-      _name,
-      _symbol
-    );
-    setUp(initParams);
-  }
-
-  function setUp(bytes memory initializeParams) public {
-    (
-      address _owner,
-      address _token,
-      uint256 _depositDeadline,
-      uint256 _lockDuration,
-      bytes32 _name,
-      bytes32 _symbol
-    ) = abi.decode(
-        initializeParams,
-        (address, address, uint256, uint256, bytes32, bytes32)
-      );
+    string memory _name,
+    string memory _symbol
+  ) public initializer {
     __Ownable_init();
     transferOwnership(_owner);
     token = ERC20(_token);
@@ -72,7 +49,6 @@ contract TokenLock is OwnableUpgradeable {
     lockDuration = _lockDuration;
     name = _name;
     symbol = _symbol;
-
     totalSupply = 0;
 
     emit Setup(
