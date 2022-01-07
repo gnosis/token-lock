@@ -1,7 +1,7 @@
 # Token Lock Contract
 
 [![Build Status](https://github.com/gnosis/token-lock/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/token-lock/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/gnosis/token-lock/badge.svg?branch=main)](https://coveralls.io/github/gnosis/token-lock)
+[![Coverage Status](https://coveralls.io/repos/github/gnosis/token-lock/badge.svg?branch=master)](https://coveralls.io/github/gnosis/token-lock)
 
 Lock ERC-20 tokens for a pre-defined amount of time
 
@@ -64,7 +64,7 @@ Deploys the latest version of the implementation contract (if necessary) and upg
 yarn run upgrade rinkeby --proxy <PROXY_CONTRACT>
 ```
 
-(Note that you must not omit the `run` command, because `upgrade` is also the name of a yarn command.)
+(Note that you must not omit `run`, because `upgrade` is also the name of a yarn command.)
 
 ### Solidity Compiler
 
