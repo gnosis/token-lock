@@ -12,7 +12,8 @@ contract TokenLock is OwnableUpgradeable {
   string public name;
   string public symbol;
   uint256 public totalSupply;
-  mapping(address => uint256) public balanceOf;
+
+  mapping(address => uint256) private balance;
 
   event Deposit(address indexed holder, uint256 amount);
   event Withdrawal(address indexed holder, uint256 amount);
@@ -50,7 +51,7 @@ contract TokenLock is OwnableUpgradeable {
     }
 
     token.transferFrom(msg.sender, address(this), amount);
-    balanceOf[msg.sender] += amount;
+    balance[msg.sender] += amount;
     totalSupply += amount;
 
     emit Deposit(msg.sender, amount);
@@ -65,11 +66,11 @@ contract TokenLock is OwnableUpgradeable {
     ) {
       revert LockPeriodOngoing();
     }
-    if (balanceOf[msg.sender] < amount) {
+    if (balance[msg.sender] < amount) {
       revert ExceedsBalance();
     }
 
-    balanceOf[msg.sender] -= amount;
+    balance[msg.sender] -= amount;
     totalSupply -= amount;
     token.transfer(msg.sender, amount);
 
@@ -79,5 +80,11 @@ contract TokenLock is OwnableUpgradeable {
   /// @dev Returns the number of decimals of the locked token
   function decimals() public view returns (uint8) {
     return token.decimals();
+  }
+
+  /// @dev Returns the balance of a given address
+  /// @param _owner The address whose balance should be checked
+  function balanceOf(address _owner) public view returns (uint256) {
+    return balance[_owner];
   }
 }
