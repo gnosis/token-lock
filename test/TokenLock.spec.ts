@@ -294,4 +294,23 @@ describe("TokenLock", () => {
       expect(await tokenLock.decimals()).to.equal(17)
     })
   })
+
+  describe("balanceOf", () => {
+    it("returns the correct balance for the given address", async () => {
+      const { token, TokenLock } = await setupTest()
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        token.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT
+
+      await token.connect(user).approve(tokenLock.address, ONE)
+      await tokenLock.connect(user).deposit(ONE)
+
+      expect(await tokenLock.balanceOf(user.address)).to.equal(ONE)
+    })
+  })
 })
