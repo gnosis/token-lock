@@ -1,4 +1,4 @@
-import { task, types } from "hardhat/config";
+import { task, types } from "hardhat/config"
 
 task("verifyEtherscan", "Verifies the contract on etherscan")
   .addParam(
@@ -11,5 +11,5 @@ task("verifyEtherscan", "Verifies the contract on etherscan")
     await hardhatRuntime.run("verify", {
       address: taskArgs.contract,
       constructorArgsParams: [],
-    });
-  });
+    })
+  })

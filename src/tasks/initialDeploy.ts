@@ -1,15 +1,6 @@
-import "hardhat-deploy";
-import "@nomiclabs/hardhat-ethers";
-import { task, types } from "hardhat/config";
-
-interface TokenLockArgs {
-  owner: string;
-  token: string;
-  depositDeadline: number;
-  lockDuration: number;
-  name: string;
-  symbol: string;
-}
+import "hardhat-deploy"
+import "@nomiclabs/hardhat-ethers"
+import { task, types } from "hardhat/config"
 
 task("initialDeploy", "Deploys a fresh TokenLock contract")
   .addParam("owner", "Address of the owner", undefined, types.string)
@@ -39,9 +30,9 @@ task("initialDeploy", "Deploys a fresh TokenLock contract")
     types.string
   )
   .setAction(async (taskArgs, hre) => {
-    const [caller] = await hre.ethers.getSigners();
-    console.log("Using the account:", caller.address);
-    const TokenLock = await hre.ethers.getContractFactory("TokenLock");
+    const [caller] = await hre.ethers.getSigners()
+    console.log("Using the account:", caller.address)
+    const TokenLock = await hre.ethers.getContractFactory("TokenLock")
     const tokenLock = await hre.upgrades.deployProxy(TokenLock, [
       taskArgs.owner,
       taskArgs.token,
@@ -49,18 +40,18 @@ task("initialDeploy", "Deploys a fresh TokenLock contract")
       taskArgs.lockDuration,
       taskArgs.name,
       taskArgs.symbol,
-    ]);
+    ])
 
-    console.log("TokenLock proxy deployed to:", tokenLock.address);
-    console.log("Waiting for deploy transaction to be mined...");
+    console.log("TokenLock proxy deployed to:", tokenLock.address)
+    console.log("Waiting for deploy transaction to be mined...")
 
-    await tokenLock.deployed();
+    await tokenLock.deployed()
     const implementationAddress =
-      await hre.upgrades.erc1967.getImplementationAddress(tokenLock.address);
+      await hre.upgrades.erc1967.getImplementationAddress(tokenLock.address)
     console.log(
       "Using the logic implementation contract deployed at:",
       implementationAddress
-    );
-  });
+    )
+  })
 
-export {};
+export {}

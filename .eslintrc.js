@@ -15,20 +15,7 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "prettier/@typescript-eslint",
+    "prettier",
   ],
-  ignorePatterns: ["build/", "node_modules/", "!.prettierrc.js"],
-  rules: {
-    "import/order": [
-      "error",
-      {
-        "newlines-between": "always",
-        alphabetize: {
-          order: "asc",
-        },
-      },
-    ],
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-empty-function": "off",
-  },
-};
+  ignorePatterns: ["build/", "node_modules/", "coverage/", ".openzeppelin"],
+}

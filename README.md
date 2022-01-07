@@ -77,7 +77,3 @@ All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MER
 ### License
 
 Created under the [LGPL-3.0+ license](LICENSE).
-
-```
-
-```

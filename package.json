@@ -17,6 +17,7 @@
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "lint:ts": "eslint --max-warnings 0 .",
     "fmt:sol": "prettier 'contracts/**/*.sol' -w",
+    "fmt:ts": "prettier '(src|test)/**/*.ts' -w",
     "prepack": "yarn build",
     "prepare": "husky install"
   },
