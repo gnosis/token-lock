@@ -20,7 +20,11 @@ task("upgrade", "Upgrades the logic of an existing TokenLock contract")
     );
 
     console.log(
-      `Proxy at ${taskArgs.proxy} upgraded to latest version of TokenLock logic`
+      `Latest version of the implementation deployed to: ${tokenLock.address}`
+    );
+
+    console.log(
+      `Proxy at ${taskArgs.proxy} upgraded to use implementation at ${tokenLock.address}`
     );
   });
 

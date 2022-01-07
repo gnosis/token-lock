@@ -1,6 +1,5 @@
 import "hardhat-deploy";
 import "@nomiclabs/hardhat-ethers";
-
 import { task, types } from "hardhat/config";
 
 interface TokenLockArgs {
@@ -52,7 +51,16 @@ task("initialDeploy", "Deploys a fresh TokenLock contract")
       taskArgs.symbol,
     ]);
 
-    console.log("TokenLock deployed to:", tokenLock.address);
+    console.log("TokenLock proxy deployed to:", tokenLock.address);
+    console.log("Waiting for deploy transaction to be mined...");
+
+    await tokenLock.deployed();
+    const implementationAddress =
+      await hre.upgrades.erc1967.getImplementationAddress(tokenLock.address);
+    console.log(
+      "Using the logic implementation contract deployed at:",
+      implementationAddress
+    );
   });
 
 export {};

@@ -72,13 +72,9 @@ export default {
       ...sharedNetworkConfig,
       url: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
     },
-    xdai: {
+    gnosischain: {
       ...sharedNetworkConfig,
       url: "https://xdai.poanetwork.dev",
-    },
-    matic: {
-      ...sharedNetworkConfig,
-      url: "https://rpc-mainnet.maticvigil.com",
     },
   },
   namedAccounts: {
