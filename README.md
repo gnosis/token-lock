@@ -3,11 +3,11 @@
 [![Build Status](https://github.com/gnosis/token-lock/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/token-lock/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/token-lock/badge.svg?branch=master)](https://coveralls.io/github/gnosis/token-lock)
 
-Lock ERC-20 tokens for a pre-defined amount of time
+A contract for locking balances of a designated ERC-20 token for a pre-defined amount of time after a deposit period.
 
-1. Deposit period that ends at the configured `depositDeadline` timestamp.
-2. Deposited tokens are locked for the configured `lockDuration` after the deposit deadline.
-3. After the end of the lock period, depositors can withdraw their tokens.
+1. **Deposit period:** Anyone can deposit the designated token, receiving an equivalent balance of non-transferrable lock claim token. Withdrawals are possible.
+2. **Lock period:** No more deposits and withdrawals are possible.
+3. **After the lock period:** Tokens can be withdrawn in redemption for lock claim tokens.
 
 ### Setup
 
