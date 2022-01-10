@@ -51,11 +51,12 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
       revert DepositPeriodOver();
     }
 
+    balanceOf[msg.sender] += amount;
+    totalSupply += amount;
+
     if (!token.transferFrom(msg.sender, address(this), amount)) {
       revert TransferFailed();
     }
-    balanceOf[msg.sender] += amount;
-    totalSupply += amount;
 
     emit Transfer(msg.sender, address(this), amount);
   }
@@ -75,6 +76,7 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
 
     balanceOf[msg.sender] -= amount;
     totalSupply -= amount;
+
     if (!token.transfer(msg.sender, amount)) {
       revert TransferFailed();
     }
