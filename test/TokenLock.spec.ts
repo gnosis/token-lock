@@ -150,6 +150,28 @@ describe("TokenLock", () => {
       )
     })
 
+    it("reverts if the token transfer is unsuccessful", async () => {
+      const { TokenLock } = await setupTest()
+      const FailingToken = await ethers.getContractFactory("TestTokenFailing")
+      const failingToken = await FailingToken.deploy(18)
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        failingToken.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT
+
+      await failingToken.mint(user.address, ONE)
+      await failingToken.connect(user).approve(tokenLock.address, ONE)
+      await tokenLock.connect(user).deposit(ONE)
+
+      await expect(tokenLock.connect(user).withdraw(ONE)).to.be.revertedWith(
+        "TransferFailed()"
+      )
+    })
+
     it("transfers the deposited tokens into the lock contract", async () => {
       const { token, TokenLock } = await setupTest()
       const tokenLock = (await upgrades.deployProxy(TokenLock, [
@@ -241,6 +263,32 @@ describe("TokenLock", () => {
       await expect(
         tokenLock.connect(user).withdraw(ONE.mul(2))
       ).to.be.revertedWith("ExceedsBalance()")
+    })
+
+    it("reverts if the token transfer is unsuccessful", async () => {
+      const { TokenLock } = await setupTest()
+      const FailingToken = await ethers.getContractFactory("TestTokenFailing")
+      const failingToken = await FailingToken.deploy(18)
+      const tokenLock = (await upgrades.deployProxy(TokenLock, [
+        owner.address,
+        failingToken.address,
+        now + oneWeek,
+        2 * oneWeek,
+        "Locked TestToken",
+        "LTT",
+      ])) as TokenLockT
+
+      await failingToken.mint(user.address, ONE)
+      await failingToken.connect(user).approve(tokenLock.address, ONE)
+      await tokenLock.connect(user).deposit(ONE)
+
+      await network.provider.send("evm_setNextBlockTimestamp", [
+        now + 4 * oneWeek,
+      ])
+
+      await expect(tokenLock.connect(user).withdraw(ONE)).to.be.revertedWith(
+        "TransferFailed()"
+      )
     })
 
     it("transfers the locked token to the sender", async () => {
