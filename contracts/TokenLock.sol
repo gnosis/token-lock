@@ -60,7 +60,7 @@ contract TokenLock is OwnableUpgradeable {
     emit Deposit(msg.sender, amount);
   }
 
-  /// @dev Withdraw tokens after the end of the locking period
+  /// @dev Withdraw tokens after the end of the locking period or during the deposit period
   /// @param amount The amount of tokens to withdraw
   function withdraw(uint256 amount) public {
     if (
