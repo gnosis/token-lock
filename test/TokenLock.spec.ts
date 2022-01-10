@@ -75,6 +75,32 @@ describe("TokenLock", () => {
     ).to.be.revertedWith("Ownable: caller is not the owner")
   })
 
+  it("should revert with NotSupported() if one the unsupported ERC-20 functions is called", async () => {
+    const { TokenLock, token } = await setupTest()
+
+    const tokenLock = (await upgrades.deployProxy(TokenLock, [
+      owner.address,
+      token.address,
+      now + oneWeek,
+      2 * oneWeek,
+      "Locked TestToken",
+      "LTT",
+    ])) as TokenLockT
+
+    await expect(
+      tokenLock.allowance(user.address, user.address)
+    ).to.be.revertedWith("NotSupported()")
+    await expect(tokenLock.approve(user.address, 1000)).to.be.revertedWith(
+      "NotSupported()"
+    )
+    await expect(tokenLock.transfer(user.address, 100)).to.be.revertedWith(
+      "NotSupported()"
+    )
+    await expect(
+      tokenLock.transferFrom(user.address, user.address, 100)
+    ).to.be.revertedWith("NotSupported()")
+  })
+
   describe("initialize", () => {
     it("sets the owner and stores the provided arguments", async () => {
       const { TokenLock, token } = await setupTest()
@@ -211,7 +237,7 @@ describe("TokenLock", () => {
       expect(await tokenLock.totalSupply()).to.equal(ONE)
     })
 
-    it("emits the Deposit event", async () => {
+    it("emits a Transfer event", async () => {
       const { token, TokenLock } = await setupTest()
       const tokenLock = (await upgrades.deployProxy(TokenLock, [
         owner.address,
@@ -225,8 +251,8 @@ describe("TokenLock", () => {
       await token.connect(user).approve(tokenLock.address, ONE)
 
       await expect(tokenLock.connect(user).deposit(ONE))
-        .to.emit(tokenLock, "Deposit")
-        .withArgs(user.address, ONE)
+        .to.emit(tokenLock, "Transfer")
+        .withArgs(user.address, tokenLock.address, ONE)
     })
   })
 
@@ -311,12 +337,12 @@ describe("TokenLock", () => {
       expect(await tokenLock.totalSupply()).to.equal(0)
     })
 
-    it("emits the Withdrawal event", async () => {
+    it("emits a Transfer event", async () => {
       const { tokenLock } = await setupWithLocked(1)
 
       await expect(tokenLock.connect(user).withdraw(ONE))
-        .to.emit(tokenLock, "Withdrawal")
-        .withArgs(user.address, ONE)
+        .to.emit(tokenLock, "Transfer")
+        .withArgs(tokenLock.address, user.address, ONE)
     })
 
     it("allows withdrawals during the deposit period", async () => {
@@ -324,8 +350,8 @@ describe("TokenLock", () => {
       const { tokenLock } = await setupWithLocked(-2.5)
 
       await expect(tokenLock.connect(user).withdraw(ONE))
-        .to.emit(tokenLock, "Withdrawal")
-        .withArgs(user.address, ONE)
+        .to.emit(tokenLock, "Transfer")
+        .withArgs(tokenLock.address, user.address, ONE)
     })
   })
 

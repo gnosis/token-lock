@@ -26,7 +26,12 @@ contract TestTokenFailingTransfer is ERC20 {
     _mint(to, amount);
   }
 
-  function transfer(address, uint256) public override returns (bool success) {
+  function transfer(address, uint256)
+    public
+    pure
+    override
+    returns (bool success)
+  {
     return false;
   }
 }

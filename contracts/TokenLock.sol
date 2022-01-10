@@ -3,19 +3,17 @@ pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract TokenLock is OwnableUpgradeable {
+contract TokenLock is OwnableUpgradeable, IERC20 {
   ERC20 public token;
   uint256 public depositDeadline;
   uint256 public lockDuration;
 
   string public name;
   string public symbol;
-  uint256 public totalSupply;
-  mapping(address => uint256) public balanceOf;
-
-  event Deposit(address indexed holder, uint256 amount);
-  event Withdrawal(address indexed holder, uint256 amount);
+  uint256 public override totalSupply;
+  mapping(address => uint256) public override balanceOf;
 
   /// Withdraw amount exceeds sender's balance of the locked token
   error ExceedsBalance();
@@ -25,6 +23,8 @@ contract TokenLock is OwnableUpgradeable {
   error LockPeriodOngoing();
   /// Could not transfer the designated ERC20 token
   error TransferFailed();
+  /// ERC-20 function is not supported
+  error NotSupported();
 
   function initialize(
     address _owner,
@@ -57,7 +57,7 @@ contract TokenLock is OwnableUpgradeable {
     balanceOf[msg.sender] += amount;
     totalSupply += amount;
 
-    emit Deposit(msg.sender, amount);
+    emit Transfer(msg.sender, address(this), amount);
   }
 
   /// @dev Withdraw tokens after the end of the locking period or during the deposit period
@@ -79,11 +79,40 @@ contract TokenLock is OwnableUpgradeable {
       revert TransferFailed();
     }
 
-    emit Withdrawal(msg.sender, amount);
+    emit Transfer(address(this), msg.sender, amount);
   }
 
   /// @dev Returns the number of decimals of the locked token
   function decimals() public view returns (uint8) {
     return token.decimals();
+  }
+
+  /// @dev Lock claim tokens are non-transferrable: ERC-20 transfer is not supported
+  function transfer(address, uint256) external pure override returns (bool) {
+    revert NotSupported();
+  }
+
+  /// @dev Lock claim tokens are non-transferrable: ERC-20 allowance is not supported
+  function allowance(address, address)
+    external
+    pure
+    override
+    returns (uint256)
+  {
+    revert NotSupported();
+  }
+
+  /// @dev Lock claim tokens are non-transferrable: ERC-20 approve is not supported
+  function approve(address, uint256) external pure override returns (bool) {
+    revert NotSupported();
+  }
+
+  /// @dev Lock claim tokens are non-transferrable: ERC-20 transferFrom is not supported
+  function transferFrom(
+    address,
+    address,
+    uint256
+  ) external pure override returns (bool) {
+    revert NotSupported();
   }
 }

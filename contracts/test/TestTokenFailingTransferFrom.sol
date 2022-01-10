@@ -30,7 +30,7 @@ contract TestTokenFailingTransferFrom is ERC20 {
     address,
     address,
     uint256
-  ) public override returns (bool success) {
+  ) public pure override returns (bool success) {
     return false;
   }
 }
