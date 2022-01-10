@@ -23,6 +23,8 @@ contract TokenLock is OwnableUpgradeable {
   error DepositPeriodOver();
   /// Withdraw is not possible because the lock period is not over yet
   error LockPeriodOngoing();
+  /// Could not transfer the designated ERC20 token
+  error TransferFailed();
 
   function initialize(
     address _owner,
@@ -49,7 +51,9 @@ contract TokenLock is OwnableUpgradeable {
       revert DepositPeriodOver();
     }
 
-    token.transferFrom(msg.sender, address(this), amount);
+    if (!token.transferFrom(msg.sender, address(this), amount)) {
+      revert TransferFailed();
+    }
     balanceOf[msg.sender] += amount;
     totalSupply += amount;
 
@@ -71,7 +75,9 @@ contract TokenLock is OwnableUpgradeable {
 
     balanceOf[msg.sender] -= amount;
     totalSupply -= amount;
-    token.transfer(msg.sender, amount);
+    if (!token.transfer(msg.sender, amount)) {
+      revert TransferFailed();
+    }
 
     emit Withdrawal(msg.sender, amount);
   }

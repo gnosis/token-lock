@@ -152,7 +152,9 @@ describe("TokenLock", () => {
 
     it("reverts if the token transfer is unsuccessful", async () => {
       const { TokenLock } = await setupTest()
-      const FailingToken = await ethers.getContractFactory("TestTokenFailing")
+      const FailingToken = await ethers.getContractFactory(
+        "TestTokenFailingTransferFrom"
+      )
       const failingToken = await FailingToken.deploy(18)
       const tokenLock = (await upgrades.deployProxy(TokenLock, [
         owner.address,
@@ -165,9 +167,8 @@ describe("TokenLock", () => {
 
       await failingToken.mint(user.address, ONE)
       await failingToken.connect(user).approve(tokenLock.address, ONE)
-      await tokenLock.connect(user).deposit(ONE)
 
-      await expect(tokenLock.connect(user).withdraw(ONE)).to.be.revertedWith(
+      await expect(tokenLock.connect(user).deposit(ONE)).to.be.revertedWith(
         "TransferFailed()"
       )
     })
@@ -267,7 +268,9 @@ describe("TokenLock", () => {
 
     it("reverts if the token transfer is unsuccessful", async () => {
       const { TokenLock } = await setupTest()
-      const FailingToken = await ethers.getContractFactory("TestTokenFailing")
+      const FailingToken = await ethers.getContractFactory(
+        "TestTokenFailingTransfer"
+      )
       const failingToken = await FailingToken.deploy(18)
       const tokenLock = (await upgrades.deployProxy(TokenLock, [
         owner.address,

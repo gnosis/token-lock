@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract TestTokenFailing is ERC20 {
+contract TestTokenFailingTransferFrom is ERC20 {
   address public owner;
 
   uint8 internal tokenDecimals;
@@ -24,10 +24,6 @@ contract TestTokenFailing is ERC20 {
 
   function mint(address to, uint256 amount) public onlyOwner {
     _mint(to, amount);
-  }
-
-  function transfer(address, uint256) public override returns (bool success) {
-    return false;
   }
 
   function transferFrom(
