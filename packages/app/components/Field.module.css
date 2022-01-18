@@ -1,0 +1,17 @@
+.container {
+  display: block;
+  margin: 0.5em 0;
+}
+.header {
+  display: flex;
+}
+
+.label {
+  font-size: 0.875em;
+  font-weight: bold;
+  color: #5d6d74;
+}
+
+.meta {
+  margin-left: auto;
+}

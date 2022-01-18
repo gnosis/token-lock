@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  margin: 0;
+}
+
+.item {
+  margin: 0.5em 0;
+  width: 50%;
+}
+.fullWidth {
+  width: 100%;
+}
+
+.item dd {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: bold;
+}

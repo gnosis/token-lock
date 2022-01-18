@@ -9,7 +9,7 @@ task("verifyEtherscan", "Verifies the contract on etherscan")
   )
   .setAction(async (taskArgs, hardhatRuntime) => {
     await hardhatRuntime.run("verify", {
-      address: taskArgs.contract,
+      address: taskArgs.implementation,
       constructorArgsParams: [],
     })
   })

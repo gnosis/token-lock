@@ -4,6 +4,9 @@ on: [push]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/contracts
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -19,4 +22,5 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
+          path-to-lcov: ./packages/contracts/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,51 @@
+.default {
+  border: 2px solid #001428;
+  background: transparent;
+  box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+  border-radius: 8px;
+  font-weight: bold;
+  color: #001428;
+  width: 340px;
+  line-height: 46px;
+  font-size: 1em;
+  font-family: Averta, sans-serif;
+  margin: 0.5em auto;
+  display: block;
+  cursor: pointer;
+}
+.default:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.primary {
+  background: #001428;
+  box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  color: white;
+  width: 340px;
+  line-height: 50px;
+  font-size: 1em;
+  font-family: Averta, sans-serif;
+  margin: 0.5em auto;
+  display: block;
+  cursor: pointer;
+}
+.primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.link {
+  background: none;
+  border: none;
+  display: inline;
+  font-size: 0.875em;
+  font-family: Averta, sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  color: #001428;
+}

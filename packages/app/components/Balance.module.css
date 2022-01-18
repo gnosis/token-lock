@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  background: #f0efee;
+  height: 56px;
+  align-items: center;
+}
+
+.icon {
+  margin: 0 12px;
+  display: flex;
+}
+
+.balanceInUsd {
+  font-size: 0.875em;
+  color: #5d6d74;
+}

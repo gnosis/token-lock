@@ -1,0 +1,36 @@
+@font-face {
+  font-family: "Averta";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Averta-Regular"),
+    url(../public/Averta-normal.woff2) format("woff2");
+}
+@font-face {
+  font-family: "Averta";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local("Averta-Extrabold"),
+    url(../public/Averta-ExtraBold.woff2) format("woff2");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Averta, sans-serif;
+  font-size: 16px;
+  color: #001428;
+  background-color: #e8e7e6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  color: #001428;
+}
+
+* {
+  box-sizing: border-box;
+}
