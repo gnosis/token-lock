@@ -23,21 +23,21 @@ export const CHAINS: Chain[] = [
     ? [addInfuraProjectId(chain.rinkeby)]
     : []),
 
-  addInfuraProjectId(chain.mainnet),
+  // addInfuraProjectId(chain.mainnet),
 
-  {
-    id: 100,
-    name: "Gnosis Chain",
-    nativeCurrency: {
-      decimals: 18,
-      name: "xDai",
-      symbol: "xDAI",
-    },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
-    blockExplorers: [
-      { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet/" },
-    ],
-  },
+  // {
+  //   id: 100,
+  //   name: "Gnosis Chain",
+  //   nativeCurrency: {
+  //     decimals: 18,
+  //     name: "xDai",
+  //     symbol: "xDAI",
+  //   },
+  //   rpcUrls: ["https://rpc.xdaichain.com/"],
+  //   blockExplorers: [
+  //     { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet/" },
+  //   ],
+  // },
 ]
 
 export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
