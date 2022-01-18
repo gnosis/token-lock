@@ -3,9 +3,10 @@ on: [push]
 
 jobs:
   tests:
-    env:
-      working-directory: "./packages/contracts"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+      working-directory: ./packages/contracts
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
