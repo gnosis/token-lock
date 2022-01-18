@@ -41,7 +41,7 @@ yarn build
 yarn deploy rinkeby \
   --owner <OWNER> \
   --token 0xd0dab4e640d95e9e8a47545598c33e31bdb53c7c \
-  --deposit-deadline 1641638437 \
+  --deposit-deadline 1642498466 \
   --lock-duration 31536000 \
   --name 'Locked Gnosis' \
   --symbol LGNO

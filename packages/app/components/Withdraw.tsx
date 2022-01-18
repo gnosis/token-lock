@@ -1,28 +1,29 @@
-import { BigNumber } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { useRef, useState } from "react";
-import { useAccount } from "wagmi";
-import Balance from "./Balance";
-import Button from "./Button";
-import Card from "./Card";
-import Input from "./Input";
-import Spinner from "./Spinner";
-import { useTokenContractRead } from "./tokenContract";
-import { useTokenLockContractWrite } from "./tokenLockContract";
-import useTokenLockConfig from "./useTokenLockConfig";
+import { BigNumber } from "ethers"
+import { formatUnits, parseUnits } from "ethers/lib/utils"
+import { useRef, useState } from "react"
+import { useAccount } from "wagmi"
+import Balance from "./Balance"
+import Button from "./Button"
+import Card from "./Card"
+import Input from "./Input"
+import Spinner from "./Spinner"
+import { useTokenContractRead } from "./tokenContract"
+import { useTokenLockContractWrite } from "./tokenLockContract"
+import useTokenLockConfig from "./useTokenLockConfig"
 
 const Withdraw: React.FC = () => {
-  const [amount, setAmount] = useState(BigNumber.from(0));
+  const [amount, setAmount] = useState(BigNumber.from(0))
 
-  const { decimals, tokenSymbol } = useTokenLockConfig();
-  const [{ data: accountData }] = useAccount();
+  const { decimals, tokenSymbol } = useTokenLockConfig()
+  const [{ data: accountData }] = useAccount()
   const [{ data: balanceOf }] = useTokenContractRead("balanceOf", {
     args: accountData?.address,
     skip: !accountData?.address,
-  });
-  const balance = balanceOf as undefined | BigNumber;
+    watch: true,
+  })
+  const balance = balanceOf as undefined | BigNumber
 
-  const [status, withdraw] = useTokenLockContractWrite("withdraw");
+  const [status, withdraw] = useTokenLockContractWrite("withdraw")
 
   return (
     <Card>
@@ -34,7 +35,7 @@ const Withdraw: React.FC = () => {
         max={balance && formatUnits(balance, decimals)}
         value={formatUnits(amount, decimals)}
         onChange={(ev) => {
-          setAmount(parseUnits(ev.target.value, decimals));
+          setAmount(parseUnits(ev.target.value, decimals))
         }}
         meta={
           <Button
@@ -42,7 +43,7 @@ const Withdraw: React.FC = () => {
             disabled={!balance || balance.isZero()}
             onClick={() => {
               if (balance) {
-                setAmount(balance);
+                setAmount(balance)
               }
             }}
           >
@@ -54,14 +55,14 @@ const Withdraw: React.FC = () => {
         primary
         disabled={amount.isZero()}
         onClick={() => {
-          withdraw({ args: [amount] });
+          withdraw({ args: [amount] })
         }}
       >
         Unlock {tokenSymbol}
         {status.loading && <Spinner />}
       </Button>
     </Card>
-  );
-};
+  )
+}
 
-export default Withdraw;
+export default Withdraw

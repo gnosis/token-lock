@@ -1,21 +1,21 @@
-import { Chain, chain } from "wagmi";
+import { Chain, chain } from "wagmi"
 
-export const LOCKED_TOKEN_NAME = "Gnosis";
-export const LOCKED_TOKEN_SYMBOL = "GNO";
-export const CLAIM_TOKEN_NAME = "Locked Gnosis";
-export const CLAIM_TOKEN_SYMBOL = "LGNO";
+export const LOCKED_TOKEN_NAME = "Gnosis"
+export const LOCKED_TOKEN_SYMBOL = "GNO"
+export const CLAIM_TOKEN_NAME = "Locked Gnosis"
+export const CLAIM_TOKEN_SYMBOL = "LGNO"
 
-export const INFURA_ID = "e301e57e9a51407eb39df231874e0563";
+export const INFURA_ID = "e301e57e9a51407eb39df231874e0563"
 
 const addInfuraProjectId = (chain: Chain) => ({
   ...chain,
   rpcUrls: chain.rpcUrls.map((url) =>
     url.endsWith("infura.io/v3") ? `${url}/${INFURA_ID}` : url
   ),
-});
+})
 
 // used for price lookup
-export const COINGECKO_TOKEN_ID = "gnosis";
+export const COINGECKO_TOKEN_ID = "gnosis"
 
 // The first item will be used as the default chain
 export const CHAINS: Chain[] = [
@@ -38,8 +38,8 @@ export const CHAINS: Chain[] = [
       { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet/" },
     ],
   },
-];
+]
 
 export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
-  4: "0x088c13fEe116B0C33202BcF490b1c1B3d25ea94E",
-};
+  4: "0x88c6501d5C2475F5a0343847A12cEA0090458013",
+}

@@ -1,52 +1,54 @@
-import { ComponentProps } from "react";
-import Image from "next/image";
+import { ComponentProps } from "react"
+import Image from "next/image"
 
-import Field from "./Field";
-import cls from "./Balance.module.css";
-import { useTokenContractRead } from "./tokenContract";
-import { useAccount } from "wagmi";
-import { useTokenLockContractRead } from "./tokenLockContract";
-import { useTokenLockConfig } from ".";
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import useTokenPrice from "./useTokenPrice";
+import Field from "./Field"
+import cls from "./Balance.module.css"
+import { useTokenContractRead } from "./tokenContract"
+import { useAccount } from "wagmi"
+import { useTokenLockContractRead } from "./tokenLockContract"
+import { useTokenLockConfig } from "."
+import { BigNumber } from "ethers"
+import { formatUnits } from "ethers/lib/utils"
+import useTokenPrice from "./useTokenPrice"
 
 export const formatToken = (bigNumber: BigNumber, decimals: number) =>
   new Intl.NumberFormat("en-IN", {
     maximumSignificantDigits: 6,
-  }).format(parseFloat(formatUnits(bigNumber, decimals)));
+  }).format(parseFloat(formatUnits(bigNumber, decimals)))
 
 const formatUsd = (number: number) =>
   new Intl.NumberFormat("en-IN", {
     maximumSignificantDigits: 2,
-  }).format(number);
+  }).format(number)
 
 type Props = ComponentProps<typeof Field> & {
-  lockToken?: boolean;
-};
+  lockToken?: boolean
+}
 const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const { decimals, tokenName, lockTokenName, tokenSymbol, lockTokenSymbol } =
-    useTokenLockConfig();
-  const [{ data: accountData }] = useAccount();
+    useTokenLockConfig()
+  const [{ data: accountData }] = useAccount()
   const [{ data: balanceToken }] = useTokenContractRead("balanceOf", {
     args: accountData?.address,
     skip: !accountData?.address || lockToken,
-  });
+    watch: true,
+  })
   const [{ data: balanceLockToken }] = useTokenLockContractRead("balanceOf", {
     args: accountData?.address,
     skip: !accountData?.address || !lockToken,
-  });
+    watch: true,
+  })
 
-  const tokenPrice = useTokenPrice();
+  const tokenPrice = useTokenPrice()
 
   const balance = (lockToken ? balanceLockToken : balanceToken) as
     | BigNumber
-    | undefined;
+    | undefined
 
   const balanceInUsd =
     tokenPrice &&
     balance &&
-    parseFloat(formatUnits(balance, decimals)) * tokenPrice;
+    parseFloat(formatUnits(balance, decimals)) * tokenPrice
 
   return (
     <Field {...rest}>
@@ -73,7 +75,7 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
         </div>
       </div>
     </Field>
-  );
-};
+  )
+}
 
-export default Balance;
+export default Balance
