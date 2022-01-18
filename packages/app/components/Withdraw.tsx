@@ -1,22 +1,24 @@
 import { BigNumber } from "ethers"
-import { formatUnits, parseUnits } from "ethers/lib/utils"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { useAccount } from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
-import Input from "./Input"
+import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import { useTokenContractRead } from "./tokenContract"
-import { useTokenLockContractWrite } from "./tokenLockContract"
+import {
+  useTokenLockContractRead,
+  useTokenLockContractWrite,
+} from "./tokenLockContract"
 import useTokenLockConfig from "./useTokenLockConfig"
 
 const Withdraw: React.FC = () => {
-  const [amount, setAmount] = useState(BigNumber.from(0))
+  const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
 
   const { decimals, tokenSymbol } = useTokenLockConfig()
   const [{ data: accountData }] = useAccount()
-  const [{ data: balanceOf }] = useTokenContractRead("balanceOf", {
+  const [{ data: balanceOf }] = useTokenLockContractRead("balanceOf", {
     args: accountData?.address,
     skip: !accountData?.address,
     watch: true,
@@ -28,15 +30,11 @@ const Withdraw: React.FC = () => {
   return (
     <Card>
       <Balance lockToken label="Locked Balance" />
-      <Input
-        type="number"
+      <AmountInput
+        value={amount}
+        decimals={decimals}
+        onChange={setAmount}
         unit="LGNO"
-        min={0}
-        max={balance && formatUnits(balance, decimals)}
-        value={formatUnits(amount, decimals)}
-        onChange={(ev) => {
-          setAmount(parseUnits(ev.target.value, decimals))
-        }}
         meta={
           <Button
             link
@@ -53,7 +51,7 @@ const Withdraw: React.FC = () => {
       />
       <Button
         primary
-        disabled={amount.isZero()}
+        disabled={!amount || amount.isZero()}
         onClick={() => {
           withdraw({ args: [amount] })
         }}

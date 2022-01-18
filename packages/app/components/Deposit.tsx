@@ -6,7 +6,7 @@ import { CONTRACT_ADDRESSES } from "../config"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
-import Input from "./Input"
+import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import { useTokenContractRead, useTokenContractWrite } from "./tokenContract"
 import { useTokenLockContractWrite } from "./tokenLockContract"
@@ -14,10 +14,10 @@ import useChainId from "./useChainId"
 import useTokenLockConfig from "./useTokenLockConfig"
 
 const Deposit: React.FC = () => {
-  const [amount, setAmount] = useState(BigNumber.from(0))
+  const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
 
   const chainId = useChainId()
-  const { decimals, tokenSymbol, tokenAddress } = useTokenLockConfig()
+  const { decimals, tokenSymbol } = useTokenLockConfig()
   const [{ data: accountData }] = useAccount()
   const [{ data: balanceOf }] = useTokenContractRead("balanceOf", {
     args: accountData?.address,
@@ -40,20 +40,17 @@ const Deposit: React.FC = () => {
   const [approveStatus, approve] = useTokenContractWrite("approve")
   const [depositStatus, deposit] = useTokenLockContractWrite("deposit")
 
-  const needsAllowance = amount.gt(0) && allowance && allowance.lt(amount)
+  const needsAllowance =
+    amount && amount.gt(0) && allowance && allowance.lt(amount)
 
   return (
     <Card>
       <Balance label="Balance" />
-      <Input
-        type="number"
+      <AmountInput
         unit="GNO"
-        min={0}
-        max={balance && formatUnits(balance, decimals)}
-        value={formatUnits(amount, decimals)}
-        onChange={(ev) => {
-          setAmount(parseUnits(ev.target.value, decimals))
-        }}
+        value={amount}
+        decimals={decimals}
+        onChange={setAmount}
         meta={
           <Button
             link
@@ -88,7 +85,12 @@ const Deposit: React.FC = () => {
       {
         <Button
           primary={!needsAllowance}
-          disabled={needsAllowance || amount.isZero() || depositStatus.loading}
+          disabled={
+            needsAllowance ||
+            !amount ||
+            amount.isZero() ||
+            depositStatus.loading
+          }
           onClick={async () => {
             const { data, error } = await deposit({
               args: [amount],
