@@ -37,6 +37,8 @@ const Deposit: React.FC = () => {
     watch: true,
   })
 
+  const [approvePending, setApprovePending] = useState(false)
+
   const [approveStatus, approve] = useTokenContractWrite("approve")
   const [depositStatus, deposit] = useTokenLockContractWrite("deposit")
 
@@ -68,18 +70,20 @@ const Deposit: React.FC = () => {
       {needsAllowance && (
         <Button
           primary
-          disabled={amount.isZero() || approveStatus.loading}
+          disabled={amount.isZero() || approvePending}
           onClick={async () => {
+            setApprovePending(true)
             const { data, error } = await approve({
               args: [contractAddress, amount],
             })
             if (data) {
               await data.wait()
             }
+            setApprovePending(false)
           }}
         >
           Allow locking contract to use your {tokenSymbol}
-          {approveStatus.loading && <Spinner />}
+          {approvePending && <Spinner />}
         </Button>
       )}
       {
@@ -91,15 +95,11 @@ const Deposit: React.FC = () => {
             amount.isZero() ||
             depositStatus.loading
           }
-          onClick={async () => {
-            const { data, error } = await deposit({
+          onClick={() =>
+            deposit({
               args: [amount],
             })
-            if (data) {
-              await data.wait()
-            }
-            console.log("done")
-          }}
+          }
         >
           Lock {tokenSymbol}
           {depositStatus.loading && <Spinner />}
