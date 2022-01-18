@@ -1,4 +1,8 @@
-# Token Lock Contract
+# Token Lock
+
+Lock ERC-20 token for a pre-defined amount of time
+
+## Contract
 
 [![Build Status](https://github.com/gnosis/token-lock/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/token-lock/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/gnosis/token-lock/badge.svg?branch=master)](https://coveralls.io/github/gnosis/token-lock)
@@ -32,6 +36,7 @@ Deploys the implementation contract and an upgradable proxy.
 When run multiple times, it will create multiple proxies sharing the same implementation contract.
 
 ```
+cd packages/contracts
 yarn build
 yarn deploy rinkeby \
   --owner <OWNER> \
@@ -50,6 +55,7 @@ You can also find these values in .openzeppelin/<network>.json.
 Verifies the implementation contract at the specified address in Etherscan.
 
 ```
+cd packages/contracts
 yarn verify rinkeby --implementation <IMPLEMENTATION_CONTRACT>
 ```
 
@@ -61,6 +67,7 @@ This is done with a [simple click on a button](https://medium.com/etherscan-blog
 Deploys the latest version of the implementation contract (if necessary) and upgrades the existing proxy contract to use this one.
 
 ```
+cd packages/contracts
 yarn run upgrade rinkeby --proxy <PROXY_CONTRACT>
 ```
 
@@ -74,6 +81,10 @@ The contracts have been developed with [Solidity 0.8.6](https://github.com/ether
 
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-### License
+## App
+
+A front-end for the token lock contract based on next.js.
+
+## License
 
 Created under the [LGPL-3.0+ license](LICENSE).

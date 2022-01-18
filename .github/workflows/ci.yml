@@ -13,6 +13,7 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - run: cd packages/contracts
       - run: yarn
       - run: yarn build
       - run: yarn coverage

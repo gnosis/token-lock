@@ -1,10 +1,2 @@
-node_modules
-build
 .DS_Store
-artifacts/
-env/
-.env
-.openzeppelin
-coverage*
-deployments
-typechain-types
+node_modules
