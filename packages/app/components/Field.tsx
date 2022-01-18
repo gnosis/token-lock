@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
-import cn from "classnames";
-import cls from "./Field.module.css";
+import { ReactNode } from "react"
+import cn from "classnames"
+import cls from "./Field.module.css"
 
 type Props = {
-  className?: string;
-  label?: ReactNode;
-  meta?: ReactNode;
-};
+  className?: string
+  label?: ReactNode
+  meta?: ReactNode
+}
 
 const Field: React.FC<Props> = ({ label, meta, children, className }) => (
   <label className={cn(className, cls.container)}>
@@ -16,6 +16,6 @@ const Field: React.FC<Props> = ({ label, meta, children, className }) => (
     </div>
     {children}
   </label>
-);
+)
 
-export default Field;
+export default Field

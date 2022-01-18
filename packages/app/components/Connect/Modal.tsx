@@ -1,12 +1,12 @@
-import { useConnect } from "wagmi";
-import Modal from "react-modal";
-import cls from "./Modal.module.css";
+import { useConnect } from "wagmi"
+import Modal from "react-modal"
+import cls from "./Modal.module.css"
 
 interface Props {
-  onRequestClose(): void;
+  onRequestClose(): void
 }
 const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
-  const [{ data, error }, connect] = useConnect();
+  const [{ data, error }, connect] = useConnect()
 
   return (
     <Modal isOpen onRequestClose={onRequestClose} className={cls.container}>
@@ -15,9 +15,9 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
           disabled={!connector.ready}
           key={connector.id}
           onClick={async () => {
-            const result = await connect(connector);
+            const result = await connect(connector)
             if (result?.data?.account) {
-              onRequestClose();
+              onRequestClose()
             }
           }}
         >
@@ -28,7 +28,7 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
 
       {error && <div>{error?.message ?? "Failed to connect"}</div>}
     </Modal>
-  );
-};
+  )
+}
 
-export default ConnectModal;
+export default ConnectModal

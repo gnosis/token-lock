@@ -1,19 +1,19 @@
-import { providers } from "ethers";
-import React from "react";
-import { InjectedConnector, Provider as WagmiProvider } from "wagmi";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { WalletLinkConnector } from "wagmi/connectors/walletLink";
-import { CHAINS, INFURA_ID, LOCKED_TOKEN_NAME } from "../config";
+import { providers } from "ethers"
+import React from "react"
+import { InjectedConnector, Provider as WagmiProvider } from "wagmi"
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
+import { WalletLinkConnector } from "wagmi/connectors/walletLink"
+import { CHAINS, INFURA_ID, LOCKED_TOKEN_NAME } from "../config"
 
 export const provider = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
-    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0];
-  return new providers.JsonRpcBatchProvider(rpcUrl, "any");
-};
+    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
+  return new providers.JsonRpcBatchProvider(rpcUrl, "any")
+}
 
 const connectors = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
-    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0];
+    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
   return [
     new InjectedConnector({ chains: CHAINS }),
     new WalletConnectConnector({
@@ -28,13 +28,13 @@ const connectors = ({ chainId }: { chainId?: number }) => {
         jsonRpcUrl: `${rpcUrl}/${INFURA_ID}`,
       },
     }),
-  ];
-};
+  ]
+}
 
 const Provider: React.FC = ({ children }) => (
   <WagmiProvider autoConnect provider={provider} connectors={connectors}>
     {children}
   </WagmiProvider>
-);
+)
 
-export default Provider;
+export default Provider

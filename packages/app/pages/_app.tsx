@@ -1,6 +1,6 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { ProvideConfig, Provider } from "../components";
+import "../styles/globals.css"
+import type { AppProps } from "next/app"
+import { ProvideConfig, Provider } from "../components"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </ProvideConfig>
     </Provider>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

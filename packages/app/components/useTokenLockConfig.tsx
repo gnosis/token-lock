@@ -1,28 +1,28 @@
-import { BigNumber, Contract, providers } from "ethers";
-import { Interface } from "ethers/lib/utils";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useProvider } from "wagmi";
-import useChainId from "./useChainId";
-import useTokenLockContract from "./tokenLockContract";
+import { BigNumber, Contract, providers } from "ethers"
+import { Interface } from "ethers/lib/utils"
+import { createContext, useContext, useEffect, useState } from "react"
+import { useProvider } from "wagmi"
+import useChainId from "./useChainId"
+import useTokenLockContract from "./tokenLockContract"
 
 interface TokeLockConfig {
-  depositDeadline: Date;
-  lockDuration: number;
-  tokenAddress: string;
-  tokenName: string;
-  tokenSymbol: string;
-  lockTokenName: string;
-  lockTokenSymbol: string;
-  decimals: number;
+  depositDeadline: Date
+  lockDuration: number
+  tokenAddress: string
+  tokenName: string
+  tokenSymbol: string
+  lockTokenName: string
+  lockTokenSymbol: string
+  decimals: number
 }
 
-const ConfigContext = createContext<TokeLockConfig | null>(null);
+const ConfigContext = createContext<TokeLockConfig | null>(null)
 
 export const ProvideConfig: React.FC = ({ children }) => {
-  const [state, setState] = useState<TokeLockConfig | null>(null);
-  const chainId = useChainId();
-  const provider = useProvider();
-  const tokenLockContract = useTokenLockContract(provider);
+  const [state, setState] = useState<TokeLockConfig | null>(null)
+  const chainId = useChainId()
+  const provider = useProvider()
+  const tokenLockContract = useTokenLockContract(provider)
 
   useEffect(() => {
     Promise.all([
@@ -33,12 +33,12 @@ export const ProvideConfig: React.FC = ({ children }) => {
           tokenAddress,
           erc20Interface,
           provider
-        );
+        )
         return Promise.all([
           tokenAddress,
           tokenContract.name(),
           tokenContract.symbol(),
-        ]);
+        ])
       }),
       tokenLockContract.name(),
       tokenLockContract.symbol(),
@@ -61,29 +61,29 @@ export const ProvideConfig: React.FC = ({ children }) => {
           lockTokenName,
           lockTokenSymbol,
           decimals: decimals.toNumber(),
-        });
+        })
       }
-    );
-  }, [tokenLockContract, chainId, provider]);
+    )
+  }, [tokenLockContract, chainId, provider])
 
   if (!state) {
-    return null;
+    return null
   }
 
   return (
     <ConfigContext.Provider value={state}>{children}</ConfigContext.Provider>
-  );
-};
+  )
+}
 
 const useTokenLockConfig = () => {
-  const config = useContext(ConfigContext);
+  const config = useContext(ConfigContext)
   if (!config) {
-    throw new Error("Must be wrapped in <ProvideConfig>");
+    throw new Error("Must be wrapped in <ProvideConfig>")
   }
-  return config;
-};
+  return config
+}
 
-export default useTokenLockConfig;
+export default useTokenLockConfig
 
 const erc20Interface = new Interface([
   "function balanceOf(address) view returns (uint256)",
@@ -91,4 +91,4 @@ const erc20Interface = new Interface([
   "function name() view returns (string)",
   "function symbol() view returns (string)",
   "function totalSupply() view returns (uint256)",
-]);
+])

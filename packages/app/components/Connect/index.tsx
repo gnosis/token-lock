@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useAccount, useConnect } from "wagmi";
-import Account from "./Account";
-import Modal from "./Modal";
+import { useState } from "react"
+import { useAccount, useConnect } from "wagmi"
+import Account from "./Account"
+import Modal from "./Modal"
 
 const Connect: React.FC = () => {
   const [
     {
       data: { connected },
     },
-  ] = useConnect();
+  ] = useConnect()
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
@@ -22,7 +22,7 @@ const Connect: React.FC = () => {
         <button onClick={() => setShowModal(true)}>Connect wallet</button>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Connect;
+export default Connect

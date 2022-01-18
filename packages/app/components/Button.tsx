@@ -2,14 +2,14 @@ import React, {
   ButtonHTMLAttributes,
   ComponentProps,
   DetailedHTMLProps,
-} from "react";
-import cn from "classnames";
-import cls from "./Button.module.css";
+} from "react"
+import cn from "classnames"
+import cls from "./Button.module.css"
 
 type Props = ComponentProps<"button"> & {
-  primary?: boolean;
-  link?: boolean;
-};
+  primary?: boolean
+  link?: boolean
+}
 const Button: React.FC<Props> = ({ className, primary, link, ...rest }) => (
   <button
     className={cn(className, {
@@ -19,6 +19,6 @@ const Button: React.FC<Props> = ({ className, primary, link, ...rest }) => (
     })}
     {...rest}
   />
-);
+)
 
-export default Button;
+export default Button

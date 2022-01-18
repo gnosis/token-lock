@@ -1,9 +1,9 @@
-import type { NextPage } from "next";
-import ReactModal from "react-modal";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import { CHAINS, LOCKED_TOKEN_NAME, LOCKED_TOKEN_SYMBOL } from "../config";
+import type { NextPage } from "next"
+import ReactModal from "react-modal"
+import Head from "next/head"
+import Image from "next/image"
+import styles from "../styles/Home.module.css"
+import { CHAINS, LOCKED_TOKEN_NAME, LOCKED_TOKEN_SYMBOL } from "../config"
 import {
   Connect,
   ConnectHint,
@@ -12,28 +12,27 @@ import {
   Stats,
   useTokenLockConfig,
   Withdraw,
-} from "../components";
-import { useEffect } from "react";
-import { useConnect, useNetwork } from "wagmi";
+} from "../components"
+import { useEffect } from "react"
+import { useConnect, useNetwork } from "wagmi"
 
 const Home: NextPage = () => {
   useEffect(() => {
-    ReactModal.setAppElement("#root");
-  }, []);
-  const config = useTokenLockConfig();
-  const [{ data: network }] = useNetwork();
+    ReactModal.setAppElement("#root")
+  }, [])
+  const config = useTokenLockConfig()
+  const [{ data: network }] = useNetwork()
 
-  const connectedChainId = network.chain?.id;
+  const connectedChainId = network.chain?.id
   const connected =
-    connectedChainId && CHAINS.some(({ id }) => id === connectedChainId);
+    connectedChainId && CHAINS.some(({ id }) => id === connectedChainId)
 
-  const depositPeriodOngoing =
-    true || config.depositDeadline.getTime() > Date.now();
+  const depositPeriodOngoing = config.depositDeadline.getTime() > Date.now()
   const lockPeriodOngoing =
     config.depositDeadline.getTime() < Date.now() &&
-    config.depositDeadline.getTime() + config.lockDuration > Date.now();
+    config.depositDeadline.getTime() + config.lockDuration > Date.now()
   const lockPeriodOver =
-    true || config.depositDeadline.getTime() + config.lockDuration < Date.now();
+    config.depositDeadline.getTime() + config.lockDuration < Date.now()
 
   return (
     <div className={styles.container} id="root">
@@ -104,7 +103,7 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

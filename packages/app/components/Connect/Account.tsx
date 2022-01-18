@@ -1,22 +1,22 @@
-import { useRef, useState } from "react";
-import useOnClickOutside from "use-onclickoutside";
-import { useAccount } from "wagmi";
-import cls from "./Account.module.css";
+import { useRef, useState } from "react"
+import useOnClickOutside from "use-onclickoutside"
+import { useAccount } from "wagmi"
+import cls from "./Account.module.css"
 
 const Account: React.FC = () => {
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
-  });
+  })
 
-  const [showDropdown, setShowDropdown] = useState(false);
-  const ref = useRef(null);
-  useOnClickOutside(ref, () => setShowDropdown(false));
+  const [showDropdown, setShowDropdown] = useState(false)
+  const ref = useRef(null)
+  useOnClickOutside(ref, () => setShowDropdown(false))
 
   if (!accountData) {
-    return null;
+    return null
   }
 
-  const avatar = accountData.ens?.avatar;
+  const avatar = accountData.ens?.avatar
 
   return (
     <div className={cls.container}>
@@ -33,8 +33,8 @@ const Account: React.FC = () => {
         <div className={cls.dropdown} ref={ref}>
           <button
             onClick={() => {
-              disconnect();
-              setShowDropdown(false);
+              disconnect()
+              setShowDropdown(false)
             }}
           >
             Disconnect
@@ -42,7 +42,7 @@ const Account: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Account;
+export default Account

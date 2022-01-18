@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { useNetwork } from "wagmi";
-import { CHAINS } from "../config";
-import Card from "./Card";
-import Modal from "./Connect/Modal";
-import Button from "./Button";
+import { useState } from "react"
+import { useNetwork } from "wagmi"
+import { CHAINS } from "../config"
+import Card from "./Card"
+import Modal from "./Connect/Modal"
+import Button from "./Button"
 
 const ConnectHint: React.FC = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
-  const [{ data }, switchNetwork] = useNetwork();
+  const [{ data }, switchNetwork] = useNetwork()
 
-  const connectedChainId = data.chain?.id;
+  const connectedChainId = data.chain?.id
   const connectedToUnsupportedChain =
-    connectedChainId && !CHAINS.some(({ id }) => id === connectedChainId);
+    connectedChainId && !CHAINS.some(({ id }) => id === connectedChainId)
 
   if (connectedChainId && !connectedToUnsupportedChain) {
-    return null;
+    return null
   }
 
   return (
@@ -37,7 +37,7 @@ const ConnectHint: React.FC = () => {
 
       {showModal && <Modal onRequestClose={() => setShowModal(false)} />}
     </Card>
-  );
-};
+  )
+}
 
-export default ConnectHint;
+export default ConnectHint
