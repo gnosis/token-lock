@@ -3,6 +3,8 @@ on: [push]
 
 jobs:
   tests:
+    env:
+      working-directory: "./packages/contracts"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +15,6 @@ jobs:
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - run: cd packages/contracts
       - run: yarn
       - run: yarn build
       - run: yarn coverage
