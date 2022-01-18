@@ -2,6 +2,10 @@
 
 Lock ERC-20 token for a pre-defined amount of time
 
+This is a mono-repo including two packages: [contract](#contract) and [app](#app)
+
+---
+
 ## Contract
 
 [![Build Status](https://github.com/gnosis/token-lock/actions/workflows/ci.yml/badge.svg)](https://github.com/gnosis/token-lock/actions/workflows/ci.yml)
@@ -80,6 +84,8 @@ The contracts have been developed with [Solidity 0.8.6](https://github.com/ether
 ### Security and Liability
 
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+---
 
 ## App
 
