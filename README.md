@@ -91,6 +91,22 @@ All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MER
 
 A front-end for the token lock contract based on next.js.
 
+### Setup
+
+#### Config
+
+In local development you might want to connect the app to different contract instances on Rinkeby. To do this edit `CONTRACT_ADDRESSES` map in ./packages/app/config.ts
+
+#### Start local dev server
+
+```
+cd packages/app
+yarn install
+yarn dev
+```
+
+---
+
 ## License
 
 Created under the [LGPL-3.0+ license](LICENSE).
