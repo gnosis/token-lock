@@ -1,4 +1,5 @@
 .wrapper {
+  border-radius: 0.5em;
   display: flex;
   background: #f0efee;
   height: 56px;

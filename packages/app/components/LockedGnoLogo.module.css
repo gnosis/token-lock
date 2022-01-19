@@ -1,0 +1,17 @@
+.container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo {
+  margin-right: 0.5em;
+}
+
+.logoText {
+  font-size: 2em;
+  font-weight: 900;
+  letter-spacing: 1px;
+  transform: translateY(3px);
+}
