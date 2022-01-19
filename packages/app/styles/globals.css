@@ -9,10 +9,22 @@
 @font-face {
   font-family: "Averta";
   font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local("Averta-Bold"),
+    url(../public/AvertaBold.woff2) format("woff2");
+}
+@font-face {
+  font-family: "Averta";
+  font-style: normal;
   font-weight: 800;
   font-display: swap;
   src: local("Averta-Extrabold"),
     url(../public/Averta-ExtraBold.woff2) format("woff2");
+}
+
+:root {
+  --navHeight: 66px;
 }
 
 html,

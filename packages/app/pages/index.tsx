@@ -8,6 +8,8 @@ import {
   Connect,
   ConnectHint,
   Deposit,
+  GnosisLogo,
+  LockedGnoLogo,
   LockedBalance,
   Stats,
   useTokenLockConfig,
@@ -46,6 +48,8 @@ const Home: NextPage = () => {
       </Head>
 
       <header className={styles.header}>
+        <GnosisLogo />
+        <LockedGnoLogo />
         <Connect />
       </header>
 
@@ -61,46 +65,51 @@ const Home: NextPage = () => {
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://discord.gg/2jnnJx3Y"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/discord.svg"
-            alt="Gnosis Guild Discord"
-            width={16}
-            height={16}
-          />
-        </a>
-        <a
-          href="https://twitter.com/gnosisguild"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/twitter.svg"
-            alt="Gnosis Guild Twitter"
-            width={16}
-            height={16}
-          />
-        </a>
-
-        <a
-          href="https://gnosisguild.mirror.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Built by Gnosis Guild{" "}
-          <span className={styles.logo}>
+        <div className={styles.footerContainer}>
+          <a
+            href="https://discord.gg/2jnnJx3Y"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
-              src="/gnosisguild.png"
-              alt="Gnosis Guild"
-              width={32}
-              height={32}
+              src="/discord.svg"
+              alt="Gnosis Guild Discord"
+              width={16}
+              height={16}
             />
-          </span>
-        </a>
+          </a>
+          <a
+            href="https://twitter.com/gnosisguild"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/twitter.svg"
+              alt="Gnosis Guild Twitter"
+              width={16}
+              height={16}
+            />
+          </a>
+
+          <div className={styles.divider} />
+
+          <a
+            className={styles.gg} 
+            href="https://gnosisguild.mirror.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Built by Gnosis Guild{" "}
+            <span className={styles.logo}>
+              <Image
+                src="/gnosisguild.png"
+                alt="Gnosis Guild"
+                width={32}
+                height={32}
+              />
+            </span>
+          </a>
+        </div>
       </footer>
     </div>
   )

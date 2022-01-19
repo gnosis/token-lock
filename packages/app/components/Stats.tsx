@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers"
 import { formatToken } from "./Balance"
+import Image from "next/image"
 import Card from "./Card"
 import cls from "./Stats.module.css"
 import useTokenLockConfig from "./useTokenLockConfig"
@@ -41,7 +42,9 @@ const Stats: React.FC = () => {
     <Card>
       <dl className={cls.container}>
         <div className={cls.item}>
-          <dt>Lock Deadline</dt>
+          <dt>
+            Lock Deadline
+          </dt>
           <dd>
             {new Intl.DateTimeFormat("default", { dateStyle: "medium" }).format(
               config.depositDeadline
@@ -49,7 +52,9 @@ const Stats: React.FC = () => {
           </dd>
         </div>
         <div className={cls.item}>
-          <dt>Lock Duration</dt>
+          <dt>
+            Lock Duration
+          </dt>
           <dd>{formatDuration(config.lockDuration)}</dd>
         </div>
         {

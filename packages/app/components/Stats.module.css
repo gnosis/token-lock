@@ -6,15 +6,38 @@
 }
 
 .item {
-  margin: 0.5em 0;
+  margin-top: 1rem;
   width: 50%;
 }
 .fullWidth {
+  margin-top: 2rem;
   width: 100%;
 }
 
 .item dd {
   margin: 0;
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight: 700;
+}
+
+.item dt {
+  color: #5D6D74;
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.titleContainer {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.info {
+  cursor: pointer;
+  margin-left: 0.25em;
+  transform: translateY(1px);
+}
+
+.info:hover {
+  opacity: 0.7;
 }
