@@ -65,7 +65,7 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
   /// @param amount The amount of tokens to withdraw
   function withdraw(uint256 amount) public {
     if (
-      block.timestamp >= depositDeadline &&
+      block.timestamp > depositDeadline &&
       block.timestamp < depositDeadline + lockDuration
     ) {
       revert LockPeriodOngoing();
