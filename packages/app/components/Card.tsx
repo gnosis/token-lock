@@ -1,7 +1,12 @@
 import cls from "./Card.module.css"
+import clsx from "clsx"
 
-const Card: React.FC = ({ children }) => (
-  <div className={cls.card}>{children}</div>
+type Props = {
+  className?: string
+}
+
+const Card: React.FC<Props> = ({ children, className }) => (
+  <div className={clsx(cls.card, className)}>{children}</div>
 )
 
 export default Card

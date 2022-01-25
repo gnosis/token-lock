@@ -12,6 +12,7 @@ import { useTokenContractRead, useTokenContractWrite } from "./tokenContract"
 import { useTokenLockContractWrite } from "./tokenLockContract"
 import useChainId from "./useChainId"
 import useTokenLockConfig from "./useTokenLockConfig"
+import utility from "../styles/utility.module.css"
 
 const Deposit: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
@@ -52,6 +53,7 @@ const Deposit: React.FC = () => {
       <AmountInput
         unit="GNO"
         id="lockMax"
+        className={utility.mt4}
         value={amount}
         decimals={decimals}
         onChange={setAmount}
@@ -109,7 +111,7 @@ const Deposit: React.FC = () => {
         </Button>
       )}
 
-      <Balance lockToken label="Locked Balance" />
+      <Balance className={utility.mt8} lockToken label="Locked Balance" />
     </Card>
   )
 }

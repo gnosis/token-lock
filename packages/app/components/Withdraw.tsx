@@ -7,6 +7,7 @@ import Card from "./Card"
 import ConnectHint from "./ConnectHint"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
+import utility from "../styles/utility.module.css"
 import { useTokenContractRead } from "./tokenContract"
 import {
   useTokenLockContractRead,
@@ -35,6 +36,7 @@ const Withdraw: React.FC = () => {
       <AmountInput
         value={amount}
         id="unlockMax"
+        className={utility.mt4}
         decimals={decimals}
         onChange={setAmount}
         unit="LGNO"
@@ -67,7 +69,7 @@ const Withdraw: React.FC = () => {
         </Button>
       )}
 
-      <Balance label="GNO Balance" />
+      <Balance className={utility.mt8} label="GNO Balance" />
     </Card>
   )
 }
