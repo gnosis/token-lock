@@ -3,7 +3,7 @@ import React, {
   ComponentProps,
   DetailedHTMLProps,
 } from "react"
-import cn from "classnames"
+import clsx from "clsx"
 import cls from "./Button.module.css"
 
 type Props = ComponentProps<"button"> & {
@@ -12,7 +12,7 @@ type Props = ComponentProps<"button"> & {
 }
 const Button: React.FC<Props> = ({ className, primary, link, ...rest }) => (
   <button
-    className={cn(className, {
+    className={clsx(className, {
       [cls.default]: !primary && !link,
       [cls.primary]: primary,
       [cls.link]: link,

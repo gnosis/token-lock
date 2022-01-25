@@ -1,4 +1,4 @@
-import cn from "classnames"
+import clsx from "clsx"
 import { useState } from "react"
 import Deposit from "./Deposit"
 import Withdraw from "./Withdraw"
@@ -10,13 +10,13 @@ const DepositAndWithdraw: React.FC<{}> = () => {
     <div>
       <div className={cls.header}>
         <button
-          className={cn(cls.title, activeTab === "deposit" && cls.active)}
+          className={clsx(cls.title, activeTab === "deposit" && cls.active)}
           onClick={() => setActiveTab("deposit")}
         >
           Lock
         </button>
         <button
-          className={cn(cls.title, activeTab === "withdraw" && cls.active)}
+          className={clsx(cls.title, activeTab === "withdraw" && cls.active)}
           onClick={() => setActiveTab("withdraw")}
         >
           Unlock

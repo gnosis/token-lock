@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import cn from "classnames"
+import clsx from "clsx"
 import cls from "./Field.module.css"
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Field: React.FC<Props> = ({ label, meta, children, className }) => (
-  <label className={cn(className, cls.container)}>
+  <label className={clsx(className, cls.container)}>
     <div className={cls.header}>
       {label && <span className={cls.label}>{label}</span>}
       {meta && <span className={cls.meta}>{meta}</span>}

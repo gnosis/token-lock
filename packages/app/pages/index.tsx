@@ -3,7 +3,7 @@ import ReactModal from "react-modal"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
-import { CHAINS, LOCKED_TOKEN_NAME, LOCKED_TOKEN_SYMBOL } from "../config"
+import { CHAINS } from "../config"
 import {
   Connect,
   ConnectHint,
@@ -18,7 +18,7 @@ import {
   StatsWithdraw,
 } from "../components"
 import { useEffect } from "react"
-import { useConnect, useNetwork } from "wagmi"
+import { useNetwork } from "wagmi"
 
 const Home: NextPage = () => {
   useEffect(() => {
