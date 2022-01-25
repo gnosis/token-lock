@@ -51,7 +51,7 @@ const Home: NextPage = () => {
 
       <header className={styles.header}>
         <GnosisLogo />
-        <LockedGnoLogo />
+        <LockedGnoLogo locked={lockPeriodOngoing} />
         <Connect />
       </header>
 
