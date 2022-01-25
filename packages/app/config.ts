@@ -23,25 +23,25 @@ export const CHAINS: Chain[] = [
     ? [addInfuraProjectId(chain.rinkeby)]
     : []),
 
-  addInfuraProjectId(chain.mainnet),
+  // addInfuraProjectId(chain.mainnet),
 
-  {
-    id: 100,
-    name: "Gnosis Chain",
-    nativeCurrency: {
-      decimals: 18,
-      name: "xDai",
-      symbol: "xDAI",
-    },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
-    blockExplorers: [
-      { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet/" },
-    ],
-  },
+  // {
+  //   id: 100,
+  //   name: "Gnosis Chain",
+  //   nativeCurrency: {
+  //     decimals: 18,
+  //     name: "xDai",
+  //     symbol: "xDAI",
+  //   },
+  //   rpcUrls: ["https://rpc.xdaichain.com/"],
+  //   blockExplorers: [
+  //     { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet" },
+  //   ],
+  // },
 ]
 
 export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
-  4: "0x01FD5975E40D16838a7213e2fdfFbBBA4477c14d", // deposit period ongoing
+  // 4: "0x01FD5975E40D16838a7213e2fdfFbBBA4477c14d", // deposit period ongoing
   // 4: "0x88c6501d5C2475F5a0343847A12cEA0090458013", // lock period ongoing
-  // 4: "0xF7a579Cc9c27488f13C1F16036a65810fa1Ca3CC", // lock period over
+  4: "0xF7a579Cc9c27488f13C1F16036a65810fa1Ca3CC", // lock period over
 }

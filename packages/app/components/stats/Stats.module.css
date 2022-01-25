@@ -6,15 +6,22 @@
 }
 
 .item {
-  margin: 0.5em 0;
+  margin-top: 1rem;
   width: 50%;
 }
 .fullWidth {
+  margin-top: 2rem;
   width: 100%;
 }
 
 .item dd {
   margin: 0;
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight: 700;
+}
+
+.item dt {
+  color: #5d6d74;
+  font-size: 0.75em;
+  font-weight: 700;
 }

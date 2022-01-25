@@ -3,18 +3,22 @@ import ReactModal from "react-modal"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
-import { CHAINS, LOCKED_TOKEN_NAME, LOCKED_TOKEN_SYMBOL } from "../config"
+import { CHAINS } from "../config"
 import {
   Connect,
   ConnectHint,
-  Deposit,
+  GnosisLogo,
+  LockedGnoLogo,
   LockedBalance,
-  Stats,
   useTokenLockConfig,
   Withdraw,
+  DepositAndWithdraw,
+  StatsDeposit,
+  StatsLocked,
+  StatsWithdraw,
 } from "../components"
 import { useEffect } from "react"
-import { useConnect, useNetwork } from "wagmi"
+import { useNetwork } from "wagmi"
 
 const Home: NextPage = () => {
   useEffect(() => {
@@ -46,61 +50,73 @@ const Home: NextPage = () => {
       </Head>
 
       <header className={styles.header}>
+        <GnosisLogo />
+        <LockedGnoLogo />
         <Connect />
       </header>
 
       <main className={styles.main}>
-        <Stats />
+        {depositPeriodOngoing && <StatsDeposit />}
+
+        {lockPeriodOngoing && <StatsLocked />}
+
+        {lockPeriodOver && <StatsWithdraw />}
+
         <ConnectHint />
 
-        {connected && depositPeriodOngoing && <Deposit />}
+        {connected && depositPeriodOngoing && <DepositAndWithdraw />}
 
         {connected && lockPeriodOngoing && <LockedBalance />}
 
-        {connected && (depositPeriodOngoing || lockPeriodOver) && <Withdraw />}
+        {connected && lockPeriodOver && <Withdraw />}
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://discord.gg/2jnnJx3Y"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/discord.svg"
-            alt="Gnosis Guild Discord"
-            width={16}
-            height={16}
-          />
-        </a>
-        <a
-          href="https://twitter.com/gnosisguild"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/twitter.svg"
-            alt="Gnosis Guild Twitter"
-            width={16}
-            height={16}
-          />
-        </a>
-
-        <a
-          href="https://gnosisguild.mirror.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Built by Gnosis Guild{" "}
-          <span className={styles.logo}>
+        <div className={styles.footerContainer}>
+          <a
+            href="https://discord.gg/2jnnJx3Y"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
-              src="/gnosisguild.png"
-              alt="Gnosis Guild"
-              width={32}
-              height={32}
+              src="/discord.svg"
+              alt="Gnosis Guild Discord"
+              width={16}
+              height={16}
             />
-          </span>
-        </a>
+          </a>
+          <a
+            href="https://twitter.com/gnosisguild"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/twitter.svg"
+              alt="Gnosis Guild Twitter"
+              width={16}
+              height={16}
+            />
+          </a>
+
+          <div className={styles.divider} />
+
+          <a
+            className={styles.gg}
+            href="https://gnosisguild.mirror.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Built by Gnosis Guild{" "}
+            <span className={styles.logo}>
+              <Image
+                src="/gnosisguild.png"
+                alt="Gnosis Guild"
+                width={32}
+                height={32}
+              />
+            </span>
+          </a>
+        </div>
       </footer>
     </div>
   )

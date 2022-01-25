@@ -3,7 +3,7 @@ import Card from "./Card"
 
 const LockedBalance: React.FC = () => (
   <Card>
-    <Balance lockToken label="Your Locked Balance" />
+    <Balance lockToken label="Locked Balance" />
   </Card>
 )
 

@@ -12,12 +12,12 @@ import { formatUnits } from "ethers/lib/utils"
 import useTokenPrice from "./useTokenPrice"
 
 export const formatToken = (bigNumber: BigNumber, decimals: number) =>
-  new Intl.NumberFormat("en-IN", {
+  new Intl.NumberFormat("en-US", {
     maximumSignificantDigits: 6,
   }).format(parseFloat(formatUnits(bigNumber, decimals)))
 
 const formatUsd = (number: number) =>
-  new Intl.NumberFormat("en-IN", {
+  new Intl.NumberFormat("en-US", {
     maximumSignificantDigits: 2,
   }).format(number)
 
