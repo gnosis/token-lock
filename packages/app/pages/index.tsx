@@ -10,10 +10,12 @@ import {
   GnosisLogo,
   LockedGnoLogo,
   LockedBalance,
-  Stats,
   useTokenLockConfig,
   Withdraw,
   DepositAndWithdraw,
+  StatsDeposit,
+  StatsLocked,
+  StatsWithdraw,
 } from "../components"
 import { useEffect } from "react"
 import { useConnect, useNetwork } from "wagmi"
@@ -54,7 +56,12 @@ const Home: NextPage = () => {
       </header>
 
       <main className={styles.main}>
-        <Stats />
+        {depositPeriodOngoing && <StatsDeposit />}
+
+        {lockPeriodOngoing && <StatsLocked />}
+
+        {lockPeriodOver && <StatsWithdraw />}
+
         <ConnectHint />
 
         {connected && depositPeriodOngoing && <DepositAndWithdraw />}

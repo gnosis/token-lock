@@ -21,23 +21,7 @@
 }
 
 .item dt {
-  color: #5D6D74;
+  color: #5d6d74;
   font-size: 0.75em;
   font-weight: 700;
-}
-
-.titleContainer {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.info {
-  cursor: pointer;
-  margin-left: 0.25em;
-  transform: translateY(1px);
-}
-
-.info:hover {
-  opacity: 0.7;
 }
