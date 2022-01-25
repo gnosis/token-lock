@@ -34,6 +34,7 @@ const Withdraw: React.FC = () => {
       <Balance lockToken label="Locked Balance" />
       <AmountInput
         value={amount}
+        id="unlockMax"
         decimals={decimals}
         onChange={setAmount}
         unit="LGNO"

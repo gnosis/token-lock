@@ -51,6 +51,7 @@ const Deposit: React.FC = () => {
       <Balance label="Balance" />
       <AmountInput
         unit="GNO"
+        id="lockMax"
         value={amount}
         decimals={decimals}
         onChange={setAmount}
