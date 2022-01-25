@@ -1,10 +1,11 @@
 import { BigNumber } from "ethers"
 import { useMemo, useState } from "react"
-import { useAccount } from "wagmi"
+import { useConnect, useAccount } from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
+import ConnectHint from "./ConnectHint"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import { useTokenContractRead, useTokenContractWrite } from "./tokenContract"
@@ -23,6 +24,7 @@ const Deposit: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
+  const [{ data: { connected }}] = useConnect()
   const balance = balanceOf as undefined | BigNumber
 
   const contractAddress = CONTRACT_ADDRESSES[chainId]
@@ -66,7 +68,9 @@ const Deposit: React.FC = () => {
           </Button>
         }
       />
-      {needsAllowance && (
+      {!connected ? (
+        <ConnectHint />
+      ) : needsAllowance ? (
         <Button
           primary
           disabled={amount.isZero() || approvePending}
@@ -84,8 +88,7 @@ const Deposit: React.FC = () => {
           Allow locking contract to use your {tokenSymbol}
           {approvePending && <Spinner />}
         </Button>
-      )}
-      {
+      ) : (
         <Button
           primary={!needsAllowance}
           disabled={
@@ -103,7 +106,7 @@ const Deposit: React.FC = () => {
           Lock {tokenSymbol}
           {depositStatus.loading && <Spinner />}
         </Button>
-      }
+      )}
 
       <Balance lockToken label="Locked Balance" />
     </Card>

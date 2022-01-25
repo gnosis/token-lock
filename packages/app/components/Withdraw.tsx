@@ -1,9 +1,10 @@
 import { BigNumber } from "ethers"
 import { useState } from "react"
-import { useAccount } from "wagmi"
+import { useConnect, useAccount } from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
+import ConnectHint from "./ConnectHint"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import { useTokenContractRead } from "./tokenContract"
@@ -23,6 +24,7 @@ const Withdraw: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
+  const [{ data: { connected }}] = useConnect()
   const balance = balanceOf as undefined | BigNumber
 
   const [status, withdraw] = useTokenLockContractWrite("withdraw")
@@ -49,16 +51,20 @@ const Withdraw: React.FC = () => {
           </Button>
         }
       />
-      <Button
-        primary
-        disabled={!amount || amount.isZero()}
-        onClick={() => {
-          withdraw({ args: [amount] })
-        }}
-      >
-        Unlock {tokenSymbol}
-        {status.loading && <Spinner />}
-      </Button>
+      {!connected ? (
+        <ConnectHint />
+      ) : (
+        <Button
+          primary
+          disabled={!amount || amount.isZero()}
+          onClick={() => {
+            withdraw({ args: [amount] })
+          }}
+        >
+          Unlock {tokenSymbol}
+          {status.loading && <Spinner />}
+        </Button>
+      )}
 
       <Balance label="GNO Balance" />
     </Card>

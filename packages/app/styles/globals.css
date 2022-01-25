@@ -43,6 +43,10 @@ a {
   color: #001428;
 }
 
+button {
+  font-family: Averta, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
