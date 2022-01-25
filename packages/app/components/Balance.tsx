@@ -10,6 +10,7 @@ import { useTokenLockConfig } from "."
 import { BigNumber } from "ethers"
 import { formatUnits } from "ethers/lib/utils"
 import useTokenPrice from "./useTokenPrice"
+import clsx from "clsx"
 
 export const formatToken = (bigNumber: BigNumber, decimals: number) =>
   new Intl.NumberFormat("en-US", {
@@ -52,7 +53,7 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
 
   return (
     <Field {...rest}>
-      <div className={cls.wrapper}>
+      <div className={clsx(cls.wrapper, balance && lockToken && cls.hasLocked)}>
         <div className={cls.icon}>
           <Image
             src="/gno.svg"
@@ -73,7 +74,16 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
             </div>
           )}
         </div>
+        { balance && lockToken && (
+          <div className={cls.percentLockedWrapper}>
+            <div className={cls.percentLockedAmount}>
+              {100}%
+            </div>
+            <div className={cls.percentLockedTitle}>Locked</div>
+          </div>
+        )}
       </div>
+
     </Field>
   )
 }
