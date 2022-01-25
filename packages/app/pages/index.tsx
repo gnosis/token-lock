@@ -7,13 +7,13 @@ import { CHAINS, LOCKED_TOKEN_NAME, LOCKED_TOKEN_SYMBOL } from "../config"
 import {
   Connect,
   ConnectHint,
-  Deposit,
   GnosisLogo,
   LockedGnoLogo,
   LockedBalance,
   Stats,
   useTokenLockConfig,
   Withdraw,
+  DepositAndWithdraw,
 } from "../components"
 import { useEffect } from "react"
 import { useConnect, useNetwork } from "wagmi"
@@ -57,11 +57,11 @@ const Home: NextPage = () => {
         <Stats />
         <ConnectHint />
 
-        {connected && depositPeriodOngoing && <Deposit />}
+        {connected && depositPeriodOngoing && <DepositAndWithdraw />}
 
         {connected && lockPeriodOngoing && <LockedBalance />}
 
-        {connected && (depositPeriodOngoing || lockPeriodOver) && <Withdraw />}
+        {connected && lockPeriodOver && <Withdraw />}
       </main>
 
       <footer className={styles.footer}>
@@ -94,7 +94,7 @@ const Home: NextPage = () => {
           <div className={styles.divider} />
 
           <a
-            className={styles.gg} 
+            className={styles.gg}
             href="https://gnosisguild.mirror.xyz"
             target="_blank"
             rel="noopener noreferrer"

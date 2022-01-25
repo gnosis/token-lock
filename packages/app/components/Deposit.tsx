@@ -1,6 +1,5 @@
 import { BigNumber } from "ethers"
-import { formatUnits, parseUnits } from "ethers/lib/utils"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { useAccount } from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import Balance from "./Balance"
@@ -105,6 +104,8 @@ const Deposit: React.FC = () => {
           {depositStatus.loading && <Spinner />}
         </Button>
       }
+
+      <Balance lockToken label="Locked Balance" />
     </Card>
   )
 }

@@ -59,6 +59,8 @@ const Withdraw: React.FC = () => {
         Unlock {tokenSymbol}
         {status.loading && <Spinner />}
       </Button>
+
+      <Balance label="GNO Balance" />
     </Card>
   )
 }
