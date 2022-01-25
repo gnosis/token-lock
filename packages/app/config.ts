@@ -35,7 +35,7 @@ export const CHAINS: Chain[] = [
   //   },
   //   rpcUrls: ["https://rpc.xdaichain.com/"],
   //   blockExplorers: [
-  //     { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet/" },
+  //     { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet" },
   //   ],
   // },
 ]

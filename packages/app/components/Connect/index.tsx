@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
-import { useAccount, useConnect } from "wagmi"
+import copy from "copy-to-clipboard"
+import { chain, useAccount, useConnect, useNetwork } from "wagmi"
 import truncateEthAddress from "truncate-eth-address"
 import Image from "next/image"
 import Identicon from "./Identicon"
@@ -9,6 +10,7 @@ import Button from "../Button"
 import cls from "./index.module.css"
 
 const Connect: React.FC = () => {
+  const [{ data: network }] = useNetwork()
   const [{ data: accountData }, disconnect] = useAccount({
     fetchEns: true,
   })
@@ -25,6 +27,9 @@ const Connect: React.FC = () => {
 
   const avatar = accountData?.ens?.avatar
   const address = accountData?.address
+
+  const explorer =
+    network.chain?.blockExplorers && network.chain?.blockExplorers[0]
 
   return (
     <>
@@ -55,11 +60,43 @@ const Connect: React.FC = () => {
                   </div>
                   {address && (
                     <div className={cls.dropdownAddress}>
-                      {accountData?.ens?.name
-                        ? `${accountData?.ens?.name} (${truncateEthAddress(
-                            address
-                          )})`
-                        : truncateEthAddress(address)}
+                      <div className={cls.address}>
+                        {accountData?.ens?.name
+                          ? `${accountData?.ens?.name} (${truncateEthAddress(
+                              address
+                            )})`
+                          : truncateEthAddress(address)}
+                      </div>
+                      <button
+                        className={cls.iconButton}
+                        onClick={() => {
+                          copy(address)
+                        }}
+                        title="Copy to clipboard"
+                      >
+                        <Image
+                          src="/copy.svg"
+                          alt="Copy to clipboard"
+                          width={16}
+                          height={16}
+                        />
+                      </button>
+                      {explorer && (
+                        <a
+                          className={cls.iconButton}
+                          href={`${explorer.url}/address/${address}`}
+                          rel="external noreferrer"
+                          target="_blank"
+                          title={`Open in ${explorer?.name}`}
+                        >
+                          <Image
+                            src="/open.svg"
+                            alt={`Open in ${explorer?.name}`}
+                            width={16}
+                            height={16}
+                          />
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
@@ -76,7 +113,7 @@ const Connect: React.FC = () => {
                   Network
                   <div className={cls.dropdownListFlex}>
                     <div className={cls.dropdownNetworkJewel} />
-                    Rinkeby
+                    {network.chain?.name || "Unsupported network"}
                   </div>
                 </div>
                 <div className={cls.dropdownDivider} />

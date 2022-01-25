@@ -62,7 +62,7 @@
 }
 
 .dropdownDivider {
-  background-color: #E8E7E6;
+  background-color: #e8e7e6;
   height: 2px;
   margin: 4px 0;
   min-height: 2px;
@@ -83,7 +83,7 @@
 }
 
 .dropdownConnectedJewel {
-  background-color: #008C73;
+  background-color: #008c73;
   border-radius: 999px;
   height: 6px;
   margin-right: 0.25rem;
@@ -93,7 +93,7 @@
 
 .dropdownNetworkJewel {
   background-color: none;
-  border: 2px solid #E8E7E6;
+  border: 2px solid #e8e7e6;
   border-radius: 999px;
   height: 8px;
   margin-right: 0.25rem;
@@ -118,4 +118,25 @@ button.dropdownButton {
   justify-content: center;
   margin-top: 1rem;
   width: 100%;
+}
+
+.address {
+  margin-right: 0.5rem;
+}
+
+.iconButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  width: 24px;
+  height: 24px;
+  display: block;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.iconButton:hover {
+  background-color: #f0efee;
 }
