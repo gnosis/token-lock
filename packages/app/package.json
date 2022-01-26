@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier '(components|pages)/**/*.(ts|tsx)' -w"
+    "format": "prettier '(components|pages)/**/*.(ts|tsx)' -w",
+    "static": "next build && next export"
   },
   "dependencies": {
     "copy-to-clipboard": "^3.3.1",
