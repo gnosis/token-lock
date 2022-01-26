@@ -1,7 +1,7 @@
 .container {
   display: block;
-  margin: 0.5em 0;
 }
+
 .header {
   display: flex;
 }
@@ -10,8 +10,10 @@
   font-size: 0.875em;
   font-weight: 700;
   color: #5d6d74;
+  display: block;
 }
 
 .meta {
+  font-weight: 400;
   margin-left: auto;
 }

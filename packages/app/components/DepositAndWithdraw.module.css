@@ -7,17 +7,22 @@
 }
 
 .title {
-  flex-grow: 1;
-  font-weight: bold;
-  font-size: 1em;
   background: none;
+  border-bottom: 4px solid transparent !important;
   border: 0;
-  padding: 6px 0;
-  border-bottom: 4px solid transparent;
+  color: #5D6D74;
   cursor: pointer;
+  flex-grow: 1;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 6px 0;
+  transition: opacity 0.12 ease-in-out;
+}
+.title:not(.active):hover {
+  opacity: 0.7;
 }
 .title.active {
+  border-bottom: 4px solid #001428 !important;
+  color: #001428;
   cursor: default;
-
-  border-bottom: 4px solid #001428;
 }

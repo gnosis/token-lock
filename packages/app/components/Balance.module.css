@@ -4,6 +4,12 @@
   background: #f0efee;
   height: 56px;
   align-items: center;
+  position: relative;
+}
+
+.wrapper.hasLocked {
+  border-radius: 0.5em 0 0 0.5em;
+  width: calc(100% - 28px);
 }
 
 .icon {
@@ -15,3 +21,31 @@
   font-size: 0.875em;
   color: #5d6d74;
 }
+
+.percentLockedWrapper {
+  background: #ffffff;
+  border-radius: 999px;
+  border: 4px solid #D2D2D1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  aspect-ratio: 1/1;
+  transform: translateX(50%);
+}
+
+.percentLockedAmount {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.percentLockedTitle {
+  color: #5D6D74;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+

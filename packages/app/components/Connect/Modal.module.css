@@ -4,13 +4,14 @@
   border: 1px solid rgb(233, 233, 233);
   box-shadow: 0 24px 24px rgba(0,0,0,0.05);
   left: 50%;
+  max-width: 400px;
   outline: none;
   overflow: auto;
   padding: 1.33rem;
   position: absolute;
   top: 50%;
   transform: translate(-50%,-50%);
-  width: 400px;
+  width: calc(100% - 2rem);
 }
 
 .textSmall {

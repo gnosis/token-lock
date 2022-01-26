@@ -51,24 +51,31 @@ const Home: NextPage = () => {
 
       <header className={styles.header}>
         <GnosisLogo />
-        <LockedGnoLogo />
+        <LockedGnoLogo locked={lockPeriodOngoing} />
         <Connect />
       </header>
 
       <main className={styles.main}>
-        {depositPeriodOngoing && <StatsDeposit />}
+        {depositPeriodOngoing && (
+          <>
+            <StatsDeposit />
+            <DepositAndWithdraw />
+          </>
+        )}
+        
+        {lockPeriodOngoing && (
+          <>
+              <StatsLocked />
+              <LockedBalance />
+          </>
+          )}
 
-        {lockPeriodOngoing && <StatsLocked />}
-
-        {lockPeriodOver && <StatsWithdraw />}
-
-        <ConnectHint />
-
-        {connected && depositPeriodOngoing && <DepositAndWithdraw />}
-
-        {connected && lockPeriodOngoing && <LockedBalance />}
-
-        {connected && lockPeriodOver && <Withdraw />}
+        {lockPeriodOver && (
+          <>
+              <StatsWithdraw />
+              <Withdraw />
+          </>
+          )}
       </main>
 
       <footer className={styles.footer}>
