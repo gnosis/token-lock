@@ -25,7 +25,11 @@ const Deposit: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
-  const [{ data: { connected }}] = useConnect()
+  const [
+    {
+      data: { connected },
+    },
+  ] = useConnect()
   const balance = balanceOf as undefined | BigNumber
 
   const contractAddress = CONTRACT_ADDRESSES[chainId]
@@ -51,8 +55,8 @@ const Deposit: React.FC = () => {
     <Card>
       <Balance label="Balance" />
       <AmountInput
+        name="depositAmount"
         unit="GNO"
-        id="lockMax"
         className={utility.mt4}
         value={amount}
         decimals={decimals}

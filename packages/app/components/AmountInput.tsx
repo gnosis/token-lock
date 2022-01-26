@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof Field> & {
   onChange(value: BigNumber | undefined): void
   decimals: number
   unit?: ReactNode
-  id?: string
+  name?: string
 }
 
 const sanitize = (str: string) => {
@@ -24,7 +24,7 @@ const sanitize = (str: string) => {
 }
 
 const AmountInput = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, label, value, decimals, onChange, meta, unit, className }, ref) => {
+  ({ name, label, value, decimals, onChange, meta, unit, className }, ref) => {
     const [state, setState] = useState(
       value ? formatUnits(value, decimals) : ""
     )
@@ -43,13 +43,13 @@ const AmountInput = React.forwardRef<HTMLInputElement, Props>(
     }, [state, value, decimals])
 
     return (
-      <Field htmlFor={id} className={className} label={label} meta={meta}>
+      <Field htmlFor={name} className={className} label={label} meta={meta}>
         <div className={cls.wrapper}>
           <input
             pattern="^[0-9]*[.,]?[0-9]*$"
             placeholder="0.0"
             ref={ref}
-            name={id} 
+            name={name}
             className={cls.input}
             value={state}
             onChange={(ev) => {

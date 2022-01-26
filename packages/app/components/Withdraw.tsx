@@ -25,7 +25,11 @@ const Withdraw: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
-  const [{ data: { connected }}] = useConnect()
+  const [
+    {
+      data: { connected },
+    },
+  ] = useConnect()
   const balance = balanceOf as undefined | BigNumber
 
   const [status, withdraw] = useTokenLockContractWrite("withdraw")
@@ -34,8 +38,8 @@ const Withdraw: React.FC = () => {
     <Card>
       <Balance lockToken label="Locked Balance" />
       <AmountInput
+        name="withdrawAmount"
         value={amount}
-        id="unlockMax"
         className={utility.mt4}
         decimals={decimals}
         onChange={setAmount}
