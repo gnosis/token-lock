@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { useAccount, useConnect } from "wagmi"
 import Blockies from "react-blockies"
 import clsx from "clsx"
@@ -23,7 +22,7 @@ const Identicon: React.FC<Props> = ({ large }) => {
       {address ? (
         <Blockies seed={address} size={12} scale={large ? 5 : 3} />
       ) : (
-        <Image
+        <img
           src="/identicon.svg"
           alt="Identicon keyhole"
           height={large ? 24 : 16}

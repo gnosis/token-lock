@@ -1,7 +1,6 @@
 import { useConnect } from "wagmi"
 import Modal from "react-modal"
 import cls from "./Modal.module.css"
-import Image from "next/image"
 
 interface Props {
   onRequestClose(): void
@@ -11,9 +10,7 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
 
   return (
     <Modal isOpen onRequestClose={onRequestClose} className={cls.container}>
-      <h2>
-        Select a Wallet
-      </h2>
+      <h2>Select a Wallet</h2>
       <p className={cls.textSmall}>
         Please select a wallet to connect to lock your GNO.
       </p>
@@ -29,7 +26,7 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
             }
           }}
         >
-          <Image
+          <img
             src={`/${connector.name.split(" ")[0]}.svg`}
             alt={`${connector.name}`}
             height={32}

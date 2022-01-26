@@ -1,7 +1,6 @@
 import type { NextPage } from "next"
 import ReactModal from "react-modal"
 import Head from "next/head"
-import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { CHAINS } from "../config"
 import {
@@ -87,7 +86,7 @@ const Home: NextPage = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
+            <img
               src="/discord.svg"
               alt="Gnosis Guild Discord"
               width={16}
@@ -99,7 +98,7 @@ const Home: NextPage = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Image
+            <img
               src="/twitter.svg"
               alt="Gnosis Guild Twitter"
               width={16}
@@ -117,7 +116,7 @@ const Home: NextPage = () => {
           >
             Built by Gnosis Guild{" "}
             <span className={styles.logo}>
-              <Image
+              <img
                 src="/gnosisguild.png"
                 alt="Gnosis Guild"
                 width={32}

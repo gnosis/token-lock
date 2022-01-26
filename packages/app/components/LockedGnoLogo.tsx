@@ -1,13 +1,12 @@
-import Image from "next/image"
 import cls from "./LockedGnoLogo.module.css"
 
 type Props = {
   locked?: boolean
 }
 
-const LockedGnoLogo: React.FC<Props> = ({locked}) => (
+const LockedGnoLogo: React.FC<Props> = ({ locked }) => (
   <div className={cls.container}>
-    <Image
+    <img
       className={cls.logo}
       src={locked ? `/lock.svg` : `/unlocked.svg`}
       alt="Locked GNO"

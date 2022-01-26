@@ -3,7 +3,6 @@ import useOnClickOutside from "use-onclickoutside"
 import copy from "copy-to-clipboard"
 import { chain, useAccount, useConnect, useNetwork } from "wagmi"
 import truncateEthAddress from "truncate-eth-address"
-import Image from "next/image"
 import Identicon from "./Identicon"
 import Modal from "./Modal"
 import Button from "../Button"
@@ -38,7 +37,7 @@ const Connect: React.FC = () => {
         <button className={cls.button} onClick={() => setShowDropdown(true)}>
           <div className={cls.identiconWrapper}>
             <Identicon />
-            <Image
+            <img
               className={cls.arrow}
               alt="Identicon arrow"
               src="/arrow.svg"
@@ -72,7 +71,7 @@ const Connect: React.FC = () => {
                         }}
                         title="Copy to clipboard"
                       >
-                        <Image
+                        <img
                           src="/copy.svg"
                           alt="Copy to clipboard"
                           width={16}
@@ -87,7 +86,7 @@ const Connect: React.FC = () => {
                           target="_blank"
                           title={`Open in ${explorer?.name}`}
                         >
-                          <Image
+                          <img
                             src="/open.svg"
                             alt={`Open in ${explorer?.name}`}
                             width={16}

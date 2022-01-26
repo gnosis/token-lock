@@ -1,5 +1,4 @@
 import { ComponentProps } from "react"
-import Image from "next/image"
 
 import Field from "./Field"
 import cls from "./Balance.module.css"
@@ -68,7 +67,7 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
     <Field {...rest}>
       <div className={clsx(cls.wrapper, balance && lockToken && cls.hasLocked)}>
         <div className={cls.icon}>
-          <Image
+          <img
             src="/gno.svg"
             width={32}
             height={32}
