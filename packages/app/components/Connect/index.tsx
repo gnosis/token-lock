@@ -25,7 +25,6 @@ const Connect: React.FC = () => {
   const ref = useRef(null)
   useOnClickOutside(ref, () => setShowDropdown(false))
 
-  const avatar = accountData?.ens?.avatar
   const address = accountData?.address
 
   const explorer =
@@ -38,7 +37,7 @@ const Connect: React.FC = () => {
       <div className={cls.container}>
         <button className={cls.button} onClick={() => setShowDropdown(true)}>
           <div className={cls.identiconWrapper}>
-            <Identicon arrow />
+            <Identicon />
             <Image
               className={cls.arrow}
               alt="Identicon arrow"
@@ -55,8 +54,7 @@ const Connect: React.FC = () => {
               <>
                 <div className={cls.dropdownAccountDetails}>
                   <div className={cls.row}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    {avatar && <img src={avatar} alt="ENS Avatar" />}
+                    <Identicon large />
                   </div>
                   {address && (
                     <div className={cls.dropdownAddress}>

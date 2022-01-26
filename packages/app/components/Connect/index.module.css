@@ -20,6 +20,7 @@
 .identiconWrapper {
   align-items: center;
   display: flex;
+  gap: 0.5rem;
 }
 
 .arrow {
@@ -41,6 +42,8 @@
 .row {
   padding-left: 1rem;
   padding-right: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
 .dropdownAccountDetails {
@@ -57,7 +60,7 @@
   font-size: 11px;
   justify-content: center;
   line-height: 1;
-  margin: 0 auto;
+  margin: 0.5rem auto 0;
   padding: 0.5rem;
 }
 

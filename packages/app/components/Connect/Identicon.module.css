@@ -1,6 +1,6 @@
 .identicon {
   align-items: center;
-  background: #E8E7E6;
+  background: #e8e7e6;
   border: none;
   border-radius: 999px;
   display: flex;
@@ -10,18 +10,19 @@
   transition: opacity 0.12s ease-in-out;
   width: 36px;
 }
-
-.identicon.isLarge {
-  height: 64px;
-  width: 64px;
+.identicon img,
+.identicon canvas {
+  border-radius: 999px;
+  overlow: hidden;
 }
 
-.identicon.hasArrow {
-  margin-right: 0.5rem;
+.identicon.isLarge {
+  height: 60px;
+  width: 60px;
 }
 
 .statusJewel {
-  background: #F02525;
+  background: #f02525;
   border: 2px solid white;
   border-radius: 999px;
   bottom: 0;
@@ -37,7 +38,6 @@
   width: 1rem;
 }
 
-
 .statusJewel.isConnected {
-  background: #008C73;
+  background: #008c73;
 }
