@@ -12,6 +12,9 @@ import { formatUnits } from "ethers/lib/utils"
 import useTokenPrice from "./useTokenPrice"
 import clsx from "clsx"
 
+const CIRCLE_RADIUS = 26
+const CIRCUMFERENCE = CIRCLE_RADIUS * 2 * Math.PI
+
 export const formatToken = (bigNumber: BigNumber, decimals: number) =>
   new Intl.NumberFormat("en-US", {
     maximumSignificantDigits: 6,
@@ -29,23 +32,33 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const { decimals, tokenName, lockTokenName, tokenSymbol, lockTokenSymbol } =
     useTokenLockConfig()
   const [{ data: accountData }] = useAccount()
-  const [{ data: balanceToken }] = useTokenContractRead("balanceOf", {
+  const [{ data: balanceTokenData }] = useTokenContractRead("balanceOf", {
     args: accountData?.address,
     skip: !accountData?.address || lockToken,
     watch: true,
   })
-  const [{ data: balanceLockToken }] = useTokenLockContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address || !lockToken,
-    watch: true,
-  })
+  const [{ data: balanceLockTokenData }] = useTokenLockContractRead(
+    "balanceOf",
+    {
+      args: accountData?.address,
+      skip: !accountData?.address || !lockToken,
+      watch: true,
+    }
+  )
+  const balanceToken = balanceTokenData as BigNumber | undefined
+  const balanceLockToken = balanceLockTokenData as BigNumber | undefined
+
+  const percentLocked =
+    balanceLockToken && balanceToken && balanceLockToken.gt(0)
+      ? balanceLockToken
+          .mul(100)
+          .div(balanceLockToken.add(balanceToken))
+          .toNumber()
+      : 0
+
+  const balance = lockToken ? balanceLockToken : balanceToken
 
   const tokenPrice = useTokenPrice()
-
-  const balance = (lockToken ? balanceLockToken : balanceToken) as
-    | BigNumber
-    | undefined
-
   const balanceInUsd =
     tokenPrice &&
     balance &&
@@ -74,16 +87,35 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
             </div>
           )}
         </div>
-        { balance && lockToken && (
+        {balance && lockToken && (
           <div className={cls.percentLockedWrapper}>
-            <div className={cls.percentLockedAmount}>
-              {100}%
-            </div>
+            <svg
+              className={cls.percentLockedIndicator}
+              viewBox="0 0 56 56"
+              width={56}
+              height={56}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                className={cls.percentLockedCircle}
+                stroke="#001428"
+                strokeWidth="4"
+                fill="transparent"
+                r={CIRCLE_RADIUS}
+                cx="28"
+                cy="28"
+                style={{
+                  strokeDasharray: `${CIRCUMFERENCE} ${CIRCUMFERENCE}`,
+                  strokeDashoffset:
+                    CIRCUMFERENCE - (percentLocked / 100) * CIRCUMFERENCE,
+                }}
+              />
+            </svg>
+            <div className={cls.percentLockedAmount}>{percentLocked}%</div>
             <div className={cls.percentLockedTitle}>Locked</div>
           </div>
         )}
       </div>
-
     </Field>
   )
 }
