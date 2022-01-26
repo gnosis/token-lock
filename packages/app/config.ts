@@ -19,9 +19,10 @@ export const COINGECKO_TOKEN_ID = "gnosis"
 
 // The first item will be used as the default chain
 export const CHAINS: Chain[] = [
-  ...(process.env.NODE_ENV === "development"
-    ? [addInfuraProjectId(chain.rinkeby)]
-    : []),
+  // ...(process.env.NODE_ENV === "development"
+  //   ? [addInfuraProjectId(chain.rinkeby)]
+  //   : []),
+  addInfuraProjectId(chain.rinkeby),
 
   // addInfuraProjectId(chain.mainnet),
 
