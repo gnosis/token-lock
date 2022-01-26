@@ -4,7 +4,6 @@ import { useConnect, useAccount } from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
-import ConnectHint from "./ConnectHint"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import utility from "../styles/utility.module.css"
@@ -58,20 +57,17 @@ const Withdraw: React.FC = () => {
           </Button>
         }
       />
-      {!connected ? (
-        <ConnectHint />
-      ) : (
-        <Button
-          primary
-          disabled={!amount || amount.isZero()}
-          onClick={() => {
-            withdraw({ args: [amount] })
-          }}
-        >
-          Unlock {tokenSymbol}
-          {status.loading && <Spinner />}
-        </Button>
-      )}
+
+      <Button
+        primary
+        disabled={!amount || amount.isZero()}
+        onClick={() => {
+          withdraw({ args: [amount] })
+        }}
+      >
+        Unlock {tokenSymbol}
+        {status.loading && <Spinner />}
+      </Button>
 
       <Balance className={utility.mt8} label="GNO Balance" />
     </Card>

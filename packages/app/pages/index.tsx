@@ -59,23 +59,25 @@ const Home: NextPage = () => {
         {depositPeriodOngoing && (
           <>
             <StatsDeposit />
-            <DepositAndWithdraw />
+            {connected && <DepositAndWithdraw />}
           </>
         )}
-        
+
         {lockPeriodOngoing && (
           <>
-              <StatsLocked />
-              <LockedBalance />
+            <StatsLocked />
+            {connected && <LockedBalance />}
           </>
-          )}
+        )}
 
         {lockPeriodOver && (
           <>
-              <StatsWithdraw />
-              <Withdraw />
+            <StatsWithdraw />
+            {connected && <Withdraw />}
           </>
-          )}
+        )}
+
+        {!connected && <ConnectHint />}
       </main>
 
       <footer className={styles.footer}>

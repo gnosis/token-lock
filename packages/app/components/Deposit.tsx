@@ -75,9 +75,7 @@ const Deposit: React.FC = () => {
           </Button>
         }
       />
-      {!connected ? (
-        <ConnectHint />
-      ) : needsAllowance ? (
+      {needsAllowance ? (
         <Button
           primary
           disabled={amount.isZero() || approvePending}

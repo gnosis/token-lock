@@ -19,7 +19,7 @@ const ConnectHint: React.FC = () => {
   }
 
   return (
-    <>
+    <Card>
       {!connectedChainId && (
         <Button primary onClick={() => setShowModal(true)}>
           Connect
@@ -36,7 +36,7 @@ const ConnectHint: React.FC = () => {
       )}
 
       {showModal && <Modal onRequestClose={() => setShowModal(false)} />}
-    </>
+    </Card>
   )
 }
 
