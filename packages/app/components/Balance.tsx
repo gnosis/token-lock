@@ -34,14 +34,14 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const [{ data: accountData }] = useAccount()
   const [{ data: balanceTokenData }] = useTokenContractRead("balanceOf", {
     args: accountData?.address,
-    skip: !accountData?.address || lockToken,
+    skip: !accountData?.address,
     watch: true,
   })
   const [{ data: balanceLockTokenData }] = useTokenLockContractRead(
     "balanceOf",
     {
       args: accountData?.address,
-      skip: !accountData?.address || !lockToken,
+      skip: !accountData?.address,
       watch: true,
     }
   )
