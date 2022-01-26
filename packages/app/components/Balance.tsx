@@ -111,8 +111,12 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
                 }}
               />
             </svg>
-            <div className={cls.percentLockedAmount}>{percentLocked}%</div>
-            <div className={cls.percentLockedTitle}>Locked</div>
+            {balanceToken && balanceLockToken && (
+              <>
+                <div className={cls.percentLockedAmount}>{percentLocked}%</div>
+                <div className={cls.percentLockedTitle}>Locked</div>
+              </>
+            )}
           </div>
         )}
       </div>
