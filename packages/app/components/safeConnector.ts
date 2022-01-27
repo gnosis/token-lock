@@ -5,7 +5,7 @@ import { providers } from "ethers"
 
 let sdk: SafeAppsSDK | undefined
 let safe: SafeInfo | undefined
-let safePromise: Promise<SafeInfo | undefined>
+export let safePromise: Promise<SafeInfo | undefined>
 
 const inIframe = () => {
   if (typeof window === "undefined") return false
@@ -17,12 +17,16 @@ const inIframe = () => {
 }
 
 const tryToGetSafeInfo = async () => {
-  if (!inIframe()) return
+  if (!inIframe()) {
+    safePromise = Promise.resolve(undefined)
+    return
+  }
+
   sdk = new SafeAppsSDK()
   safePromise = Promise.race([
     sdk.safe.getInfo(),
     // Timeout needed as the returned promise won't resolve if we're not in a Gnosis Safe context
-    new Promise<undefined>((resolve) => setTimeout(resolve, 200)),
+    new Promise<undefined>((resolve) => setTimeout(resolve, 100)),
   ])
   safe = await safePromise
 }
@@ -98,6 +102,8 @@ class GnosisSafeConnector extends Connector {
   }
 
   async isAuthorized() {
+    await safePromise
+
     return !!safe
   }
 
