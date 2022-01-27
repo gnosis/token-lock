@@ -15,7 +15,7 @@ const Connect: React.FC = () => {
   })
   const [
     {
-      data: { connected },
+      data: { connected, connector },
     },
   ] = useConnect()
 
@@ -113,19 +113,23 @@ const Connect: React.FC = () => {
                     {network.chain?.name || "Unsupported network"}
                   </div>
                 </div>
-                <div className={cls.dropdownDivider} />
-                <div className={cls.row}>
-                  <Button
-                    className={cls.dropdownButton}
-                    primary
-                    onClick={() => {
-                      disconnect()
-                      setShowDropdown(false)
-                    }}
-                  >
-                    Disconnect
-                  </Button>
-                </div>
+                {connector?.id !== "gnosisSafe" && (
+                  <>
+                    <div className={cls.dropdownDivider} />
+                    <div className={cls.row}>
+                      <Button
+                        className={cls.dropdownButton}
+                        primary
+                        onClick={() => {
+                          disconnect()
+                          setShowDropdown(false)
+                        }}
+                      >
+                        Disconnect
+                      </Button>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <div className={cls.wrapper}>

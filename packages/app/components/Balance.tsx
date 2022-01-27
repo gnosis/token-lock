@@ -5,11 +5,11 @@ import cls from "./Balance.module.css"
 import { useTokenContractRead } from "./tokenContract"
 import { useAccount } from "wagmi"
 import { useTokenLockContractRead } from "./tokenLockContract"
-import { useTokenLockConfig } from "."
 import { BigNumber } from "ethers"
 import { formatUnits } from "ethers/lib/utils"
 import useTokenPrice from "./useTokenPrice"
 import clsx from "clsx"
+import useTokenLockConfig from "./useTokenLockConfig"
 
 const CIRCLE_RADIUS = 26
 const CIRCUMFERENCE = CIRCLE_RADIUS * 2 * Math.PI
@@ -44,8 +44,12 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
       watch: true,
     }
   )
+  const [{ data: totalSupplyData }] = useTokenLockContractRead("totalSupply", {
+    watch: true,
+  })
   const balanceToken = balanceTokenData as BigNumber | undefined
   const balanceLockToken = balanceLockTokenData as BigNumber | undefined
+  const totalSupply = totalSupplyData as BigNumber | undefined
 
   const percentLocked =
     balanceLockToken && balanceToken && balanceLockToken.gt(0)
@@ -53,6 +57,11 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
           .mul(100)
           .div(balanceLockToken.add(balanceToken))
           .toNumber()
+      : 0
+
+  const percentOfTotal =
+    balanceLockToken && totalSupply && totalSupply.gt(0)
+      ? balanceLockToken.mul(100).mul(1e4).div(totalSupply).toNumber() / 1e4 // precision to 4 decimal places
       : 0
 
   const balance = lockToken ? balanceLockToken : balanceToken
@@ -64,7 +73,7 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
     parseFloat(formatUnits(balance, decimals)) * tokenPrice
 
   return (
-    <Field {...rest}>
+    <Field {...rest} meta={`${percentOfTotal}% of total GNO locked`}>
       <div className={clsx(cls.wrapper, balance && lockToken && cls.hasLocked)}>
         <div className={cls.icon}>
           <img
