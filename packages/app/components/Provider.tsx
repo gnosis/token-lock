@@ -4,6 +4,7 @@ import { InjectedConnector, Provider as WagmiProvider } from "wagmi"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 import { CHAINS, INFURA_ID, LOCKED_TOKEN_NAME } from "../config"
+import GnosisSafeConnector from "./safeConnector"
 
 export const provider = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
@@ -15,6 +16,7 @@ const connectors = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
     CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
   return [
+    new GnosisSafeConnector({ chains: CHAINS }),
     new InjectedConnector({ chains: CHAINS }),
     new WalletConnectConnector({
       options: {
