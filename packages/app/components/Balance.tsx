@@ -5,11 +5,11 @@ import cls from "./Balance.module.css"
 import { useTokenContractRead } from "./tokenContract"
 import { useAccount } from "wagmi"
 import { useTokenLockContractRead } from "./tokenLockContract"
-import { useTokenLockConfig } from "."
 import { BigNumber } from "ethers"
 import { formatUnits } from "ethers/lib/utils"
 import useTokenPrice from "./useTokenPrice"
 import clsx from "clsx"
+import useTokenLockConfig from "./useTokenLockConfig"
 
 const CIRCLE_RADIUS = 26
 const CIRCUMFERENCE = CIRCLE_RADIUS * 2 * Math.PI
