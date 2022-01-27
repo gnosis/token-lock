@@ -10,13 +10,7 @@ import {
   Signer,
 } from "ethers"
 import { Interface } from "ethers/lib/utils"
-import {
-  useContract,
-  useContractRead,
-  useContractWrite,
-  useNetwork,
-  useProvider,
-} from "wagmi"
+import { useContract, useContractRead, useContractWrite } from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import useChainId from "./useChainId"
 
@@ -39,12 +33,10 @@ export const useTokenLockContractRead = (
   config?: Parameters<typeof useContractRead>[2]
 ) => {
   const chainId = useChainId()
-  // const provider = useProvider();
   return useContractRead<TokenLockContract>(
     {
       addressOrName: CONTRACT_ADDRESSES[chainId],
       contractInterface,
-      // signerOrProvider: provider,
     },
     functionName,
     config
@@ -56,12 +48,10 @@ export const useTokenLockContractWrite = (
   config?: Parameters<typeof useContractWrite>[2]
 ) => {
   const chainId = useChainId()
-  // const provider = useProvider();
   return useContractWrite<TokenLockContract>(
     {
       addressOrName: CONTRACT_ADDRESSES[chainId],
       contractInterface,
-      // signerOrProvider: provider,
     },
     functionName,
     config

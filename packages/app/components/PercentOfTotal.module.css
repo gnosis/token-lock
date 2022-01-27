@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  gap: 4px;
+}
+
+.infoBubble {
+  position: relative;
+}
+.infoBubble img {
+  with: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.dropdown {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+  padding: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  width: 280px;
+  display: none;
+  z-index: 99;
+}
+.infoBubble:hover .dropdown {
+  display: block;
+}
