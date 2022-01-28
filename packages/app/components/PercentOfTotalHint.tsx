@@ -8,7 +8,7 @@ const SUPPLY_OF_COW = 50000000
 
 const formatAmount = (amount: number) =>
   new Intl.NumberFormat("en-US", {
-    maximumSignificantDigits: 6,
+    maximumSignificantDigits: 4,
   }).format(amount)
 
 const PercentOfTotalHint: React.FC<{ balance?: BigNumber }> = ({ balance }) => {
@@ -17,7 +17,7 @@ const PercentOfTotalHint: React.FC<{ balance?: BigNumber }> = ({ balance }) => {
 
   const percent =
     balance && totalLocked && totalLocked.gt(0)
-      ? balance.mul(100).mul(1e4).div(totalLocked).toNumber() / 1e4 // precision to 4 decimal places
+      ? balance.mul(100).mul(1e2).div(totalLocked).toNumber() / 1e2 // precision to 2 decimal places
       : 0
 
   if (percent === 0) return null
