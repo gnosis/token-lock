@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  gap: 4px;
+}
+
+.infoBubble {
+  position: relative;
+}
+.infoBubble img {
+  width: 16px;
+  height: 16px;
+  cursor: help;
+}
+
+.dropdown {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+  padding: 0 0.5rem;
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  width: 360px;
+  display: none;
+  z-index: 99;
+}
+.infoBubble:hover .dropdown {
+  display: block;
+}
+
+.breakdown > div {
+  margin-bottom: 0.5rem;
+}
+.breakdown dd {
+  font-weight: bold;
+  margin-left: 2.5rem;
+}
+
+.total {
+  border-top: 1px solid #001428;
+  padding-top: 4px;
+}
