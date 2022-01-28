@@ -23,7 +23,7 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     }
   )
   const [{ data: gnoStakedData }] = useTokenContractRead("balanceOf", {
-    args: "0x722fc4DAABFEaff81b97894fC623f91814a1BF68",
+    args: "0x722fc4DAABFEaff81b97894fC623f91814a1BF68", // mGNO contract
     chainId: 4, // 100
     watch: true,
   })

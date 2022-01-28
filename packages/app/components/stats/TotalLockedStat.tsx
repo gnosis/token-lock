@@ -3,21 +3,16 @@ import { formatToken } from "../Balance"
 import cls from "./Stats.module.css"
 import useTokenLockConfig from "../useTokenLockConfig"
 import { useTokenLockContractRead } from "../tokenLockContract"
+import useTotalLocked from "../useTotalLocked"
 
 const TotalLockedStat: React.FC = () => {
   const config = useTokenLockConfig()
-  const [{ data: totalSupply }] = useTokenLockContractRead("totalSupply", {
-    watch: true,
-  })
+  const [totalLocked] = useTotalLocked()
 
   return (
     <div className={`${cls.item} ${cls.fullWidth}`}>
       <dt>Total GNO Locked</dt>
-      <dd>
-        {totalSupply
-          ? formatToken(totalSupply as unknown as BigNumber, config.decimals)
-          : "…"}
-      </dd>
+      <dd>{totalLocked ? formatToken(totalLocked, config.decimals) : "…"}</dd>
     </div>
   )
 }

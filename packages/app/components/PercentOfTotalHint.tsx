@@ -30,34 +30,47 @@ const PercentOfTotalHint: React.FC<{ balance?: BigNumber }> = ({ balance }) => {
         <div className={cls.dropdown}>
           <p>
             Your current share of the total locked GNO would give you a grant of
-            ~{formatAmount((percent / 100) * SUPPLY_OF_COW)} $COW. This value
-            will go down as more people lock their GNO.
+            <strong>
+              ~{formatAmount((percent / 100) * SUPPLY_OF_COW)} $COW.
+            </strong>{" "}
+            This value will go down as more people lock their GNO.
           </p>
           <p>
-            Note: 50M $COW are distributed to people committing to hold their
-            GNO for the long-term. The following balances are taken into
-            account:
+            A total of 50M $COW are distributed to people committing to hold
+            their GNO long-term. The following balances are taken into account:
           </p>
-          <ul>
-            <li>
-              Total GNO locked on Mainnet:{" "}
-              {breakdown.mainnet
-                ? formatUnits(breakdown.mainnet, config.decimals)
-                : "…"}
-            </li>
-            <li>
-              Total GNO locked on Gnosis Chain:{" "}
-              {breakdown.gnosisChain
-                ? formatUnits(breakdown.gnosisChain, config.decimals)
-                : "…"}
-            </li>
-            <li>
-              Total GNO staked by Gnosis Beacon Chain validators:{" "}
-              {breakdown.staked
-                ? formatUnits(breakdown.staked, config.decimals)
-                : "…"}
-            </li>
-          </ul>
+          <dl className={cls.breakdown}>
+            <div>
+              <dt>GNO locked on Mainnet:</dt>
+              <dd>
+                {breakdown.mainnet
+                  ? formatUnits(breakdown.mainnet, config.decimals)
+                  : "…"}
+              </dd>
+            </div>
+            <div>
+              <dt>GNO locked on Gnosis Chain:</dt>
+              <dd>
+                {breakdown.gnosisChain
+                  ? formatUnits(breakdown.gnosisChain, config.decimals)
+                  : "…"}
+              </dd>
+            </div>
+            <div>
+              <dt>GNO staked by Gnosis Beacon Chain validators:</dt>
+              <dd>
+                {breakdown.staked
+                  ? formatUnits(breakdown.staked, config.decimals)
+                  : "…"}
+              </dd>
+            </div>
+            <div className={cls.total}>
+              <dt>Total locked GNO:</dt>
+              <dd>
+                {totalLocked ? formatUnits(totalLocked, config.decimals) : "…"}
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
     </div>
