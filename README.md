@@ -112,6 +112,16 @@ cd packages/app
 yarn install
 yarn dev
 ```
+  
+#### Build for production
+  
+```
+cd packages/app
+yarn install
+yarn static
+```
+  
+The output is written to packages/app/out
 
 ---
 
