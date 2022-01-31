@@ -18,3 +18,8 @@
 .unit {
   padding: 0 16px;
 }
+
+.errorText {
+  color: #F02525;
+  font-size: 12px;
+}
