@@ -81,6 +81,14 @@ yarn run upgrade rinkeby --proxy <PROXY_CONTRACT>
 
 The contracts have been developed with [Solidity 0.8.6](https://github.com/ethereum/solidity/releases/tag/v0.8.6). This version of Solidity made all arithmetic checked by default, therefore eliminating the need for explicit overflow or underflow (or other arithmetic) checks. This version of solidity was chosen as it allows to easily cast bytes to bytes4 and bytes32.
 
+### Audits
+
+[TokenLock.sol](./packages/contracts/contracts/TokenLock.sol) has been audited by the [G0 group](https://github.com/g0-group).
+
+All issues and notes of the audit have been addressed in commit [f974d1e8643c30d07dc005d10f9389085e74556d](https://github.com/gnosis/token-lock/commit/f974d1e8643c30d07dc005d10f9389085e74556d).
+
+The audit results are available as a pdf [in this repo](./packages/contracts/audits/GnosisTokenLockJan2022.pdf).
+
 ### Security and Liability
 
 All contracts are WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
