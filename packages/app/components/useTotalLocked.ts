@@ -10,21 +10,21 @@ interface Breakdown {
 
 const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
   const [{ data: gnoLockedOnMainnetData }] = useTokenContractRead("balanceOf", {
-    args: CONTRACT_ADDRESSES[4], // 1
-    chainId: 4, // 1
+    args: CONTRACT_ADDRESSES[1],
+    chainId: 1,
     watch: true,
   })
   const [{ data: gnoLockedOnGnosisChainData }] = useTokenContractRead(
     "balanceOf",
     {
-      args: CONTRACT_ADDRESSES[4], // 100
-      chainId: 4, // 100
+      args: CONTRACT_ADDRESSES[100],
+      chainId: 100,
       watch: true,
     }
   )
   const [{ data: gnoStakedData }] = useTokenContractRead("balanceOf", {
     args: "0x722fc4DAABFEaff81b97894fC623f91814a1BF68", // mGNO contract
-    chainId: 4, // 100
+    chainId: 100,
     watch: true,
   })
 

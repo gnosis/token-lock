@@ -19,12 +19,11 @@ export const COINGECKO_TOKEN_ID = "gnosis"
 
 // The first item will be used as the default chain
 export const CHAINS: Chain[] = [
-  // ...(process.env.NODE_ENV === "development"
-  //   ? [addInfuraProjectId(chain.rinkeby)]
-  //   : []),
-  addInfuraProjectId(chain.rinkeby),
+  ...(process.env.NODE_ENV === "development"
+    ? [addInfuraProjectId(chain.rinkeby)]
+    : []),
 
-  // addInfuraProjectId(chain.mainnet),
+  addInfuraProjectId(chain.mainnet),
 
   {
     id: 100,
@@ -42,6 +41,9 @@ export const CHAINS: Chain[] = [
 ]
 
 export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
+  1: "0x4f8AD938eBA0CD19155a835f617317a6E788c868",
+  100: "0xd4Ca39f78Bf14BfaB75226AC833b1858dB16f9a1",
+
   4: "0x01FD5975E40D16838a7213e2fdfFbBBA4477c14d", // deposit period ongoing
   // 4: "0x88c6501d5C2475F5a0343847A12cEA0090458013", // lock period ongoing
   // 4: "0xF7a579Cc9c27488f13C1F16036a65810fa1Ca3CC", // lock period over
