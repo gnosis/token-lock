@@ -5,7 +5,7 @@ export const LOCKED_TOKEN_SYMBOL = "GNO"
 export const CLAIM_TOKEN_NAME = "Locked Gnosis"
 export const CLAIM_TOKEN_SYMBOL = "LGNO"
 
-export const INFURA_ID = "e301e57e9a51407eb39df231874e0563"
+export const INFURA_ID = "a63b6fb491fa4ad3827b824218e5aa68"
 
 const addInfuraProjectId = (chain: Chain) => ({
   ...chain,
