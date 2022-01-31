@@ -1,15 +1,21 @@
 .container {
   background: #ffffff;
   border-radius: 8px;
-  border-top: 4px solid #F02525;
+  border-top: 4px solid #f02525;
   bottom: 80px;
-  box-shadow: 0 24px 24px rgba(0,0,0,0.05);
+  box-shadow: 0 24px 24px rgba(0, 0, 0, 0.05);
   color: #5d6d74;
   left: 1em;
   padding: 2rem;
-  position: absolute;
+  position: fixed;
   right: 1em;
-  z-index: 99;
+  z-index: 999;
+}
+
+.close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
 }
 
 @media screen and (min-width: 650px) {

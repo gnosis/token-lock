@@ -1,13 +1,16 @@
+import IconButton from "./IconButton"
 import cls from "./Notice.module.css"
 
-const Notice = () => (
+const Notice: React.FC<{ onDismiss: () => void }> = ({
+  children,
+  onDismiss,
+}) => (
   <div className={cls.container}>
-    <div className={cls.noticeTitle}>
-      There was an error. Please try again.
+    <div className={cls.close}>
+      <IconButton icon="close" onClick={onDismiss} title="Hide message" />
     </div>
-    <div className={cls.errorText}>
-      ERROR_INVALID_PARAMETER REG_MULTI_SZ: 5000-6000 PortsInternetAvailable: REG_SZ: Y UseInternetPorts: REG_SZ: Y
-    </div>
+    <div className={cls.noticeTitle}>There was an error. Please try again.</div>
+    <div className={cls.errorText}>{children}</div>
   </div>
 )
 

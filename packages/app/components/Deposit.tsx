@@ -12,9 +12,12 @@ import { useTokenLockContractWrite } from "./tokenLockContract"
 import useChainId from "./useChainId"
 import useTokenLockConfig from "./useTokenLockConfig"
 import utility from "../styles/utility.module.css"
+import Notice from "./Notice"
 
 const Deposit: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
+
+  const [dismissedError, dismissError] = useState<Error | undefined>(undefined)
 
   const chainId = useChainId()
   const { decimals, tokenSymbol } = useTokenLockConfig()
@@ -49,6 +52,8 @@ const Deposit: React.FC = () => {
 
   const needsAllowance =
     amount && amount.gt(0) && allowance && allowance.lt(amount)
+
+  const error = approveStatus.error || depositStatus.error
 
   return (
     <Card>
@@ -117,6 +122,16 @@ const Deposit: React.FC = () => {
       )}
 
       <Balance className={utility.mt8} lockToken label="Locked Balance" />
+
+      {error && dismissedError !== error && (
+        <Notice
+          onDismiss={() => {
+            dismissError(error)
+          }}
+        >
+          {error.message}
+        </Notice>
+      )}
     </Card>
   )
 }

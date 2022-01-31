@@ -7,6 +7,7 @@ import Identicon from "./Identicon"
 import Modal from "./Modal"
 import Button from "../Button"
 import cls from "./index.module.css"
+import IconButton, { IconLinkButton } from "../IconButton"
 
 const Connect: React.FC = () => {
   const [{ data: network }] = useNetwork()
@@ -64,35 +65,20 @@ const Connect: React.FC = () => {
                             )})`
                           : truncateEthAddress(address)}
                       </div>
-                      <button
-                        className={cls.iconButton}
+                      <IconButton
                         onClick={() => {
                           copy(address)
                         }}
+                        icon="copy"
                         title="Copy to clipboard"
-                      >
-                        <img
-                          src="/copy.svg"
-                          alt="Copy to clipboard"
-                          width={16}
-                          height={16}
-                        />
-                      </button>
+                      />
                       {explorer && (
-                        <a
-                          className={cls.iconButton}
+                        <IconLinkButton
+                          icon="open"
                           href={`${explorer.url}/address/${address}`}
-                          rel="external noreferrer"
-                          target="_blank"
+                          external
                           title={`Open in ${explorer?.name}`}
-                        >
-                          <img
-                            src="/open.svg"
-                            alt={`Open in ${explorer?.name}`}
-                            width={16}
-                            height={16}
-                          />
-                        </a>
+                        />
                       )}
                     </div>
                   )}

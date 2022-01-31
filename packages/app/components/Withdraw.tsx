@@ -13,9 +13,12 @@ import {
   useTokenLockContractWrite,
 } from "./tokenLockContract"
 import useTokenLockConfig from "./useTokenLockConfig"
+import Notice from "./Notice"
 
 const Withdraw: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
+
+  const [dismissedError, dismissError] = useState<Error | undefined>(undefined)
 
   const { decimals, tokenSymbol } = useTokenLockConfig()
   const [{ data: accountData }] = useAccount()
@@ -71,6 +74,16 @@ const Withdraw: React.FC = () => {
       </Button>
 
       <Balance className={utility.mt8} label="GNO Balance" />
+
+      {status.error && dismissedError !== status.error && (
+        <Notice
+          onDismiss={() => {
+            dismissError(status.error)
+          }}
+        >
+          {status.error.message}
+        </Notice>
+      )}
     </Card>
   )
 }

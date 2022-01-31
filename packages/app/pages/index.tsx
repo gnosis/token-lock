@@ -9,7 +9,6 @@ import {
   GnosisLogo,
   LockedGnoLogo,
   LockedBalance,
-  Notice,
   useTokenLockConfig,
   Withdraw,
   DepositAndWithdraw,
@@ -78,8 +77,6 @@ const Home: NextPage = () => {
         )}
 
         {!connected && <ConnectHint />}
-
-        <Notice />
       </main>
 
       <footer className={styles.footer}>
