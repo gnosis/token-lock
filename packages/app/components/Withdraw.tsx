@@ -39,6 +39,7 @@ const Withdraw: React.FC = () => {
       <AmountInput
         name="withdrawAmount"
         value={amount}
+        max={balance}
         className={utility.mt4}
         decimals={decimals}
         onChange={setAmount}
@@ -60,7 +61,7 @@ const Withdraw: React.FC = () => {
 
       <Button
         primary
-        disabled={!amount || amount.isZero()}
+        disabled={!amount || amount.isZero() || (balance && amount.gt(balance))}
         onClick={() => {
           withdraw({ args: [amount] })
         }}

@@ -58,6 +58,7 @@ const Deposit: React.FC = () => {
         unit="GNO"
         className={utility.mt4}
         value={amount}
+        max={balance}
         decimals={decimals}
         onChange={setAmount}
         meta={
@@ -77,7 +78,9 @@ const Deposit: React.FC = () => {
       {needsAllowance ? (
         <Button
           primary
-          disabled={amount.isZero() || approvePending}
+          disabled={
+            amount.isZero() || (balance && amount.gt(balance)) || approvePending
+          }
           onClick={async () => {
             setApprovePending(true)
             const { data, error } = await approve({
@@ -99,6 +102,7 @@ const Deposit: React.FC = () => {
             needsAllowance ||
             !amount ||
             amount.isZero() ||
+            (balance && amount.gt(balance)) ||
             depositStatus.loading
           }
           onClick={() =>
