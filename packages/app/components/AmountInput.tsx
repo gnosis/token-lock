@@ -67,6 +67,9 @@ const AmountInput = React.forwardRef<HTMLInputElement, Props>(
           />
           {unit && <span className={cls.unit}>{unit}</span>}
         </div>
+        <div className={cls.errorText}>
+          You've entered an amount that exceeds your balance.
+        </div>
       </Field>
     )
   }
