@@ -37,6 +37,7 @@
   right: 0;
   top: calc(100% + 0.5rem);
   width: 280px;
+  z-index: 99;
 }
 
 .row {
