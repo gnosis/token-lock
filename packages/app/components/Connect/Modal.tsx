@@ -29,7 +29,9 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
               }}
             >
               <img
-                src={`/${connector.name.split(" ")[0]}.svg`}
+                src={`/connectors/${connector.name
+                  .split(" ")[0]
+                  .toLowerCase()}.svg`}
                 alt={`${connector.name}`}
                 height={32}
                 width={32}
