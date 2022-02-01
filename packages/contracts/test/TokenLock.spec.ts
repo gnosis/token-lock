@@ -75,6 +75,19 @@ describe("TokenLock", () => {
     ).to.be.revertedWith("Ownable: caller is not the owner")
   })
 
+  it("initializes the implementation contract on deployment", async () => {
+    const TokenLock = await ethers.getContractFactory("TokenLock", {
+      signer: owner,
+    })
+
+    const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+
+    const tokenLock = await TokenLock.deploy()
+    await expect(
+      tokenLock.initialize(ZERO_ADDRESS, ZERO_ADDRESS, 0, 0, "", "")
+    ).to.be.revertedWith("Initializable: contract is already initialized")
+  })
+
   it("should revert with NotSupported() if one the unsupported ERC-20 functions is called", async () => {
     const { TokenLock, token } = await setupTest()
 
