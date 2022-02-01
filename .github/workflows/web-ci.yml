@@ -62,6 +62,7 @@ jobs:
       # Script to prepare production deployments
       - run: bash ./.github/scripts/prepare_production_deployment.sh
         if: success() && startsWith(github.ref, 'refs/tags/v')
+        working-directory: ./
         env:
           PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
           PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
