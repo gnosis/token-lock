@@ -12,9 +12,12 @@ import { useTokenLockContractWrite } from "./tokenLockContract"
 import useChainId from "./useChainId"
 import useTokenLockConfig from "./useTokenLockConfig"
 import utility from "../styles/utility.module.css"
+import Notice from "./Notice"
 
 const Deposit: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
+
+  const [dismissedError, dismissError] = useState<Error | undefined>(undefined)
 
   const chainId = useChainId()
   const { decimals, tokenSymbol } = useTokenLockConfig()
@@ -50,6 +53,8 @@ const Deposit: React.FC = () => {
   const needsAllowance =
     amount && amount.gt(0) && allowance && allowance.lt(amount)
 
+  const error = approveStatus.error || depositStatus.error
+
   return (
     <Card>
       <Balance label="Balance" />
@@ -58,6 +63,7 @@ const Deposit: React.FC = () => {
         unit="GNO"
         className={utility.mt4}
         value={amount}
+        max={balance}
         decimals={decimals}
         onChange={setAmount}
         meta={
@@ -77,7 +83,9 @@ const Deposit: React.FC = () => {
       {needsAllowance ? (
         <Button
           primary
-          disabled={amount.isZero() || approvePending}
+          disabled={
+            amount.isZero() || (balance && amount.gt(balance)) || approvePending
+          }
           onClick={async () => {
             setApprovePending(true)
             const { data, error } = await approve({
@@ -99,6 +107,7 @@ const Deposit: React.FC = () => {
             needsAllowance ||
             !amount ||
             amount.isZero() ||
+            (balance && amount.gt(balance)) ||
             depositStatus.loading
           }
           onClick={() =>
@@ -113,6 +122,16 @@ const Deposit: React.FC = () => {
       )}
 
       <Balance className={utility.mt8} lockToken label="Locked Balance" />
+
+      {error && dismissedError !== error && (
+        <Notice
+          onDismiss={() => {
+            dismissError(error)
+          }}
+        >
+          {error.message}
+        </Notice>
+      )}
     </Card>
   )
 }

@@ -7,6 +7,7 @@ import { formatUnits, parseUnits } from "ethers/lib/utils"
 
 type Props = ComponentProps<typeof Field> & {
   value: BigNumber | undefined
+  max: BigNumber | undefined
   onChange(value: BigNumber | undefined): void
   decimals: number
   unit?: ReactNode
@@ -24,7 +25,10 @@ const sanitize = (str: string) => {
 }
 
 const AmountInput = React.forwardRef<HTMLInputElement, Props>(
-  ({ name, label, value, decimals, onChange, meta, unit, className }, ref) => {
+  (
+    { name, label, value, max, decimals, onChange, meta, unit, className },
+    ref
+  ) => {
     const [state, setState] = useState(
       value ? formatUnits(value, decimals) : ""
     )
@@ -67,6 +71,11 @@ const AmountInput = React.forwardRef<HTMLInputElement, Props>(
           />
           {unit && <span className={cls.unit}>{unit}</span>}
         </div>
+        {value && max && value.gt(max) && (
+          <div className={cls.errorText}>
+            You&apos;ve entered an amount that exceeds your balance.
+          </div>
+        )}
       </Field>
     )
   }

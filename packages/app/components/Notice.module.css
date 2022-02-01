@@ -1,0 +1,39 @@
+.container {
+  background: #ffffff;
+  border-radius: 8px;
+  border-top: 4px solid #f02525;
+  bottom: 80px;
+  box-shadow: 0 24px 24px rgba(0, 0, 0, 0.05);
+  color: #5d6d74;
+  left: 1em;
+  padding: 2rem;
+  position: fixed;
+  right: 1em;
+  z-index: 999;
+}
+
+.close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+}
+
+@media screen and (min-width: 650px) {
+  .container {
+    left: auto;
+    max-width: 350px;
+    right: 2em;
+  }
+}
+
+.noticeTitle {
+  font-weight: 700;
+  margin-bottom: 1em;
+}
+
+.errorText {
+  font-family: monospace;
+  font-size: 14px;
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+}

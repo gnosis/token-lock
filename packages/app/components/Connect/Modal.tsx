@@ -10,7 +10,7 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
 
   return (
     <Modal isOpen onRequestClose={onRequestClose} className={cls.container}>
-      <h2>Select a Wallet</h2>
+      <h2 className={cls.h2}>Select a Wallet</h2>
       <p className={cls.textSmall}>
         Please select a wallet to connect to lock your GNO.
       </p>

@@ -16,7 +16,7 @@
   background: #ffffff;
   border-radius: 0.5rem;
   box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
-  padding: 0 0.5rem;
+  padding: 0.5rem 1rem;
   position: absolute;
   right: 0;
   bottom: calc(100% + 4px);
@@ -29,14 +29,23 @@
 }
 
 .breakdown > div {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 0.5rem;
 }
 .breakdown dd {
+  color: #5D6D74;
   font-weight: bold;
   margin-left: 2.5rem;
 }
+.breakdown dt {
+  font-size: 12px;
+}
 
 .total {
-  border-top: 1px solid #001428;
-  padding-top: 4px;
+  border-top: 1px solid #e8e7e6;
+  padding-top: 8px;
+}
+.total dd {
+  color: #001428;
 }
