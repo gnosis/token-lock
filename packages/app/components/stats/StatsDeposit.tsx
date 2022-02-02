@@ -10,7 +10,7 @@ const StatsDeposit: React.FC = () => {
     <Card>
       <dl className={cls.container}>
         <div className={cls.item}>
-          <dt>Lock Deadline</dt>
+          <dt className={cls.label}>Lock Deadline</dt>
           <dd>
             {new Intl.DateTimeFormat("default", { dateStyle: "medium" }).format(
               config.depositDeadline
@@ -18,7 +18,7 @@ const StatsDeposit: React.FC = () => {
           </dd>
         </div>
         <div className={cls.item}>
-          <dt>Lock Duration</dt>
+          <dt className={cls.label}>Lock Duration</dt>
           <dd>{formatDuration(config.lockDuration)}</dd>
         </div>
 
