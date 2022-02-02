@@ -1,9 +1,8 @@
-import { BigNumber } from "ethers"
-import { formatToken } from "../Balance"
+import { formatToken } from "./formatToken"
 import cls from "./Stats.module.css"
 import useTokenLockConfig from "../useTokenLockConfig"
-import { useTokenLockContractRead } from "../tokenLockContract"
 import useTotalLocked from "../useTotalLocked"
+import TotalLockedBreakdown from "./TotalLockedBreakdown"
 
 const TotalLockedStat: React.FC = () => {
   const config = useTokenLockConfig()
@@ -11,7 +10,10 @@ const TotalLockedStat: React.FC = () => {
 
   return (
     <div className={`${cls.item} ${cls.fullWidth}`}>
-      <dt>Total GNO Locked</dt>
+      <dt>
+        <div className={cls.label}>Total GNO Locked</div>
+        <TotalLockedBreakdown />
+      </dt>
       <dd>{totalLocked ? formatToken(totalLocked, config.decimals) : "…"}</dd>
     </div>
   )

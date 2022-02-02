@@ -15,7 +15,7 @@ import PercentOfTotalHint from "./PercentOfTotalHint"
 const CIRCLE_RADIUS = 26
 const CIRCUMFERENCE = CIRCLE_RADIUS * 2 * Math.PI
 
-export const formatToken = (bigNumber: BigNumber, decimals: number) =>
+const formatToken = (bigNumber: BigNumber, decimals: number) =>
   new Intl.NumberFormat("en-US", {
     maximumSignificantDigits: 6,
   }).format(parseFloat(formatUnits(bigNumber, decimals)))

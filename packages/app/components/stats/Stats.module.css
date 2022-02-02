@@ -14,14 +14,19 @@
   width: 100%;
 }
 
-.item dd {
-  margin: 0;
-  font-size: 1.5em;
+.item > dt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.label {
+  color: #5d6d74;
+  font-size: 0.75em;
   font-weight: 700;
 }
 
-.item dt {
-  color: #5d6d74;
-  font-size: 0.75em;
+.item > dd {
+  margin: 0;
+  font-size: 1.5em;
   font-weight: 700;
 }

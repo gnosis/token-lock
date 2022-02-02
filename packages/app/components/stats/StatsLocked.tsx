@@ -17,7 +17,7 @@ const StatsLocked: React.FC = () => {
     <Card>
       <dl className={cls.container}>
         <div className={cls.item}>
-          <dt>Unlock Date</dt>
+          <dt className={cls.label}>Unlock Date</dt>
           <dd>
             {new Intl.DateTimeFormat("default", { dateStyle: "medium" }).format(
               new Date(config.depositDeadline.getTime() + config.lockDuration)
@@ -25,7 +25,7 @@ const StatsLocked: React.FC = () => {
           </dd>
         </div>
         <div className={cls.item}>
-          <dt>Time remaining</dt>
+          <dt className={cls.label}>Time remaining</dt>
           <dd>
             {hoursRemaining <= 48
               ? pluralize(hoursRemaining, "Hour")
