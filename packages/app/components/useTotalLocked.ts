@@ -19,7 +19,7 @@ const gnosisChainProvider = new providers.StaticJsonRpcProvider(
 
 const GNO_ON_MAINNET = "0x6810e776880c02933d47db1b9fc05908e5386b96"
 const GNO_ON_GNOSIS_CHAIN = "0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb"
-const MGNO_ON_GNOSIS_CHAIN = "0x722fc4DAABFEaff81b97894fC623f91814a1BF68"
+const GNO_TO_MGNO = "0x647507A70Ff598F386CB96ae5046486389368C66"
 
 const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
   const [{ data: gnoLockedOnMainnetData }] = useContractRead(
@@ -56,7 +56,7 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     },
     "balanceOf",
     {
-      args: MGNO_ON_GNOSIS_CHAIN,
+      args: GNO_TO_MGNO,
       watch: true,
     }
   )

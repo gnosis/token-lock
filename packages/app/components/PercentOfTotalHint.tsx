@@ -19,7 +19,7 @@ const PercentOfTotalHint: React.FC<{ balance?: BigNumber }> = ({ balance }) => {
       ? balance.mul(100).mul(1e4).div(totalLocked).toNumber() / 1e4 // precision to 4 decimal places
       : 0
 
-  // if (percent === 0) return null
+  if (percent === 0) return null
 
   return (
     <div className={cls.container}>
