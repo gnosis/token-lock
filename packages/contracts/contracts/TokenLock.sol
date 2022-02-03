@@ -26,8 +26,16 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
   /// ERC-20 function is not supported
   error NotSupported();
 
-  /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor() initializer {}
+  constructor(
+    address _owner,
+    address _token,
+    uint256 _depositDeadline,
+    uint256 _lockDuration,
+    string memory _name,
+    string memory _symbol
+  ) {
+    initialize(_owner, _token, _depositDeadline, _lockDuration, _name, _symbol);
+  }
 
   function initialize(
     address _owner,

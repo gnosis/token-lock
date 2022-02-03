@@ -1,6 +1,7 @@
 import "hardhat-deploy"
 import "@nomiclabs/hardhat-ethers"
 import { task, types } from "hardhat/config"
+import { constructorArgs } from "./constructorArgs"
 
 task("initialDeploy", "Deploys a fresh TokenLock contract")
   .addParam("owner", "Address of the owner", undefined, types.string)
@@ -33,14 +34,18 @@ task("initialDeploy", "Deploys a fresh TokenLock contract")
     const [caller] = await hre.ethers.getSigners()
     console.log("Using the account:", caller.address)
     const TokenLock = await hre.ethers.getContractFactory("TokenLock")
-    const tokenLock = await hre.upgrades.deployProxy(TokenLock, [
-      taskArgs.owner,
-      taskArgs.token,
-      taskArgs.depositDeadline,
-      taskArgs.lockDuration,
-      taskArgs.name,
-      taskArgs.symbol,
-    ])
+    const tokenLock = await hre.upgrades.deployProxy(
+      TokenLock,
+      [
+        taskArgs.owner,
+        taskArgs.token,
+        taskArgs.depositDeadline,
+        taskArgs.lockDuration,
+        taskArgs.name,
+        taskArgs.symbol,
+      ],
+      { constructorArgs }
+    )
 
     console.log("TokenLock proxy deployed to:", tokenLock.address)
     console.log("Waiting for deploy transaction to be mined...")
