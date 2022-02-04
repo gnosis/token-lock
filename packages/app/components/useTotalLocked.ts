@@ -31,7 +31,6 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     "balanceOf",
     {
       args: CONTRACT_ADDRESSES[1],
-      watch: true,
     }
   )
 
@@ -44,7 +43,6 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     "balanceOf",
     {
       args: CONTRACT_ADDRESSES[100],
-      watch: true,
     }
   )
 
@@ -57,7 +55,6 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     "balanceOf",
     {
       args: GNO_TO_MGNO,
-      watch: true,
     }
   )
 
