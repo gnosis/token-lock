@@ -10,6 +10,7 @@ type Props = ComponentProps<typeof Field> & {
   max: BigNumber | undefined
   onChange(value: BigNumber | undefined): void
   decimals: number
+  disabled?: boolean
   unit?: ReactNode
   name?: string
 }
@@ -26,7 +27,18 @@ const sanitize = (str: string) => {
 
 const AmountInput = React.forwardRef<HTMLInputElement, Props>(
   (
-    { name, label, value, max, decimals, onChange, meta, unit, className },
+    {
+      name,
+      label,
+      value,
+      max,
+      decimals,
+      disabled,
+      onChange,
+      meta,
+      unit,
+      className,
+    },
     ref
   ) => {
     const [state, setState] = useState(
@@ -52,6 +64,7 @@ const AmountInput = React.forwardRef<HTMLInputElement, Props>(
           <input
             pattern="^[0-9]*[.,]?[0-9]*$"
             placeholder="0.0"
+            disabled={disabled}
             ref={ref}
             name={name}
             className={cls.input}

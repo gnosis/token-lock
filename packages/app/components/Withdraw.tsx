@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers"
-import { useState } from "react"
-import { useConnect, useAccount } from "wagmi"
+import { useEffect, useState } from "react"
+import { useConnect, useAccount, useWaitForTransaction } from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
@@ -18,7 +18,7 @@ import Notice from "./Notice"
 const Withdraw: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
 
-  const [dismissedError, dismissError] = useState<Error | undefined>(undefined)
+  const [dismissedErrors, setDismissedErrors] = useState<Error[]>([])
 
   const { decimals, tokenSymbol } = useTokenLockConfig()
   const [{ data: accountData }] = useAccount()
@@ -27,14 +27,24 @@ const Withdraw: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
-  const [
-    {
-      data: { connected },
-    },
-  ] = useConnect()
+
   const balance = balanceOf as undefined | BigNumber
 
   const [status, withdraw] = useTokenLockContractWrite("withdraw")
+  const [wait] = useWaitForTransaction({
+    hash: status.data?.hash,
+  })
+
+  const pending = status.loading || wait.loading
+  const error = status.error || wait.error
+
+  // clear input after successful deposit
+  const withdrawnBlock = wait.data?.blockHash
+  useEffect(() => {
+    if (withdrawnBlock) {
+      setAmount(undefined)
+    }
+  }, [withdrawnBlock])
 
   return (
     <Card>
@@ -46,11 +56,12 @@ const Withdraw: React.FC = () => {
         className={utility.mt4}
         decimals={decimals}
         onChange={setAmount}
+        disabled={pending}
         unit="LGNO"
         meta={
           <Button
             link
-            disabled={!balance || balance.isZero()}
+            disabled={!balance || balance.isZero() || pending}
             onClick={() => {
               if (balance) {
                 setAmount(balance)
@@ -64,24 +75,29 @@ const Withdraw: React.FC = () => {
 
       <Button
         primary
-        disabled={!amount || amount.isZero() || (balance && amount.gt(balance))}
+        disabled={
+          !amount ||
+          amount.isZero() ||
+          (balance && amount.gt(balance)) ||
+          pending
+        }
         onClick={() => {
           withdraw({ args: [amount] })
         }}
       >
         Unlock {tokenSymbol}
-        {status.loading && <Spinner />}
+        {pending && <Spinner />}
       </Button>
 
       <Balance className={utility.mt8} label="GNO Balance" />
 
-      {status.error && dismissedError !== status.error && (
+      {error && !dismissedErrors.includes(error) && (
         <Notice
           onDismiss={() => {
-            dismissError(status.error)
+            setDismissedErrors([...dismissedErrors, error])
           }}
         >
-          {status.error.message}
+          {error.message}
         </Notice>
       )}
     </Card>

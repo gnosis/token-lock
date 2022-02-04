@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers"
-import { useMemo, useState } from "react"
-import { useConnect, useAccount } from "wagmi"
+import { useEffect, useMemo, useState } from "react"
+import { useAccount, useWaitForTransaction } from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import Balance from "./Balance"
 import Button from "./Button"
@@ -17,7 +17,7 @@ import Notice from "./Notice"
 const Deposit: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
 
-  const [dismissedError, dismissError] = useState<Error | undefined>(undefined)
+  const [dismissedErrors, setDismissedErrors] = useState<Error[]>([])
 
   const chainId = useChainId()
   const { decimals, tokenSymbol } = useTokenLockConfig()
@@ -27,11 +27,7 @@ const Deposit: React.FC = () => {
     skip: !accountData?.address,
     watch: true,
   })
-  const [
-    {
-      data: { connected },
-    },
-  ] = useConnect()
+
   const balance = balanceOf as undefined | BigNumber
 
   const contractAddress = CONTRACT_ADDRESSES[chainId]
@@ -45,15 +41,34 @@ const Deposit: React.FC = () => {
     watch: true,
   })
 
-  const [approvePending, setApprovePending] = useState(false)
-
   const [approveStatus, approve] = useTokenContractWrite("approve")
+  const [approveWait] = useWaitForTransaction({
+    hash: approveStatus.data?.hash,
+  })
   const [depositStatus, deposit] = useTokenLockContractWrite("deposit")
+  const [depositWait] = useWaitForTransaction({
+    hash: depositStatus.data?.hash,
+  })
 
   const needsAllowance =
     amount && amount.gt(0) && allowance && allowance.lt(amount)
 
-  const error = approveStatus.error || depositStatus.error
+  const approvePending = approveStatus.loading || approveWait.loading
+  const depositPending = depositStatus.loading || depositWait.loading
+
+  const error =
+    approveStatus.error ||
+    approveWait.error ||
+    depositStatus.error ||
+    depositWait.error
+
+  // clear input after successful deposit
+  const depositedBlock = depositWait.data?.blockHash
+  useEffect(() => {
+    if (depositedBlock) {
+      setAmount(undefined)
+    }
+  }, [depositedBlock])
 
   return (
     <Card>
@@ -66,10 +81,13 @@ const Deposit: React.FC = () => {
         max={balance}
         decimals={decimals}
         onChange={setAmount}
+        disabled={approvePending || depositPending}
         meta={
           <Button
             link
-            disabled={!balance || balance.isZero()}
+            disabled={
+              !balance || balance.isZero() || approvePending || depositPending
+            }
             onClick={() => {
               if (balance) {
                 setAmount(balance)
@@ -86,47 +104,41 @@ const Deposit: React.FC = () => {
           disabled={
             amount.isZero() || (balance && amount.gt(balance)) || approvePending
           }
-          onClick={async () => {
-            setApprovePending(true)
-            const { data, error } = await approve({
+          onClick={() =>
+            approve({
               args: [contractAddress, amount],
             })
-            if (data) {
-              await data.wait()
-            }
-            setApprovePending(false)
-          }}
+          }
         >
           Allow locking contract to use your {tokenSymbol}
           {approvePending && <Spinner />}
         </Button>
       ) : (
         <Button
-          primary={!needsAllowance}
+          primary
           disabled={
-            needsAllowance ||
             !amount ||
             amount.isZero() ||
             (balance && amount.gt(balance)) ||
-            depositStatus.loading
+            depositPending
           }
-          onClick={() =>
+          onClick={async () =>
             deposit({
               args: [amount],
             })
           }
         >
           Lock {tokenSymbol}
-          {depositStatus.loading && <Spinner />}
+          {depositPending && <Spinner />}
         </Button>
       )}
 
       <Balance className={utility.mt8} lockToken label="Locked Balance" />
 
-      {error && dismissedError !== error && (
+      {error && !dismissedErrors.includes(error) && (
         <Notice
           onDismiss={() => {
-            dismissError(error)
+            setDismissedErrors([...dismissedErrors, error])
           }}
         >
           {error.message}

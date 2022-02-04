@@ -6,10 +6,23 @@ import { WalletLinkConnector } from "wagmi/connectors/walletLink"
 import { CHAINS, INFURA_ID, LOCKED_TOKEN_NAME } from "../config"
 import GnosisSafeConnector, { safePromise } from "./safeConnector"
 
-export const provider = ({ chainId }: { chainId?: number }) => {
+const provider = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
     CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
-  return new providers.JsonRpcBatchProvider(rpcUrl, "any")
+  const provider = new providers.JsonRpcBatchProvider(rpcUrl, "any")
+  provider.pollingInterval = 6000
+  return provider
+}
+
+const webSocketProvider = ({ chainId }: { chainId?: number }) => {
+  if (chainId === 1) {
+    return new providers.InfuraWebSocketProvider(chainId, INFURA_ID)
+  }
+  if (chainId === 100) {
+    return new providers.WebSocketProvider("wss://rpc.gnosischain.com/wss", 100)
+  }
+
+  return undefined
 }
 
 let inGnosisSafe = false
@@ -48,7 +61,12 @@ const Provider: React.FC = ({ children }) => {
   })
 
   return safePromiseResolved ? (
-    <WagmiProvider autoConnect provider={provider} connectors={connectors}>
+    <WagmiProvider
+      autoConnect
+      provider={provider}
+      webSocketProvider={webSocketProvider}
+      connectors={connectors}
+    >
       {children}
     </WagmiProvider>
   ) : (
