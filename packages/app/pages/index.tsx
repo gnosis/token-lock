@@ -43,7 +43,7 @@ const Home: NextPage = () => {
         <title>Lock GNO</title>
         <meta
           name="description"
-          content="Qualify for a COW airdrop boost by locking your GNO for 12 months"
+          content="Qualify for a $COW airdrop boost by locking your GNO for 12 months"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>

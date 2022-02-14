@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import cls from "./LockedGnoLogo.module.css"
 
 type Props = {
@@ -5,16 +6,12 @@ type Props = {
 }
 
 const LockedGnoLogo: React.FC<Props> = ({ locked }) => (
-  <div className={cls.container}>
-    <img
-      className={cls.logo}
-      src={locked ? `/lock.svg` : `/unlocked.svg`}
-      alt="Locked GNO"
-      height={36}
-      width={36}
-    />
-    <div className={cls.logoText}>GNO</div>
-  </div>
+  <h1 className={cls.heading}>
+    <span className={clsx(cls.logo, locked ? cls.locked : cls.unlocked)}>
+      Lock
+    </span>
+    <span className={cls.gno}> GNO</span>
+  </h1>
 )
 
 export default LockedGnoLogo

@@ -1,16 +1,26 @@
-.container {
-  align-items: center;
+.heading {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  align-items: center;
+  gap: 8px;
 }
 
 .logo {
   margin-right: 0.5em;
+  width: 36px;
+  height: 36px;
+  font-size: 0;
+  color: transparent;
+  display: inline-block;
+}
+.locked {
+  background-image: url("/lock.svg");
+}
+.unlocked {
+  background-image: url("/unlocked.svg");
 }
 
-.logoText {
-  font-size: 2em;
+.gno {
+  font-size: 32px;
   font-weight: 900;
   letter-spacing: 1px;
   transform: translateY(3px);
