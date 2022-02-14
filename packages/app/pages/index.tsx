@@ -19,7 +19,8 @@ import {
 import { useEffect } from "react"
 import { useNetwork } from "wagmi"
 
-const isProd = window.location.hostname === "lock.gnosis.io"
+const isProd =
+  typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
 
 const Home: NextPage = () => {
   useEffect(() => {
