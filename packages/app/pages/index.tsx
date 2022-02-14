@@ -19,6 +19,8 @@ import {
 import { useEffect } from "react"
 import { useNetwork } from "wagmi"
 
+const isProd = window.location.hostname === "lock.gnosis.io"
+
 const Home: NextPage = () => {
   useEffect(() => {
     ReactModal.setAppElement("#root")
@@ -45,6 +47,7 @@ const Home: NextPage = () => {
           name="description"
           content="Qualify for a $COW airdrop boost by locking your GNO for 12 months"
         />
+        {!isProd && <meta name="robots" content="noindex" />}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
