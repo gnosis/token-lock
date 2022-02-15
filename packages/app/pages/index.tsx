@@ -91,7 +91,7 @@ const Home: NextPage = () => {
             rel="noopener noreferrer"
           >
             <img
-              src="/discord.svg"
+              src="/discordicon.svg"
               alt="Gnosis Guild Discord"
               width={16}
               height={16}
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
             rel="noopener noreferrer"
           >
             <img
-              src="/twitter.svg"
+              src="/twittericon.svg"
               alt="Gnosis Guild Twitter"
               width={16}
               height={16}
