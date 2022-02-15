@@ -30,6 +30,7 @@
 .footer {
   padding-left: 2rem;
   padding-right: 2rem;
+  color: #5d6d74;
 }
 @media screen and (max-width: 650px) {
   .footer {
@@ -43,23 +44,35 @@
   border-top: 1px solid #b2b5b2;
   font-size: 10px;
   display: flex;
-  flex: 1;
+  justify-content: flex-start;
+}
+.left {
+  align-items: center;
+  display: flex;
+  height: var(--navHeight, 66px);
+  justify-content: flex-start;
+  gap: 1em;
+}
+.right {
+  align-items: center;
+  display: flex;
   height: var(--navHeight, 66px);
   justify-content: flex-end;
+  flex: 1;
 }
 
-.footerContainer > * {
+.right > * {
   align-items: center;
   display: flex;
   margin-left: 1rem;
 }
 
-.footerContainer a {
+.footer a {
   cursor: pointer;
   transition: opacity 0.12s ease-in-out;
 }
 
-.footerContainer a:hover {
+.footer a:hover {
   opacity: 0.7;
 }
 

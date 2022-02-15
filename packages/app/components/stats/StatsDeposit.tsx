@@ -6,6 +6,8 @@ import TotalLockedStat from "./TotalLockedStat"
 
 const StatsDeposit: React.FC = () => {
   const config = useTokenLockConfig()
+  const deadlineIsToday =
+    config.depositDeadline.toDateString() === new Date().toDateString()
   return (
     <Card>
       <dl className={cls.container}>
@@ -15,6 +17,13 @@ const StatsDeposit: React.FC = () => {
             {new Intl.DateTimeFormat("default", { dateStyle: "medium" }).format(
               config.depositDeadline
             )}
+
+            <div className={cls.time}>
+              {deadlineIsToday &&
+                new Intl.DateTimeFormat("default", {
+                  timeStyle: "long",
+                }).format(config.depositDeadline)}
+            </div>
           </dd>
         </div>
         <div className={cls.item}>
