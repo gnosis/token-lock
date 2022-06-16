@@ -1,9 +1,19 @@
-import { BaseContract, BigNumber, CallOverrides } from "ethers"
-import { erc20ABI, useContractRead, useContractWrite, useProvider } from "wagmi"
-import { CHAINS } from "../config"
+import { BaseContract, BigNumber, CallOverrides, providers } from "ethers"
+import { erc20ABI, useContractRead, useContractWrite, useContract } from "wagmi"
 import useTokenLockConfig from "./useTokenLockConfig"
 
 type Config = Parameters<typeof useContractRead>[2]
+
+export const useTokenContract = () => {
+  const { tokenAddress } = useTokenLockConfig()
+
+  const tokenContract = useContract<Erc20Contract>({
+    addressOrName: tokenAddress,
+    contractInterface: erc20ABI,
+  })
+
+  return tokenContract
+}
 
 export const useTokenContractRead = (functionName: string, config?: Config) => {
   const { tokenAddress } = useTokenLockConfig()
@@ -42,4 +52,10 @@ interface Erc20Contract extends BaseContract {
   symbol(overrides?: CallOverrides): Promise<string>
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+  approve(
+    spender: string,
+    amount: BigNumber,
+    overrides?: CallOverrides
+  ): providers.TransactionResponse
 }
