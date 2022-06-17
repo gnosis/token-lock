@@ -15,5 +15,11 @@
   "license": "LGPL-3.0+",
   "devDependencies": {
     "husky": "7.0.4"
+  },
+  "dependencies": {
+    "@gnosis.pm/safe-apps-provider": "^0.11.0",
+    "@gnosis.pm/safe-apps-sdk": "^7.3.0",
+    "@gnosis.pm/safe-apps-wagmi": "file:.yalc/@gnosis.pm/safe-apps-wagmi",
+    "wagmi": "^0.4.12"
   }
 }

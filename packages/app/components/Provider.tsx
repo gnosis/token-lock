@@ -1,10 +1,10 @@
 import { providers } from "ethers"
-import React, { useEffect, useState } from "react"
-import { InjectedConnector, Provider as WagmiProvider } from "wagmi"
+import React from "react"
+import { WagmiConfig, createClient } from "wagmi"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
-import { WalletLinkConnector } from "wagmi/connectors/walletLink"
-import { CHAINS, INFURA_ID, LOCKED_TOKEN_NAME } from "../config"
-import GnosisSafeConnector, { safePromise } from "./safeConnector"
+import { InjectedConnector } from "wagmi/connectors/injected"
+import { CHAINS, INFURA_ID } from "../config"
+import { SafeConnector } from "@gnosis.pm/safe-apps-wagmi"
 
 const provider = ({ chainId }: { chainId?: number }) => {
   const rpcUrl =
@@ -25,16 +25,10 @@ const webSocketProvider = ({ chainId }: { chainId?: number }) => {
   return undefined
 }
 
-let inGnosisSafe = false
-
-const connectors = ({ chainId }: { chainId?: number }) => {
-  if (inGnosisSafe) {
-    return [new GnosisSafeConnector({ chains: CHAINS })]
-  }
-
-  const rpcUrl =
-    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
-  return [
+const client = createClient({
+  autoConnect: true,
+  connectors: [
+    new SafeConnector({}),
     new InjectedConnector({ chains: CHAINS }),
     new WalletConnectConnector({
       options: {
@@ -42,36 +36,13 @@ const connectors = ({ chainId }: { chainId?: number }) => {
         qrcode: true,
       },
     }),
-    new WalletLinkConnector({
-      options: {
-        appName: `Lock ${LOCKED_TOKEN_NAME}`,
-        jsonRpcUrl: `${rpcUrl}/${INFURA_ID}`,
-      },
-    }),
-  ]
-}
+  ],
+  provider,
+  webSocketProvider,
+})
 
 const Provider: React.FC = ({ children }) => {
-  const [safePromiseResolved, setSafePromiseResolved] = useState(false)
-  useEffect(() => {
-    safePromise.then((safe) => {
-      inGnosisSafe = !!safe
-      setSafePromiseResolved(true)
-    })
-  })
-
-  return safePromiseResolved ? (
-    <WagmiProvider
-      autoConnect
-      provider={provider}
-      webSocketProvider={webSocketProvider}
-      connectors={connectors}
-    >
-      {children}
-    </WagmiProvider>
-  ) : (
-    <h1>loading...</h1>
-  )
+  return <WagmiConfig client={client}>{children}</WagmiConfig>
 }
 
 export default Provider

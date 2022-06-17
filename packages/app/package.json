@@ -12,6 +12,7 @@
   "dependencies": {
     "@gnosis.pm/safe-apps-provider": "^0.9.3",
     "@gnosis.pm/safe-apps-sdk": "^6.2.0",
+    "@gnosis.pm/safe-apps-wagmi": "file:.yalc/@gnosis.pm/safe-apps-wagmi",
     "copy-to-clipboard": "^3.3.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.5.3",
@@ -21,7 +22,7 @@
     "react-modal": "^3.14.4",
     "truncate-eth-address": "^1.0.2",
     "use-onclickoutside": "^0.4.0",
-    "wagmi": "^0.1.3"
+    "wagmi": "^0.4.12"
   },
   "devDependencies": {
     "@types/node": "17.0.8",
