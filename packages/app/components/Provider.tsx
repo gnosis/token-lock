@@ -7,8 +7,9 @@ import { CHAINS, INFURA_ID } from "../config"
 import { SafeConnector } from "@gnosis.pm/safe-apps-wagmi"
 
 const provider = ({ chainId }: { chainId?: number }) => {
-  const rpcUrl =
-    CHAINS.find((x) => x.id === chainId)?.rpcUrls?.[0] ?? CHAINS[0].rpcUrls[0]
+  const rpcUrl = CHAINS.find((x) => x.id === chainId)?.rpcUrls.default
+
+  console.log({ rpcUrl, CHAINS, chainId })
   const provider = new providers.JsonRpcBatchProvider(rpcUrl, "any")
   provider.pollingInterval = 6000
   return provider
