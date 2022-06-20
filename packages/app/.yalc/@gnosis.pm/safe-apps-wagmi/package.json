@@ -15,16 +15,16 @@
     "wagmi"
   ],
   "scripts": {
-    "build": "yarn rimraf dist && tsc",
-    "lint": "tslint -p tsconfig.json"
+    "build": "yarn rimraf dist && tsc"
   },
   "author": "Safe (https://gnosis-safe.io)",
   "license": "MIT",
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "7.3.0"
+    "@gnosis.pm/safe-apps-provider": "^0.11.1",
+    "@gnosis.pm/safe-apps-sdk": "^7.4.0"
   },
   "peerDependencies": {
-    "wagmi": "0.4.12"
+    "@wagmi/core": "^0.3.8"
   },
   "repository": {
     "type": "git",
@@ -37,5 +37,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "yalcSig": "03f65d90dc0e34d3e453347ff4cd734f"
+  "yalcSig": "dc0fbbb15554f42da45c5370b6f273d4"
 }

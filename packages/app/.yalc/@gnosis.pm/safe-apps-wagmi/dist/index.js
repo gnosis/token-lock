@@ -20,7 +20,7 @@ const providers_1 = require("@ethersproject/providers");
 const safe_apps_provider_1 = require("@gnosis.pm/safe-apps-provider");
 const safe_apps_sdk_1 = __importDefault(require("@gnosis.pm/safe-apps-sdk"));
 const utils_1 = require("ethers/lib/utils");
-const wagmi_1 = require("wagmi");
+const core_1 = require("@wagmi/core");
 function normalizeChainId(chainId) {
     if (typeof chainId === 'string') {
         const isHex = chainId.trim().substring(0, 2);
@@ -28,9 +28,9 @@ function normalizeChainId(chainId) {
     }
     return chainId;
 }
-const __IS_IFRAME__ = (window === null || window === void 0 ? void 0 : window.parent) !== window;
 const __IS_SERVER__ = typeof window === 'undefined';
-class SafeConnector extends wagmi_1.Connector {
+const __IS_IFRAME__ = !__IS_SERVER__ && (window === null || window === void 0 ? void 0 : window.parent) !== window;
+class SafeConnector extends core_1.Connector {
     constructor(config) {
         super(Object.assign(Object.assign({}, config), { options: config === null || config === void 0 ? void 0 : config.options }));
         _SafeConnector_instances.add(this);
@@ -45,7 +45,7 @@ class SafeConnector extends wagmi_1.Connector {
     async connect() {
         const runningAsSafeApp = await __classPrivateFieldGet(this, _SafeConnector_instances, "m", _SafeConnector_isSafeApp).call(this);
         if (!runningAsSafeApp) {
-            throw new wagmi_1.ConnectorNotFoundError();
+            throw new core_1.ConnectorNotFoundError();
         }
         const provider = await this.getProvider();
         if (provider.on) {
@@ -71,13 +71,13 @@ class SafeConnector extends wagmi_1.Connector {
     }
     async getAccount() {
         if (!__classPrivateFieldGet(this, _SafeConnector_safe, "f")) {
-            throw new wagmi_1.ConnectorNotFoundError();
+            throw new core_1.ConnectorNotFoundError();
         }
         return (0, utils_1.getAddress)(__classPrivateFieldGet(this, _SafeConnector_safe, "f").safeAddress);
     }
     async getChainId() {
         if (!__classPrivateFieldGet(this, _SafeConnector_provider, "f")) {
-            throw new wagmi_1.ConnectorNotFoundError();
+            throw new core_1.ConnectorNotFoundError();
         }
         return normalizeChainId(__classPrivateFieldGet(this, _SafeConnector_provider, "f").chainId);
     }
@@ -126,7 +126,7 @@ class SafeConnector extends wagmi_1.Connector {
 exports.SafeConnector = SafeConnector;
 _SafeConnector_provider = new WeakMap(), _SafeConnector_sdk = new WeakMap(), _SafeConnector_safe = new WeakMap(), _SafeConnector_instances = new WeakSet(), _SafeConnector_getSafeInfo = async function _SafeConnector_getSafeInfo() {
     if (!__classPrivateFieldGet(this, _SafeConnector_sdk, "f")) {
-        throw new wagmi_1.ConnectorNotFoundError();
+        throw new core_1.ConnectorNotFoundError();
     }
     if (!__classPrivateFieldGet(this, _SafeConnector_safe, "f")) {
         __classPrivateFieldSet(this, _SafeConnector_safe, await __classPrivateFieldGet(this, _SafeConnector_sdk, "f").safe.getInfo(), "f");

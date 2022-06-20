@@ -10,8 +10,8 @@
     "static": "next build && next export"
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-provider": "^0.9.3",
-    "@gnosis.pm/safe-apps-sdk": "^6.2.0",
+    "@gnosis.pm/safe-apps-provider": "^0.11.1",
+    "@gnosis.pm/safe-apps-sdk": "^7.4.0",
     "@gnosis.pm/safe-apps-wagmi": "file:.yalc/@gnosis.pm/safe-apps-wagmi",
     "copy-to-clipboard": "^3.3.1",
     "ethereum-blockies-base64": "^1.0.2",

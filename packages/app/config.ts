@@ -10,11 +10,13 @@ export const INFURA_ID =
     ? "2d043e79a14e4145b4e07dd3eb3a5a4b"
     : "a63b6fb491fa4ad3827b824218e5aa68"
 
-const addInfuraProjectId = (chain: Chain) => ({
+const addInfuraProjectId = (chain: Chain): Chain => ({
   ...chain,
-  rpcUrls: chain.rpcUrls.map((url) =>
-    url.endsWith("infura.io/v3") ? `${url}/${INFURA_ID}` : url
-  ),
+  rpcUrls: {
+    default: chain.rpcUrls.infura?.endsWith("infura.io/v3")
+      ? `${chain.rpcUrls.infura}/${INFURA_ID}`
+      : (chain.rpcUrls.infura as string),
+  },
 })
 
 // used for price lookup
@@ -31,15 +33,21 @@ export const CHAINS: Chain[] = [
   {
     id: 100,
     name: "Gnosis Chain",
+    network: "gchain",
     nativeCurrency: {
       decimals: 18,
       name: "xDai",
       symbol: "xDAI",
     },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
-    blockExplorers: [
-      { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet" },
-    ],
+    rpcUrls: {
+      default: "https://rpc.xdaichain.com/",
+    },
+    blockExplorers: {
+      default: {
+        name: "Blockscout",
+        url: "https://blockscout.com/xdai/mainnet",
+      },
+    },
   },
 ]
 
