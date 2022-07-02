@@ -36,7 +36,7 @@ export const CHAINS: Chain[] = [
       name: "xDai",
       symbol: "xDAI",
     },
-    rpcUrls: ["https://rpc.xdaichain.com/"],
+    rpcUrls: ["https://rpc.gnosischain.com/"],
     blockExplorers: [
       { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet" },
     ],
