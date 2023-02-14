@@ -19,12 +19,12 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 1em;
+  gap: 2em;
   justify-content: flex-start;
   margin: auto;
   max-width: 500px;
   min-height: calc(100vh - (var(--navHeight, 66px) * 2));
-  padding: 1.5rem 1rem;
+  padding: 2rem 1rem;
 }
 
 .footer {
