@@ -18,6 +18,7 @@ import {
 } from "../components"
 import { useEffect } from "react"
 import { useNetwork } from "wagmi"
+import UseGNOBanner from "../components/UseGnoBanner"
 
 const isProd =
   typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
       </header>
 
       <main className={styles.main}>
+        <UseGNOBanner />
         {depositPeriodOngoing && (
           <>
             <StatsDeposit />
