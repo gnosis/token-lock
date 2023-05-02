@@ -132,7 +132,7 @@ const Home: NextPage = () => {
           </div>
           <div className={styles.right}>
             <a
-              href="https://discord.gg/2jnnJx3Y"
+              href="https://discord.com/invite/gnosischain"
               target="_blank"
               rel="noopener noreferrer"
             >
