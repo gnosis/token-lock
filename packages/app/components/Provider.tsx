@@ -40,6 +40,7 @@ const connectors = ({ chainId }: { chainId?: number }) => {
       options: {
         infuraId: INFURA_ID,
         qrcode: true,
+        bridge: "https://walletconnect.gnosis.io",
       },
     }),
     new WalletLinkConnector({
