@@ -21,25 +21,28 @@ const Withdraw: React.FC = () => {
   const [dismissedErrors, setDismissedErrors] = useState<Error[]>([])
 
   const { decimals, tokenSymbol } = useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceOf }] = useTokenLockContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  // const [{ data: accountData }] = useAccount()
+  const { address } = useAccount()
+  const { data: balanceOf } = useTokenLockContractRead("balanceOf", {
+    args: [address],
+    skip: !address,
     watch: true,
   })
 
+
   const balance = balanceOf as undefined | BigNumber
 
-  const [status, withdraw] = useTokenLockContractWrite("withdraw")
-  const [wait] = useWaitForTransaction({
-    hash: status.data?.hash,
+  // const { status, withdraw } = useTokenLockContractWrite("withdraw")
+  const { data: tokenLockContractData, isLoading, isError, write } = useTokenLockContractWrite("withdraw")
+  const { data, isLoading: txIsLoading, isError: txIsError } = useWaitForTransaction({
+    hash: tokenLockContractData?.hash
   })
 
-  const pending = status.loading || wait.loading
-  const error = status.error || wait.error
+  const pending = isLoading || txIsLoading
+  const error = isError || txIsError
 
   // clear input after successful deposit
-  const withdrawnBlock = wait.data?.blockHash
+  const withdrawnBlock = data?.blockHash
   useEffect(() => {
     if (withdrawnBlock) {
       setAmount(undefined)
@@ -82,7 +85,7 @@ const Withdraw: React.FC = () => {
           pending
         }
         onClick={() => {
-          withdraw({ args: [amount] })
+          write({ args: [amount] })
         }}
       >
         Unlock {tokenSymbol}

@@ -1,4 +1,4 @@
-import { useAccount, useConnect } from "wagmi"
+import { useAccount, useConnect, useEnsAvatar } from "wagmi"
 import makeBlockie from "ethereum-blockies-base64"
 import clsx from "clsx"
 import cls from "./Identicon.module.css"
@@ -9,12 +9,17 @@ type Props = {
 }
 
 const Identicon: React.FC<Props> = ({ large }) => {
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
+  // const [{ data: accountData }, disconnect] = useAccount({
+  //   fetchEns: true,
+  // })
+  const { address } = useAccount()
+  const { data: avatar, isError, isLoading } = useEnsAvatar({
+    address,
   })
+  
 
-  const avatar = accountData?.ens?.avatar
-  const address = accountData?.address
+  // const avatar = accountData?.ens?.avatar
+  // const address = accountData?.address
 
   const blockie = useMemo(() => address && makeBlockie(address), [address])
 
@@ -36,7 +41,7 @@ const Identicon: React.FC<Props> = ({ large }) => {
       <div
         className={clsx(
           cls.statusJewel,
-          accountData && cls.isConnected,
+          avatar && cls.isConnected,
           large && cls.isLarge
         )}
       />

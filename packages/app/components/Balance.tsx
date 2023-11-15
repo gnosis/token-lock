@@ -31,17 +31,33 @@ type Props = ComponentProps<typeof Field> & {
 const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const { decimals, tokenName, lockTokenName, tokenSymbol, lockTokenSymbol } =
     useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceTokenData }] = useTokenContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  // const [{ data: accountData }] = useAccount()
+  const { address } = useAccount()
+  // const [{ data: balanceTokenData }] = useTokenContractRead("balanceOf", {
+  //   args: accountData?.address,
+  //   skip: !accountData?.address,
+  //   watch: true,
+  // })
+
+  const { data: balanceTokenData } = useTokenContractRead("balanceOf", {
+    args: [address],
+    skip: !address,
     watch: true,
   })
-  const [{ data: balanceLockTokenData }] = useTokenLockContractRead(
-    "balanceOf",
+
+  // const [{ data: balanceLockTokenData }] = useTokenLockContractRead(
+  //   "balanceOf",
+  //   {
+  //     args: accountData?.address,
+  //     skip: !accountData?.address,
+  //     watch: true,
+  //   }
+  // )
+
+  const { data: balanceLockTokenData } = useTokenLockContractRead("balanceOf",
     {
-      args: accountData?.address,
-      skip: !accountData?.address,
+      args: [address],
+      skip: !address,
       watch: true,
     }
   )

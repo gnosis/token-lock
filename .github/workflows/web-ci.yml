@@ -41,6 +41,10 @@ jobs:
 
       - name: Build website
         run: yarn static
+        env:
+          WC_PROJECT_ID: ${{ secrets.WC_PROJECT_ID }}
+          RPC_URL_ETHEREUM: ${{ secrets.RPC_URL_ETHEREUM }}
+          RPC_URL_GNOSIS: 'https://rpc.gnosischain.com'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

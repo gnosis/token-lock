@@ -60,7 +60,7 @@ export const ProvideConfig: React.FC = ({ children }) => {
           tokenSymbol,
           lockTokenName,
           lockTokenSymbol,
-          decimals: decimals.toNumber(),
+          decimals: parseInt(decimals),
         })
       }
     )

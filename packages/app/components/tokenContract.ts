@@ -1,6 +1,5 @@
 import { BaseContract, BigNumber, CallOverrides } from "ethers"
-import { erc20ABI, useContractRead, useContractWrite, useProvider } from "wagmi"
-import { CHAINS } from "../config"
+import { erc20ABI, useContractRead, useContractWrite } from "wagmi"
 import useTokenLockConfig from "./useTokenLockConfig"
 
 type Config = Parameters<typeof useContractRead>[2]
@@ -9,11 +8,11 @@ export const useTokenContractRead = (functionName: string, config?: Config) => {
   const { tokenAddress } = useTokenLockConfig()
   return useContractRead<Erc20Contract>(
     {
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
+      ...config,
+      address: tokenAddress,
+      abi: erc20ABI,
+      functionName,
     },
-    functionName,
-    config
   )
 }
 
@@ -24,11 +23,12 @@ export const useTokenContractWrite = (
   const { tokenAddress } = useTokenLockConfig()
   return useContractWrite<Erc20Contract>(
     {
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
+      ...config,
+      address: tokenAddress,
+      abi: erc20ABI,
+      functionName,
     },
-    functionName,
-    config
+
   )
 }
 
