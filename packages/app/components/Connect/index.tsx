@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
 import copy from "copy-to-clipboard"
-import { chain, useAccount, useConnect, useNetwork } from "wagmi"
+import { useAccount, useEnsName, useDisconnect, useNetwork } from "wagmi"
 import truncateEthAddress from "truncate-eth-address"
 import Identicon from "./Identicon"
 import Modal from "./Modal"
@@ -10,25 +10,22 @@ import cls from "./index.module.css"
 import IconButton, { IconLinkButton } from "../IconButton"
 
 const Connect: React.FC = () => {
-  const [{ data: network }] = useNetwork()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
+  // const [{ data: network }] = useNetwork()
+  const { chain } = useNetwork()
+  const { address, isConnected, connector } = useAccount()
+  const { data: ensData } = useEnsName({
+    address,
   })
-  const [
-    {
-      data: { connected, connector },
-    },
-  ] = useConnect()
+
+  const { disconnect } = useDisconnect()
 
   const [showDropdown, setShowDropdown] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const ref = useRef(null)
   useOnClickOutside(ref, () => setShowDropdown(false))
 
-  const address = accountData?.address
-
   const explorer =
-    network.chain?.blockExplorers && network.chain?.blockExplorers[0]
+    chain?.blockExplorers && chain?.blockExplorers[0]
 
   return (
     <>
@@ -50,7 +47,7 @@ const Connect: React.FC = () => {
 
         {showDropdown && (
           <div className={cls.dropdown} ref={ref}>
-            {connected ? (
+            {isConnected ? (
               <>
                 <div className={cls.dropdownAccountDetails}>
                   <div className={cls.row}>
@@ -59,8 +56,8 @@ const Connect: React.FC = () => {
                   {address && (
                     <div className={cls.dropdownAddress}>
                       <div className={cls.address}>
-                        {accountData?.ens?.name
-                          ? `${accountData?.ens?.name} (${truncateEthAddress(
+                        {ensData
+                          ? `${ensData} (${truncateEthAddress(
                               address
                             )})`
                           : truncateEthAddress(address)}
@@ -96,7 +93,7 @@ const Connect: React.FC = () => {
                   Network
                   <div className={cls.dropdownListFlex}>
                     <div className={cls.dropdownNetworkJewel} />
-                    {network.chain?.name || "Unsupported network"}
+                    {chain?.name || "Unsupported network"}
                   </div>
                 </div>
                 {connector?.id !== "gnosisSafe" && (

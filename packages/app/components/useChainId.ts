@@ -2,8 +2,8 @@ import { useNetwork } from "wagmi"
 import { CHAINS } from "../config"
 
 const useChainId = () => {
-  const [{ data }] = useNetwork()
-  const connectedChainId = data.chain?.id
+  const { chain } = useNetwork()
+  const connectedChainId = chain?.id
   const chainId =
     connectedChainId && CHAINS.some(({ id }) => id === connectedChainId)
       ? connectedChainId

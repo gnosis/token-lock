@@ -1,33 +1,28 @@
-import { Chain, chain } from "wagmi"
+import { Chain } from "wagmi"
 
 export const LOCKED_TOKEN_NAME = "Gnosis"
 export const LOCKED_TOKEN_SYMBOL = "GNO"
 export const CLAIM_TOKEN_NAME = "Locked Gnosis"
 export const CLAIM_TOKEN_SYMBOL = "LGNO"
 
-export const INFURA_ID =
-  process.env.NODE_ENV === "development"
-    ? "2d043e79a14e4145b4e07dd3eb3a5a4b"
-    : "a63b6fb491fa4ad3827b824218e5aa68"
-
-const addInfuraProjectId = (chain: Chain) => ({
-  ...chain,
-  rpcUrls: chain.rpcUrls.map((url) =>
-    url.endsWith("infura.io/v3") ? `${url}/${INFURA_ID}` : url
-  ),
-})
-
 // used for price lookup
 export const COINGECKO_TOKEN_ID = "gnosis"
 
 // The first item will be used as the default chain
 export const CHAINS: Chain[] = [
-  ...(process.env.NODE_ENV === "development"
-    ? [addInfuraProjectId(chain.rinkeby)]
-    : []),
-
-  addInfuraProjectId(chain.mainnet),
-
+  {
+    id: 1,
+    name: "Ethereum Mainnet",
+    nativeCurrency: {
+      decimals: 18,
+      name: "ETH",
+      symbol: "ETH",
+    },
+    rpcUrls: [process.env.RPC_URL_EHEREUM],
+    blockExplorers: [
+      { name: "Etherscan", url: "https://etherscan.io" },
+    ],
+  },
   {
     id: 100,
     name: "Gnosis Chain",
@@ -36,9 +31,9 @@ export const CHAINS: Chain[] = [
       name: "xDai",
       symbol: "xDAI",
     },
-    rpcUrls: ["https://rpc.gnosischain.com/"],
+    rpcUrls: [process.env.RPC_URL_GNOSIS],
     blockExplorers: [
-      { name: "Blockscout", url: "https://blockscout.com/xdai/mainnet" },
+      { name: "GnosisScan", url: "https://gnosisscan.io" },
     ],
   },
 ]
@@ -51,3 +46,5 @@ export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
   // 4: "0x88c6501d5C2475F5a0343847A12cEA0090458013", // lock period ongoing
   // 4: "0xF7a579Cc9c27488f13C1F16036a65810fa1Ca3CC", // lock period over
 }
+
+export const WC_PROJECT_ID = process.env.WC_PROJECT_ID

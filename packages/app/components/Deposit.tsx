@@ -21,10 +21,10 @@ const Deposit: React.FC = () => {
 
   const chainId = useChainId()
   const { decimals, tokenSymbol } = useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceOf }] = useTokenContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  const { address } = useAccount()
+  const { data: balanceOf } = useTokenContractRead("balanceOf", {
+    args: [address],
+    skip: !address,
     watch: true,
   })
 
@@ -32,12 +32,12 @@ const Deposit: React.FC = () => {
 
   const contractAddress = CONTRACT_ADDRESSES[chainId]
   const allowanceArgs = useMemo(
-    () => [accountData?.address, contractAddress],
-    [accountData?.address, contractAddress]
+    () => [address, contractAddress],
+    [address, contractAddress]
   )
-  const [{ data: allowance }] = useTokenContractRead("allowance", {
+  const { data: allowance } = useTokenContractRead("allowance", {
     args: allowanceArgs,
-    skip: !accountData?.address,
+    skip: !address,
     watch: true,
   })
 
