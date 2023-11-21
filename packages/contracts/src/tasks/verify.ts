@@ -1,4 +1,5 @@
 import { task, types } from "hardhat/config"
+import { constructorArgs } from "./constructorArgs"
 
 task("verifyEtherscan", "Verifies the contract on etherscan")
   .addParam(
@@ -10,6 +11,6 @@ task("verifyEtherscan", "Verifies the contract on etherscan")
   .setAction(async (taskArgs, hardhatRuntime) => {
     await hardhatRuntime.run("verify", {
       address: taskArgs.implementation,
-      constructorArgsParams: [],
+      constructorArgsParams: constructorArgs,
     })
   })
