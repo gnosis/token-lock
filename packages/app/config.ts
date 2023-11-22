@@ -19,7 +19,7 @@ export const CHAINS = [mainnet, gnosis, goerli] as Chain[]
 export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
   1: "0x4f8AD938eBA0CD19155a835f617317a6E788c868",
   100: "0xd4Ca39f78Bf14BfaB75226AC833b1858dB16f9a1",
-  5: "0xB5d2b6cD4b0417D566593B42B21F2316FDCCB5FA",
+  5: "0xCfDf830D59cbb30197b78dB578066F6AbD8e4b3b", //"0xB5d2b6cD4b0417D566593B42B21F2316FDCCB5FA",
 
   // 4: "0x01FD5975E40D16838a7213e2fdfFbBBA4477c14d", // deposit period ongoing
   // 4: "0x88c6501d5C2475F5a0343847A12cEA0090458013", // lock period ongoing
