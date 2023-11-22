@@ -10,52 +10,54 @@ import {
   Signer,
 } from "ethers"
 import { Interface } from "ethers/lib/utils"
-import { useContract, useContractRead, useContractWrite } from "wagmi"
+import {
+  erc20ABI,
+  useContract,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import useChainId from "./useChainId"
 
 const useTokenLockContract = (
   signerOrProvider?: Signer | providers.Provider | undefined
-): TokenLockContract => {
+): TokenLockContract | null => {
   const chainId = useChainId()
 
   return useContract({
-    addressOrName: CONTRACT_ADDRESSES[chainId],
-    contractInterface,
+    address: CONTRACT_ADDRESSES[chainId],
+    abi,
     signerOrProvider,
-  })
+  }) as TokenLockContract | null
 }
 
 export default useTokenLockContract
 
+type Config = { enabled?: boolean; watch?: boolean; args?: any }
+
 export const useTokenLockContractRead = (
   functionName: string,
-  config?: Parameters<typeof useContractRead>[2]
+  config: Config = {}
 ) => {
   const chainId = useChainId()
-  return useContractRead<TokenLockContract>(
-    {
-      addressOrName: CONTRACT_ADDRESSES[chainId],
-      contractInterface,
-    },
+  return useContractRead({
+    ...config,
+    address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+    abi,
     functionName,
-    config
-  )
+  })
 }
 
-export const useTokenLockContractWrite = (
-  functionName: string,
-  config?: Parameters<typeof useContractWrite>[2]
-) => {
+export const useTokenLockContractWrite = (functionName: string, args: any) => {
   const chainId = useChainId()
-  return useContractWrite<TokenLockContract>(
-    {
-      addressOrName: CONTRACT_ADDRESSES[chainId],
-      contractInterface,
-    },
-    functionName,
-    config
-  )
+  const { config } = usePrepareContractWrite({
+    address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+    abi,
+    functionName: functionName as any,
+    args,
+  })
+  return useContractWrite(config)
 }
 
 const contractInterface = new Interface([
@@ -70,6 +72,9 @@ const contractInterface = new Interface([
   "function totalSupply() view returns (uint256)",
   "function withdraw(uint256 amount)",
 ])
+
+const abi = JSON.parse(contractInterface.format("json") as string)
+
 export interface TokenLockContract extends BaseContract {
   functions: {
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>

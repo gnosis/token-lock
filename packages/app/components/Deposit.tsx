@@ -21,10 +21,10 @@ const Deposit: React.FC = () => {
 
   const chainId = useChainId()
   const { decimals, tokenSymbol } = useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceOf }] = useTokenContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  const accountData = useAccount()
+  const { data: balanceOf } = useTokenContractRead("balanceOf", {
+    args: [accountData?.address],
+    enabled: !!accountData?.address,
     watch: true,
   })
 
@@ -35,32 +35,40 @@ const Deposit: React.FC = () => {
     () => [accountData?.address, contractAddress],
     [accountData?.address, contractAddress]
   )
-  const [{ data: allowance }] = useTokenContractRead("allowance", {
+  const { data: allowance } = useTokenContractRead("allowance", {
     args: allowanceArgs,
-    skip: !accountData?.address,
+    enabled: !!accountData?.address,
     watch: true,
   })
 
-  const [approveStatus, approve] = useTokenContractWrite("approve")
-  const [approveWait] = useWaitForTransaction({
-    hash: approveStatus.data?.hash,
+  const {
+    isLoading: approveLoading,
+    write: approve,
+    data: approveData,
+    error: approveError,
+  } = useTokenContractWrite("approve", [contractAddress, amount])
+  const approveWait = useWaitForTransaction({
+    hash: approveData?.hash,
   })
-  const [depositStatus, deposit] = useTokenLockContractWrite("deposit")
-  const [depositWait] = useWaitForTransaction({
-    hash: depositStatus.data?.hash,
+  const {
+    isLoading: depositLoading,
+    write: deposit,
+    writeAsync: depositAsync,
+    data: depositData,
+    error: depositError,
+  } = useTokenLockContractWrite("deposit", [amount])
+  const depositWait = useWaitForTransaction({
+    hash: depositData?.hash,
   })
 
   const needsAllowance =
-    amount && amount.gt(0) && allowance && allowance.lt(amount)
+    amount && amount.gt(0) && allowance && BigNumber.from(allowance).lt(amount)
 
-  const approvePending = approveStatus.loading || approveWait.loading
-  const depositPending = depositStatus.loading || depositWait.loading
+  const approvePending = approveLoading || approveWait.isLoading
+  const depositPending = depositLoading || depositWait.isLoading
 
   const error =
-    approveStatus.error ||
-    approveWait.error ||
-    depositStatus.error ||
-    depositWait.error
+    approveError || approveWait.error || depositError || depositWait.error
 
   // clear input after successful deposit
   const depositedBlock = depositWait.data?.blockHash
@@ -104,11 +112,10 @@ const Deposit: React.FC = () => {
           disabled={
             amount.isZero() || (balance && amount.gt(balance)) || approvePending
           }
-          onClick={() =>
-            approve({
-              args: [contractAddress, amount],
-            })
-          }
+          onClick={() => {
+            if (!approve) throw new Error("approve is undefined")
+            approve()
+          }}
         >
           Allow locking contract to use your {tokenSymbol}
           {approvePending && <Spinner />}
@@ -120,13 +127,13 @@ const Deposit: React.FC = () => {
             !amount ||
             amount.isZero() ||
             (balance && amount.gt(balance)) ||
-            depositPending
+            depositPending ||
+            !deposit
           }
-          onClick={async () =>
-            deposit({
-              args: [amount],
-            })
-          }
+          onClick={async () => {
+            if (!deposit) throw new Error("deposit is undefined")
+            deposit()
+          }}
         >
           Lock {tokenSymbol}
           {depositPending && <Spinner />}

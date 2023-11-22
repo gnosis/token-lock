@@ -1,45 +1,34 @@
 import { BaseContract, BigNumber, CallOverrides } from "ethers"
-import { erc20ABI, useContractRead, useContractWrite, useProvider } from "wagmi"
-import { CHAINS } from "../config"
+import {
+  erc20ABI,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi"
 import useTokenLockConfig from "./useTokenLockConfig"
 
-type Config = Parameters<typeof useContractRead>[2]
+type Config = { enabled?: boolean; watch?: boolean; args?: any }
 
-export const useTokenContractRead = (functionName: string, config?: Config) => {
-  const { tokenAddress } = useTokenLockConfig()
-  return useContractRead<Erc20Contract>(
-    {
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
-    },
-    functionName,
-    config
-  )
-}
-
-export const useTokenContractWrite = (
+export const useTokenContractRead = (
   functionName: string,
-  config?: Parameters<typeof useContractWrite>[2]
+  config: Config = {}
 ) => {
   const { tokenAddress } = useTokenLockConfig()
-  return useContractWrite<Erc20Contract>(
-    {
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
-    },
-    functionName,
-    config
-  )
+  return useContractRead({
+    ...config,
+    address: tokenAddress as `0x${string}`,
+    abi: erc20ABI,
+    functionName: functionName as any,
+  })
 }
 
-interface Erc20Contract extends BaseContract {
-  balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
-
-  decimals(overrides?: CallOverrides): Promise<BigNumber>
-
-  name(overrides?: CallOverrides): Promise<string>
-
-  symbol(overrides?: CallOverrides): Promise<string>
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+export const useTokenContractWrite = (functionName: string, args: any) => {
+  const { tokenAddress } = useTokenLockConfig()
+  const { config } = usePrepareContractWrite({
+    address: tokenAddress as `0x${string}`,
+    abi: erc20ABI,
+    functionName: functionName as any,
+    args,
+  })
+  return useContractWrite(config)
 }

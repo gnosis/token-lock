@@ -25,6 +25,8 @@ export const ProvideConfig: React.FC = ({ children }) => {
   const tokenLockContract = useTokenLockContract(provider)
 
   useEffect(() => {
+    if (!tokenLockContract) return
+
     Promise.all([
       tokenLockContract.depositDeadline(),
       tokenLockContract.lockDuration(),

@@ -1,13 +1,12 @@
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
-import { useConnect, useAccount, useWaitForTransaction } from "wagmi"
+import { useAccount, useWaitForTransaction } from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
 import utility from "../styles/utility.module.css"
-import { useTokenContractRead } from "./tokenContract"
 import {
   useTokenLockContractRead,
   useTokenLockContractWrite,
@@ -21,22 +20,27 @@ const Withdraw: React.FC = () => {
   const [dismissedErrors, setDismissedErrors] = useState<Error[]>([])
 
   const { decimals, tokenSymbol } = useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceOf }] = useTokenLockContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  const accountData = useAccount()
+  const { data: balanceOf } = useTokenLockContractRead("balanceOf", {
+    args: [accountData.address],
+    enabled: !!accountData?.address,
     watch: true,
   })
 
   const balance = balanceOf as undefined | BigNumber
 
-  const [status, withdraw] = useTokenLockContractWrite("withdraw")
-  const [wait] = useWaitForTransaction({
-    hash: status.data?.hash,
+  const {
+    isLoading,
+    error: withdrawError,
+    write: withdraw,
+    data,
+  } = useTokenLockContractWrite("withdraw", [amount])
+  const wait = useWaitForTransaction({
+    hash: data?.hash,
   })
 
-  const pending = status.loading || wait.loading
-  const error = status.error || wait.error
+  const pending = isLoading || wait.isLoading
+  const error = withdrawError || wait.error
 
   // clear input after successful deposit
   const withdrawnBlock = wait.data?.blockHash
@@ -82,7 +86,8 @@ const Withdraw: React.FC = () => {
           pending
         }
         onClick={() => {
-          withdraw({ args: [amount] })
+          if (!withdraw) throw new Error("withdraw is undefined")
+          withdraw()
         }}
       >
         Unlock {tokenSymbol}

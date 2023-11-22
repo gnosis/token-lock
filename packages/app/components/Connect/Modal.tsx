@@ -6,7 +6,7 @@ interface Props {
   onRequestClose(): void
 }
 const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
-  const [{ data, error }, connect] = useConnect()
+  const { connect, connectors, error } = useConnect()
 
   return (
     <Modal isOpen onRequestClose={onRequestClose} className={cls.container}>
@@ -14,7 +14,7 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
       <p className={cls.textSmall}>
         Please select a wallet to connect to lock your GNO.
       </p>
-      {data.connectors.map(
+      {connectors.map(
         (connector) =>
           connector.ready && (
             <button
@@ -22,10 +22,8 @@ const ConnectModal: React.FC<Props> = ({ onRequestClose }) => {
               disabled={!connector.ready}
               key={connector.id}
               onClick={async () => {
-                const result = await connect(connector)
-                if (result?.data?.account) {
-                  onRequestClose()
-                }
+                await connect({ connector })
+                onRequestClose()
               }}
             >
               <img

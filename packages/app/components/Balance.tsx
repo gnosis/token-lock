@@ -31,20 +31,18 @@ type Props = ComponentProps<typeof Field> & {
 const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const { decimals, tokenName, lockTokenName, tokenSymbol, lockTokenSymbol } =
     useTokenLockConfig()
-  const [{ data: accountData }] = useAccount()
-  const [{ data: balanceTokenData }] = useTokenContractRead("balanceOf", {
-    args: accountData?.address,
-    skip: !accountData?.address,
+  const accountData = useAccount()
+
+  const { data: balanceTokenData } = useTokenContractRead("balanceOf", {
+    args: [accountData.address],
+    enabled: !!accountData.address,
     watch: true,
   })
-  const [{ data: balanceLockTokenData }] = useTokenLockContractRead(
-    "balanceOf",
-    {
-      args: accountData?.address,
-      skip: !accountData?.address,
-      watch: true,
-    }
-  )
+  const { data: balanceLockTokenData } = useTokenLockContractRead("balanceOf", {
+    args: [accountData?.address],
+    enabled: !!accountData?.address,
+    watch: true,
+  })
 
   const balanceToken = balanceTokenData as BigNumber | undefined
   const balanceLockToken = balanceLockTokenData as BigNumber | undefined
@@ -63,7 +61,7 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
   const balanceInUsd =
     tokenPrice &&
     balance &&
-    parseFloat(formatUnits(balance, decimals)) * tokenPrice
+    parseFloat(formatUnits(balance || 0, decimals)) * tokenPrice
 
   return (
     <Field
