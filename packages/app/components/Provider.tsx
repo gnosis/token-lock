@@ -66,6 +66,9 @@ const client = createClient({
       options: {
         projectId: "f0f39635674ae1bc5c5db55ccfbb0f33",
         showQrModal: true,
+        qrModalOptions: {
+          themeMode: "light",
+        },
       },
     }),
   ],
