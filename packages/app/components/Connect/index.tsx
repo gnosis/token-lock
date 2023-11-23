@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
+import { useWeb3Modal } from "@web3modal/ethers5/react"
 import copy from "copy-to-clipboard"
 import {
   useAccount,
@@ -17,6 +18,7 @@ import IconButton, { IconLinkButton } from "../IconButton"
 
 const Connect: React.FC = () => {
   const network = useNetwork()
+  const { open } = useWeb3Modal()
   const { address, isConnected, connector } = useAccount()
   const { data: ensName } = useEnsName({
     address,
@@ -37,7 +39,7 @@ const Connect: React.FC = () => {
       {showModal && <Modal onRequestClose={() => setShowModal(false)} />}
 
       <div className={cls.container}>
-        <button className={cls.button} onClick={() => setShowDropdown(true)}>
+        <button className={cls.button} onClick={() => open()}>
           <div className={cls.identiconWrapper}>
             <Identicon />
             <img
@@ -127,7 +129,7 @@ const Connect: React.FC = () => {
                   <Button
                     className={cls.dropdownButton}
                     primary
-                    onClick={() => setShowModal(true)}
+                    onClick={() => open()}
                   >
                     Connect wallet
                   </Button>
