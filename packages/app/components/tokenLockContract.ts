@@ -194,14 +194,20 @@ export const useTokenLockContractRead = (
   })
 }
 
-export const useTokenLockContractWrite = (functionName: string, args: any) => {
+export const useTokenLockContractWrite = (
+  functionName: string,
+  args: any,
+  enabled = true
+) => {
   const chainId = useChainId()
-  const { config } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
     abi,
     functionName: functionName as any,
     args,
+    enabled,
   })
+  console.log({ error, config })
   return useContractWrite(config)
 }
 

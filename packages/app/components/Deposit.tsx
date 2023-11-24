@@ -47,7 +47,7 @@ const Deposit: React.FC = () => {
     write: approve,
     data: approveData,
     error: approveError,
-  } = useTokenContractWrite("approve", [contractAddress, amount])
+  } = useTokenContractWrite("approve", [contractAddress, amount?.toBigInt()])
   const approveWait = useWaitForTransaction({
     hash: approveData?.hash,
   })
@@ -57,7 +57,7 @@ const Deposit: React.FC = () => {
     writeAsync: depositAsync,
     data: depositData,
     error: depositError,
-  } = useTokenLockContractWrite("deposit", [amount])
+  } = useTokenLockContractWrite("deposit", [amount?.toBigInt()])
   const depositWait = useWaitForTransaction({
     hash: depositData?.hash,
   })

@@ -1,5 +1,4 @@
 import type { NextPage } from "next"
-import ReactModal from "react-modal"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import { CHAINS } from "../config"
@@ -16,7 +15,6 @@ import {
   StatsLocked,
   StatsWithdraw,
 } from "../components"
-import { useEffect } from "react"
 import { useNetwork } from "wagmi"
 import UseGNOBanner from "../components/UseGnoBanner"
 
@@ -24,9 +22,6 @@ const isProd =
   typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    ReactModal.setAppElement("#root")
-  }, [])
   const config = useTokenLockConfig()
   const network = useNetwork()
 

@@ -5,7 +5,10 @@ import { goerli, gnosis, mainnet } from "wagmi/chains"
 import { publicProvider } from "@wagmi/core/providers/public"
 
 export let walletConnectProjectId = "f0f39635674ae1bc5c5db55ccfbb0f33"
-if (window.location.hostname === "lock.dev.gnosisdev.com") {
+if (
+  typeof window !== "undefined" &&
+  window.location.hostname === "lock.dev.gnosisdev.com"
+) {
   walletConnectProjectId = "38ed7bec7b29a2a2a06c81d565d0a421"
 }
 
@@ -39,12 +42,5 @@ createWeb3Modal({
 })
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = React.useState(false)
-  React.useEffect(() => setMounted(true), [])
-  return (
-    <WagmiConfig config={config}>
-      {mounted && children}
-      {children}
-    </WagmiConfig>
-  )
+  return <WagmiConfig config={config}>{children}</WagmiConfig>
 }

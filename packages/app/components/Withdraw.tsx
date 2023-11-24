@@ -35,7 +35,7 @@ const Withdraw: React.FC = () => {
     error: withdrawError,
     write: withdraw,
     data,
-  } = useTokenLockContractWrite("withdraw", [amount])
+  } = useTokenLockContractWrite("withdraw", [amount?.toBigInt()], !!amount)
   const wait = useWaitForTransaction({
     hash: data?.hash,
   })
@@ -84,7 +84,8 @@ const Withdraw: React.FC = () => {
           !amount ||
           amount.isZero() ||
           (balance && amount.gt(balance)) ||
-          pending
+          pending ||
+          !withdraw
         }
         onClick={() => {
           if (!withdraw) throw new Error("withdraw is undefined")
