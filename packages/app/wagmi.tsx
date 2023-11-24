@@ -4,7 +4,10 @@ import { WagmiConfig, configureChains } from "wagmi"
 import { goerli, gnosis, mainnet } from "wagmi/chains"
 import { publicProvider } from "@wagmi/core/providers/public"
 
-export const walletConnectProjectId = "f0f39635674ae1bc5c5db55ccfbb0f33"
+export let walletConnectProjectId = "f0f39635674ae1bc5c5db55ccfbb0f33"
+if (window.location.hostname === "lock.dev.gnosisdev.com") {
+  walletConnectProjectId = "38ed7bec7b29a2a2a06c81d565d0a421"
+}
 
 const { chains } = configureChains(
   [
