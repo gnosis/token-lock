@@ -28,7 +28,7 @@ const Home: NextPage = () => {
     ReactModal.setAppElement("#root")
   }, [])
   const config = useTokenLockConfig()
-  const [{ data: network }] = useNetwork()
+  const network = useNetwork()
 
   const connectedChainId = network.chain?.id
   const connected =

@@ -3,6 +3,7 @@ import {
   BigNumber,
   BigNumberish,
   CallOverrides,
+  Contract,
   ContractTransaction,
   Overrides,
   PopulatedTransaction,
@@ -10,52 +11,198 @@ import {
   Signer,
 } from "ethers"
 import { Interface } from "ethers/lib/utils"
-import { useContract, useContractRead, useContractWrite } from "wagmi"
+
+import * as React from "react"
+import { type PublicClient } from "wagmi"
+import { type HttpTransport } from "viem"
+import {
+  erc20ABI,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import useChainId from "./useChainId"
+import { useEthersProvider } from "./useEthersProvider"
+
+export const TOKEN_LOCK_ABI = [
+  {
+    type: "function",
+    name: "balanceOf",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [
+      {
+        type: "address",
+      },
+    ],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "decimals",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "deposit",
+    constant: false,
+    payable: false,
+    inputs: [
+      {
+        type: "uint256",
+        name: "amount",
+      },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "depositDeadline",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "lockDuration",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "token",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "address",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "name",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "string",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "symbol",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "string",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "totalSupply",
+    constant: true,
+    stateMutability: "view",
+    payable: false,
+    inputs: [],
+    outputs: [
+      {
+        type: "uint256",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "withdraw",
+    constant: false,
+    payable: false,
+    inputs: [
+      {
+        type: "uint256",
+        name: "amount",
+      },
+    ],
+    outputs: [],
+  },
+]
 
 const useTokenLockContract = (
   signerOrProvider?: Signer | providers.Provider | undefined
-): TokenLockContract => {
+): TokenLockContract | null => {
   const chainId = useChainId()
+  const provider = useEthersProvider({ chainId })
 
-  return useContract({
-    addressOrName: CONTRACT_ADDRESSES[chainId],
-    contractInterface,
-    signerOrProvider,
-  })
+  return React.useMemo(() => {
+    return new Contract(
+      CONTRACT_ADDRESSES[chainId],
+      contractInterface,
+      provider
+    ) as TokenLockContract
+  }, [chainId, provider])
 }
 
 export default useTokenLockContract
 
+type Config = { enabled?: boolean; watch?: boolean; args?: any }
+
 export const useTokenLockContractRead = (
   functionName: string,
-  config?: Parameters<typeof useContractRead>[2]
+  config: Config = {}
 ) => {
   const chainId = useChainId()
-  return useContractRead<TokenLockContract>(
-    {
-      addressOrName: CONTRACT_ADDRESSES[chainId],
-      contractInterface,
-    },
+  return useContractRead({
+    ...config,
+    address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+    abi,
     functionName,
-    config
-  )
+  })
 }
 
-export const useTokenLockContractWrite = (
-  functionName: string,
-  config?: Parameters<typeof useContractWrite>[2]
-) => {
+export const useTokenLockContractWrite = (functionName: string, args: any) => {
   const chainId = useChainId()
-  return useContractWrite<TokenLockContract>(
-    {
-      addressOrName: CONTRACT_ADDRESSES[chainId],
-      contractInterface,
-    },
-    functionName,
-    config
-  )
+  const { config } = usePrepareContractWrite({
+    address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+    abi,
+    functionName: functionName as any,
+    args,
+  })
+  return useContractWrite(config)
 }
 
 const contractInterface = new Interface([
@@ -70,6 +217,9 @@ const contractInterface = new Interface([
   "function totalSupply() view returns (uint256)",
   "function withdraw(uint256 amount)",
 ])
+
+const abi = JSON.parse(contractInterface.format("json") as string)
+
 export interface TokenLockContract extends BaseContract {
   functions: {
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>
@@ -205,4 +355,20 @@ export interface TokenLockContract extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>
   }
+}
+
+export function publicClientToProvider(publicClient: PublicClient) {
+  const { chain, transport } = publicClient
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  }
+  if (transport.type === "fallback")
+    return new providers.FallbackProvider(
+      (transport.transports as ReturnType<HttpTransport>[]).map(
+        ({ value }) => new providers.JsonRpcProvider(value?.url, network)
+      )
+    )
+  return new providers.JsonRpcProvider(transport.url, network)
 }

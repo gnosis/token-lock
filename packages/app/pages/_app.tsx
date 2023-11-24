@@ -1,14 +1,15 @@
 import "../styles/globals.css"
 import type { AppProps } from "next/app"
-import { ProvideConfig, Provider } from "../components"
+import { ProvideConfig } from "../components"
+import { Providers } from "../wagmi"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider>
+    <Providers>
       <ProvideConfig>
         <Component {...pageProps} />
       </ProvideConfig>
-    </Provider>
+    </Providers>
   )
 }
 

@@ -1,39 +1,34 @@
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
 import copy from "copy-to-clipboard"
-import { chain, useAccount, useConnect, useNetwork } from "wagmi"
+import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi"
 import truncateEthAddress from "truncate-eth-address"
 import Identicon from "./Identicon"
-import Modal from "./Modal"
 import Button from "../Button"
 import cls from "./index.module.css"
 import IconButton, { IconLinkButton } from "../IconButton"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 const Connect: React.FC = () => {
-  const [{ data: network }] = useNetwork()
-  const [{ data: accountData }, disconnect] = useAccount({
-    fetchEns: true,
+  const network = useNetwork()
+  const { address, isConnected, connector } = useAccount()
+  const { data: ensName } = useEnsName({
+    address,
   })
-  const [
-    {
-      data: { connected, connector },
-    },
-  ] = useConnect()
+
+  const { open } = useWeb3Modal()
+
+  const { disconnect } = useDisconnect()
 
   const [showDropdown, setShowDropdown] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const ref = useRef(null)
   useOnClickOutside(ref, () => setShowDropdown(false))
 
-  const address = accountData?.address
-
   const explorer =
-    network.chain?.blockExplorers && network.chain?.blockExplorers[0]
+    network.chain?.blockExplorers && network.chain?.blockExplorers.default
 
   return (
     <>
-      {showModal && <Modal onRequestClose={() => setShowModal(false)} />}
-
       <div className={cls.container}>
         <button className={cls.button} onClick={() => setShowDropdown(true)}>
           <div className={cls.identiconWrapper}>
@@ -50,7 +45,7 @@ const Connect: React.FC = () => {
 
         {showDropdown && (
           <div className={cls.dropdown} ref={ref}>
-            {connected ? (
+            {isConnected ? (
               <>
                 <div className={cls.dropdownAccountDetails}>
                   <div className={cls.row}>
@@ -59,10 +54,8 @@ const Connect: React.FC = () => {
                   {address && (
                     <div className={cls.dropdownAddress}>
                       <div className={cls.address}>
-                        {accountData?.ens?.name
-                          ? `${accountData?.ens?.name} (${truncateEthAddress(
-                              address
-                            )})`
+                        {ensName
+                          ? `${ensName} (${truncateEthAddress(address)})`
                           : truncateEthAddress(address)}
                       </div>
                       <IconButton
@@ -127,7 +120,7 @@ const Connect: React.FC = () => {
                   <Button
                     className={cls.dropdownButton}
                     primary
-                    onClick={() => setShowModal(true)}
+                    onClick={() => open()}
                   >
                     Connect wallet
                   </Button>

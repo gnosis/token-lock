@@ -1,5 +1,4 @@
 export * from "./stats"
-export { default as Provider } from "./Provider"
 export { default as Connect } from "./Connect"
 export { default as ConnectHint } from "./ConnectHint"
 export { default as GnosisLogo } from "./GnosisLogo"

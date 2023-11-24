@@ -1,9 +1,10 @@
 import { Contract } from "ethers"
 import { Interface } from "ethers/lib/utils"
 import { createContext, useContext, useEffect, useState } from "react"
-import { useProvider } from "wagmi"
+
 import useChainId from "./useChainId"
 import useTokenLockContract from "./tokenLockContract"
+import { useEthersProvider } from "./useEthersProvider"
 
 interface TokeLockConfig {
   depositDeadline: Date
@@ -21,10 +22,12 @@ const ConfigContext = createContext<TokeLockConfig | null>(null)
 export const ProvideConfig: React.FC = ({ children }) => {
   const [state, setState] = useState<TokeLockConfig | null>(null)
   const chainId = useChainId()
-  const provider = useProvider()
-  const tokenLockContract = useTokenLockContract(provider)
+  const tokenLockContract = useTokenLockContract()
+  const provider = useEthersProvider()
 
   useEffect(() => {
+    if (!tokenLockContract) return
+
     Promise.all([
       tokenLockContract.depositDeadline(),
       tokenLockContract.lockDuration(),
