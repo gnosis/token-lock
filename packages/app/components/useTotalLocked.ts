@@ -1,4 +1,4 @@
-import { BigNumber, providers } from "ethers"
+import { BigNumber } from "ethers"
 import { erc20ABI, useContractRead } from "wagmi"
 import { CHAINS, CONTRACT_ADDRESSES } from "../config"
 
@@ -37,11 +37,16 @@ const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
     args: [GNO_TO_MGNO as `0x${string}`],
   })
 
-  const gnoLockedOnMainnet = gnoLockedOnMainnetData as BigNumber | undefined
-  const gnoLockedOnGnosisChain = gnoLockedOnGnosisChainData as
-    | BigNumber
-    | undefined
-  const gnoStaked = gnoStakedData as BigNumber | undefined
+  const gnoLockedOnMainnet =
+    gnoLockedOnMainnetData === undefined
+      ? undefined
+      : BigNumber.from(gnoLockedOnMainnetData)
+  const gnoLockedOnGnosisChain =
+    gnoLockedOnGnosisChainData === undefined
+      ? undefined
+      : BigNumber.from(gnoLockedOnGnosisChainData)
+  const gnoStaked =
+    gnoStakedData === undefined ? undefined : BigNumber.from(gnoStakedData)
 
   return [
     gnoLockedOnMainnet &&

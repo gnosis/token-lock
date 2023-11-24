@@ -1,18 +1,18 @@
-import { useState } from "react"
-import { useSwitchNetwork } from "wagmi"
+import { useAccount, useConnect, useSwitchNetwork } from "wagmi"
 import { CHAINS } from "../config"
 import Card from "./Card"
-import Modal from "./Connect/Modal"
 import Button from "./Button"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 const ConnectHint: React.FC = () => {
-  const [showModal, setShowModal] = useState(false)
-
+  const { isConnected } = useAccount()
   const { switchNetwork, data: chain } = useSwitchNetwork()
+
+  const { open } = useWeb3Modal()
 
   const connectedChainId = chain?.id
   const connectedToUnsupportedChain =
-    connectedChainId && !CHAINS.some(({ id }) => id === connectedChainId)
+    isConnected && !CHAINS.some(({ id }) => id === connectedChainId)
 
   if (connectedChainId && !connectedToUnsupportedChain) {
     return null
@@ -20,8 +20,8 @@ const ConnectHint: React.FC = () => {
 
   return (
     <Card>
-      {!connectedChainId && (
-        <Button primary onClick={() => setShowModal(true)}>
+      {!isConnected && (
+        <Button primary onClick={() => open()}>
           Connect
         </Button>
       )}
@@ -34,8 +34,6 @@ const ConnectHint: React.FC = () => {
           Switch Wallet To {CHAINS[0].name}
         </Button>
       )}
-
-      {showModal && <Modal onRequestClose={() => setShowModal(false)} />}
     </Card>
   )
 }

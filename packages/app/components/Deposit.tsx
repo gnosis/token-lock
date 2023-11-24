@@ -28,7 +28,8 @@ const Deposit: React.FC = () => {
     watch: true,
   })
 
-  const balance = balanceOf as undefined | BigNumber
+  const balance =
+    balanceOf === undefined ? undefined : BigNumber.from(balanceOf)
 
   const contractAddress = CONTRACT_ADDRESSES[chainId]
   const allowanceArgs = useMemo(

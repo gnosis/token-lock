@@ -27,7 +27,8 @@ const Withdraw: React.FC = () => {
     watch: true,
   })
 
-  const balance = balanceOf as undefined | BigNumber
+  const balance =
+    balanceOf === undefined ? undefined : BigNumber.from(balanceOf)
 
   const {
     isLoading,

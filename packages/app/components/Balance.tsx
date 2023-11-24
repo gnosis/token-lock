@@ -44,8 +44,14 @@ const Balance: React.FC<Props> = ({ lockToken, ...rest }) => {
     watch: true,
   })
 
-  const balanceToken = balanceTokenData as BigNumber | undefined
-  const balanceLockToken = balanceLockTokenData as BigNumber | undefined
+  const balanceToken =
+    balanceTokenData === undefined
+      ? undefined
+      : BigNumber.from(balanceTokenData)
+  const balanceLockToken =
+    balanceLockTokenData === undefined
+      ? undefined
+      : BigNumber.from(balanceLockTokenData)
 
   const percentLocked =
     balanceLockToken && balanceToken && balanceLockToken.gt(0)
