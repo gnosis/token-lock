@@ -4,7 +4,7 @@ import { WagmiConfig, configureChains } from "wagmi"
 import { goerli, gnosis, mainnet } from "wagmi/chains"
 import { publicProvider } from "@wagmi/core/providers/public"
 
-export let walletConnectProjectId = "f0f39635674ae1bc5c5db55ccfbb0f33"
+export let walletConnectProjectId = "82b90020010d4b99d67a28028e036200"
 if (
   typeof window !== "undefined" &&
   window.location.hostname === "lock.dev.gnosisdev.com"
