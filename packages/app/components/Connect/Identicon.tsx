@@ -1,4 +1,4 @@
-import { useAccount, useConnect, useEnsAvatar } from "wagmi"
+import { useAccount, useEnsAvatar } from "wagmi"
 import makeBlockie from "ethereum-blockies-base64"
 import clsx from "clsx"
 import cls from "./Identicon.module.css"
@@ -10,9 +10,8 @@ type Props = {
 
 const Identicon: React.FC<Props> = ({ large }) => {
   const { address } = useAccount()
-  const { data: avatar } = useEnsAvatar({
-    address,
-  })
+
+  const { data: avatar } = useEnsAvatar()
 
   const blockie = useMemo(() => address && makeBlockie(address), [address])
 
