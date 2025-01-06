@@ -1,4 +1,3 @@
-import { BaseContract, BigNumber, CallOverrides } from "ethers"
 import {
   erc20ABI,
   useContractRead,
