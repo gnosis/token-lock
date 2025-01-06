@@ -1,10 +1,9 @@
 import {
-  erc20ABI,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useReadContract,
+  useWriteContract,
 } from "wagmi"
 import useTokenLockConfig from "./useTokenLockConfig"
+import { erc20Abi } from 'viem'
 
 type Config = { enabled?: boolean; watch?: boolean; args?: any }
 
@@ -13,21 +12,21 @@ export const useTokenContractRead = (
   config: Config = {}
 ) => {
   const { tokenAddress } = useTokenLockConfig()
-  return useContractRead({
+  return useReadContract({
     ...config,
     address: tokenAddress as `0x${string}`,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: functionName as any,
   })
 }
 
 export const useTokenContractWrite = (functionName: string, args: any) => {
+  const { data: hash, writeContract } = useWriteContract()
   const { tokenAddress } = useTokenLockConfig()
-  const { config } = usePrepareContractWrite({
+  return writeContract({
     address: tokenAddress as `0x${string}`,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: functionName as any,
     args,
   })
-  return useContractWrite(config)
 }

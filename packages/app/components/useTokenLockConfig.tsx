@@ -1,10 +1,9 @@
 import { Contract } from "ethers"
 import { Interface } from "ethers/lib/utils"
 import { createContext, useContext, useEffect, useState } from "react"
-
-import useChainId from "./useChainId"
 import useTokenLockContract from "./tokenLockContract"
 import { useEthersProvider } from "./useEthersProvider"
+import { useChainId } from "wagmi"
 
 interface TokeLockConfig {
   depositDeadline: Date

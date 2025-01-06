@@ -1,6 +1,11 @@
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
-import { useAccount, useWaitForTransaction } from "wagmi"
+import {
+  useAccount,
+  useChainId,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
@@ -9,10 +14,11 @@ import Spinner from "./Spinner"
 import utility from "../styles/utility.module.css"
 import {
   useTokenLockContractRead,
-  useTokenLockContractWrite,
 } from "./tokenLockContract"
 import useTokenLockConfig from "./useTokenLockConfig"
 import Notice from "./Notice"
+import { CONTRACT_ADDRESSES } from "../config"
+import { TOKEN_LOCK_ABI } from "../abi/tokenLock"
 
 const Withdraw: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
@@ -31,17 +37,28 @@ const Withdraw: React.FC = () => {
     balanceOf === undefined ? undefined : BigNumber.from(balanceOf)
 
   const {
-    isLoading,
-    error: withdrawError,
-    write: withdraw,
-    data,
-  } = useTokenLockContractWrite("withdraw", [amount?.toBigInt()], !!amount)
-  const wait = useWaitForTransaction({
-    hash: data?.hash,
+    data: hash,
+    error: txError,
+    isPending,
+    writeContract,
+  } = useWriteContract()
+
+  const chainId = useChainId()
+  function withdraw() {
+    writeContract({
+      address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+      abi: TOKEN_LOCK_ABI,
+      functionName: "withdraw",
+      args: [amount?.toBigInt()],
+    })
+  }
+
+  const wait = useWaitForTransactionReceipt({
+    hash: hash,
   })
 
-  const pending = isLoading || wait.isLoading
-  const error = withdrawError || wait.error
+  const pending = isPending || wait.isLoading
+  const error = txError || wait.error
 
   // clear input after successful deposit
   const withdrawnBlock = wait.data?.blockHash

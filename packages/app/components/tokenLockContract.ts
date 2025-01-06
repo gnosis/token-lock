@@ -13,16 +13,12 @@ import {
 import { Interface } from "ethers/lib/utils"
 
 import * as React from "react"
-import { type PublicClient } from "wagmi"
+import { useChainId } from "wagmi"
 import { type HttpTransport } from "viem"
 import {
-  erc20ABI,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useReadContract,
 } from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
-import useChainId from "./useChainId"
 import { useEthersProvider } from "./useEthersProvider"
 
 export const TOKEN_LOCK_ABI = [
@@ -186,7 +182,7 @@ export const useTokenLockContractRead = (
   config: Config = {}
 ) => {
   const chainId = useChainId()
-  return useContractRead({
+  return useReadContract({
     ...config,
     address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
     abi,
@@ -194,22 +190,23 @@ export const useTokenLockContractRead = (
   })
 }
 
-export const useTokenLockContractWrite = (
-  functionName: string,
-  args: any,
-  enabled = true
-) => {
-  const chainId = useChainId()
-  const { config, error } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
-    abi,
-    functionName: functionName as any,
-    args,
-    enabled,
-  })
-  console.log({ error, config })
-  return useContractWrite(config)
-}
+// export const useTokenLockContractWrite = (
+//   functionName: string,
+//   args: any,
+//   enabled = true
+// ) => {
+//   const chainId = useChainId()
+//   console.log({ chainId }, CONTRACT_ADDRESSES[chainId]);
+//   const { config, error } = usePrepareContractWrite({
+//     address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+//     abi,
+//     functionName: functionName as any,
+//     args,
+//     enabled,
+//   })
+//   console.log({ error, config })
+//   return useContractWrite(config)
+// }
 
 const contractInterface = new Interface([
   "function balanceOf(address) view returns (uint256)",
@@ -363,7 +360,8 @@ export interface TokenLockContract extends BaseContract {
   }
 }
 
-export function publicClientToProvider(publicClient: PublicClient) {
+//TODO: better typing for publicClient
+export function publicClientToProvider(publicClient: any) { 
   const { chain, transport } = publicClient
   const network = {
     chainId: chain.id,
