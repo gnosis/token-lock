@@ -1,10 +1,9 @@
 "use client"
-import { Contract } from "ethers"
-import { Interface } from "ethers/lib/utils"
+import { CONTRACT_ADDRESSES } from "@/config"
 import { createContext, useContext, useEffect, useState } from "react"
-import useTokenLockContract from "./tokenLockContract"
-import { useEthersProvider } from "./useEthersProvider"
-import { useChainId } from "wagmi"
+import { useChainId, useReadContract } from "wagmi"
+import { TOKEN_LOCK_ABI } from "../abi/tokenLock"
+import { erc20Abi } from "viem"
 
 interface TokeLockConfig {
   depositDeadline: Date
@@ -22,52 +21,90 @@ const ConfigContext = createContext<TokeLockConfig | null>(null)
 export const ProvideConfig: React.FC = ({ children }) => {
   const [state, setState] = useState<TokeLockConfig | null>(null)
   const chainId = useChainId()
-  const tokenLockContract = useTokenLockContract()
-  const provider = useEthersProvider()
+  const tokenLockContractAddress = CONTRACT_ADDRESSES[chainId]
+
+  const { data: depositDeadline } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "depositDeadline",
+  })
+
+  const { data: lockDuration } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "lockDuration",
+  })
+
+  const { data: tokenAddress } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "token",
+  })
+
+  const { data: lockTokenName } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "name",
+  })
+
+  const { data: lockTokenSymbol } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "symbol",
+  })
+
+  const { data: decimals } = useReadContract({
+    address: tokenLockContractAddress,
+    abi: TOKEN_LOCK_ABI,
+    functionName: "decimals",
+  })
+
+  const { data: tokenName } = useReadContract({
+    address: tokenAddress as `0x${string}`,
+    abi: erc20Abi,
+    functionName: "name",
+    query: { enabled: !!tokenAddress },
+  })
+
+  const { data: tokenSymbol } = useReadContract({
+    address: tokenAddress as `0x${string}`,
+    abi: erc20Abi,
+    functionName: "symbol",
+    query: { enabled: !!tokenAddress },
+  })
 
   useEffect(() => {
-    if (!tokenLockContract) return
-
-    Promise.all([
-      tokenLockContract.depositDeadline(),
-      tokenLockContract.lockDuration(),
-      tokenLockContract.token().then((tokenAddress) => {
-        const tokenContract = new Contract(
-          tokenAddress,
-          erc20Interface,
-          provider
-        )
-        return Promise.all([
-          tokenAddress,
-          tokenContract.name(),
-          tokenContract.symbol(),
-        ])
-      }),
-      tokenLockContract.name(),
-      tokenLockContract.symbol(),
-      tokenLockContract.decimals(),
-    ]).then(
-      ([
-        depositDeadline,
-        lockDuration,
-        [tokenAddress, tokenName, tokenSymbol],
-        lockTokenName,
-        lockTokenSymbol,
-        decimals,
-      ]) => {
-        setState({
-          depositDeadline: new Date(depositDeadline.toNumber() * 1000),
-          lockDuration: lockDuration.toNumber() * 1000,
-          tokenAddress,
-          tokenName,
-          tokenSymbol,
-          lockTokenName,
-          lockTokenSymbol,
-          decimals: decimals.toNumber(),
-        })
-      }
-    )
-  }, [tokenLockContract, chainId, provider])
+    if (
+      depositDeadline &&
+      lockDuration &&
+      tokenAddress &&
+      lockTokenName &&
+      lockTokenSymbol &&
+      decimals &&
+      tokenName &&
+      tokenSymbol
+    ) {
+      setState({
+        depositDeadline: new Date(Number(depositDeadline) * 1000),
+        lockDuration: Number(lockDuration) * 1000,
+        tokenAddress: tokenAddress as string,
+        tokenName: tokenName as string,
+        tokenSymbol: tokenSymbol as string,
+        lockTokenName: lockTokenName as string,
+        lockTokenSymbol: lockTokenSymbol as string,
+        decimals: Number(decimals),
+      })
+    }
+  }, [
+    depositDeadline,
+    lockDuration,
+    tokenAddress,
+    lockTokenName,
+    lockTokenSymbol,
+    decimals,
+    tokenName,
+    tokenSymbol,
+  ])
 
   if (!state) {
     return null
@@ -87,11 +124,3 @@ const useTokenLockConfig = () => {
 }
 
 export default useTokenLockConfig
-
-const erc20Interface = new Interface([
-  "function balanceOf(address) view returns (uint256)",
-  "function decimals() view returns (uint256)",
-  "function name() view returns (string)",
-  "function symbol() view returns (string)",
-  "function totalSupply() view returns (uint256)",
-])

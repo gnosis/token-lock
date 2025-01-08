@@ -10,7 +10,7 @@ export const COINGECKO_TOKEN_ID = "gnosis"
 
 export const CHAINS = [mainnet, gnosis] as Chain[]
 
-export const CONTRACT_ADDRESSES: { [chainId: number]: string } = {
+export const CONTRACT_ADDRESSES: { [chainId: number]: `0x${string}` } = {
   1: "0x4f8AD938eBA0CD19155a835f617317a6E788c868",
   100: "0xd4Ca39f78Bf14BfaB75226AC833b1858dB16f9a1",
 

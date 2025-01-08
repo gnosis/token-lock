@@ -5,8 +5,8 @@ import ContextProvider from "../context"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "AppKit Example App",
-  description: "Powered by WalletConnect",
+  title: "Gnosis Lock",
+  description: "Gnosis Lock",
 }
 
 export default async function RootLayout({
