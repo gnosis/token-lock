@@ -1,3 +1,4 @@
+"use client"
 import { BigNumber } from "ethers"
 import { useEffect, useState } from "react"
 import {

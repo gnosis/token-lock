@@ -1,4 +1,4 @@
-import type { NextPage } from "next"
+"use client"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import { CHAINS } from "../config"
@@ -21,12 +21,11 @@ import { useChainId } from "wagmi"
 const isProd =
   typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
 
-const Home: NextPage = () => {
+export default function Page() {
   const config = useTokenLockConfig()
-  const chainId = useChainId();
+  const chainId = useChainId()
 
-  const connected =
-    chainId && CHAINS.some(({ id }) => id === chainId)
+  const connected = chainId && CHAINS.some(({ id }) => id === chainId)
 
   const depositPeriodOngoing = config.depositDeadline.getTime() > Date.now()
   const lockPeriodOngoing =
@@ -174,5 +173,3 @@ const Home: NextPage = () => {
     </div>
   )
 }
-
-export default Home

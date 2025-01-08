@@ -1,3 +1,4 @@
+"use client"
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
 import copy from "copy-to-clipboard"
@@ -7,11 +8,10 @@ import Identicon from "./Identicon"
 import Button from "../Button"
 import cls from "./index.module.css"
 import IconButton, { IconLinkButton } from "../IconButton"
-import { useAppKit } from '@reown/appkit/react'
-
+import { useAppKit } from "@reown/appkit/react"
 
 const Connect: React.FC = () => {
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient()
   const { address, isConnected, connector } = useAccount()
   const { data: ensName } = useEnsName({
     address,
@@ -25,7 +25,7 @@ const Connect: React.FC = () => {
   const ref = useRef(null)
   useOnClickOutside(ref, () => setShowDropdown(false))
 
-  const explorer = publicClient?.chain?.blockExplorers?.default;
+  const explorer = publicClient?.chain?.blockExplorers?.default
 
   return (
     <>

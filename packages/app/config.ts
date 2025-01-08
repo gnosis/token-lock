@@ -1,4 +1,4 @@
-import { Chain, mainnet, gnosis, goerli } from "wagmi/chains"
+import { Chain, mainnet, gnosis } from "wagmi/chains"
 
 export const LOCKED_TOKEN_NAME = "Gnosis"
 export const LOCKED_TOKEN_SYMBOL = "GNO"
