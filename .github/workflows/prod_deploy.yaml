@@ -54,19 +54,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
-
-      # Script to prepare production deployments
-      # - run: bash ./.github/scripts/prepare_production_deployment.sh
-      #   if: success()
-      #   working-directory: ./
-      #   env:
-      #     PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
-      #     PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
-      #     VERSION_TAG: ${{ steps.get_version.outputs.VERSION }}
-
       - name: 'Deploy to S3: Production'
         run: |
           aws s3 sync out/ s3://${{ secrets.PROD_BUCKET_NAME }} --delete --exclude "*.html" --cache-control max-age=86400,public
