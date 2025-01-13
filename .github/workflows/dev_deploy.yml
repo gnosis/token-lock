@@ -53,6 +53,11 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: aws s3 sync out s3://${{ secrets.AWS_DEV_BUCKET_NAME }}/current --delete
 
+      - name: 'Cloudfront Production: cache invalidation'
+        if: (startsWith(github.event.ref, 'refs/tags/v') || github.event_name == 'release')
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_AWS_CLOUDFRONT_ID }} --paths "/*"
+
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
