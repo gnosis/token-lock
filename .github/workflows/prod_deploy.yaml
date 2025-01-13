@@ -1,0 +1,90 @@
+name: Manual Deployment to Production
+
+# Run on pushes to main or PRs
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tagged version to deploy
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deployment
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag checkout
+        run: |
+          git fetch --prune --unshallow --tags
+          git checkout ${{ github.event.inputs.tag }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: |
+          yarn install
+          pip install awscli --upgrade --user
+
+      - name: Build App
+        run: yarn static
+
+      - name: Configure AWS Production credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      # Script to prepare production deployments
+      # - run: bash ./.github/scripts/prepare_production_deployment.sh
+      #   if: success()
+      #   working-directory: ./
+      #   env:
+      #     PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
+      #     PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
+      #     VERSION_TAG: ${{ steps.get_version.outputs.VERSION }}
+
+      - name: 'Deploy to S3: Production'
+        run: |
+          aws s3 sync out/ s3://${{ secrets.PROD_BUCKET_NAME }} --delete --exclude "*.html" --cache-control max-age=86400,public
+          aws s3 sync out/ s3://${{ secrets.PROD_BUCKET_NAME }} --delete --exclude "*" --include "*.html" --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html
+          
+      - name: 'Cloudfront Production: cache invalidation'
+        if: (startsWith(github.event.ref, 'refs/tags/v') || github.event_name == 'release')
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_AWS_CLOUDFRONT_ID }} --paths "/*"
+
+  notify:
+    uses: ./.github/workflows/slack_release_notification.yml
+    if: ${{ always() }}
+    needs: deploy
+    secrets: 
+      RELEASES_SLACK_WEBHOOK_URL: ${{ secrets.RELEASES_SLACK_WEBHOOK_URL }}
+    with:
+      environment: Production
+      service: GC Token Lock UI
+      success: ${{ contains(join(needs.*.result, ','), 'success') }}
+      message: "deploy service `GC Token Lock UI` version `${{ inputs.tag }}`. Triggered by `${{ github.actor }}`."
