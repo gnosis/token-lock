@@ -39,7 +39,7 @@ jobs:
           pip install awscli --upgrade --user
 
       - name: Build website
-        run: yarn static
+        run: yarn build
 
       - name: Configure AWS Dev credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -51,7 +51,9 @@ jobs:
       # Script to deploy to the dev environment
       - name: 'Deploy to S3: Dev'
         if: github.ref == 'refs/heads/master'
-        run: aws s3 sync out s3://${{ secrets.DEV_BUCKET_NAME }}/current --delete
+        run: |
+          aws s3 sync .next/static/ s3://${{ secrets.DEV_BUCKET_NAME }} --delete --exclude "*.html" --cache-control max-age=86400,public
+          aws s3 sync .next/static/ s3://${{ secrets.DEV_BUCKET_NAME }} --delete --exclude "*" --include "*.html" --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html
 
       - name: 'Cloudfront Production: cache invalidation'
         if: (startsWith(github.event.ref, 'refs/tags/v') || github.event_name == 'release')
