@@ -1,5 +1,4 @@
 "use client"
-import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import { CHAINS } from "../config"
 import {
@@ -18,9 +17,6 @@ import {
 import UseGNOBanner from "../components/UseGnoBanner"
 import { useChainId } from "wagmi"
 
-const isProd =
-  typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
-
 export default function Page() {
   const config = useTokenLockConfig()
   const chainId = useChainId()
@@ -36,16 +32,6 @@ export default function Page() {
 
   return (
     <div className={styles.container} id="root">
-      <Head>
-        <title>Lock GNO</title>
-        <meta
-          name="description"
-          content="Qualify for a $COW airdrop boost by locking your GNO for 12 months"
-        />
-        {!isProd && <meta name="robots" content="noindex" />}
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <header className={styles.header}>
         <GnosisLogo />
         <LockedGnoLogo locked={lockPeriodOngoing} />
