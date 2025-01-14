@@ -6,8 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier '(components|pages)/**/*.(ts|tsx)' -w",
-    "static": "next build"
+    "format": "prettier '(components|pages)/**/*.(ts|tsx)' -w"
   },
   "dependencies": {
     "@gnosis.pm/safe-apps-provider": "^0.9.3",
