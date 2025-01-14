@@ -1,4 +1,4 @@
-import type { NextPage } from "next"
+"use client"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import { CHAINS } from "../config"
@@ -15,19 +15,17 @@ import {
   StatsLocked,
   StatsWithdraw,
 } from "../components"
-import { useNetwork } from "wagmi"
 import UseGNOBanner from "../components/UseGnoBanner"
+import { useChainId } from "wagmi"
 
 const isProd =
   typeof window !== "undefined" && window.location.hostname === "lock.gnosis.io"
 
-const Home: NextPage = () => {
+export default function Page() {
   const config = useTokenLockConfig()
-  const network = useNetwork()
+  const chainId = useChainId()
 
-  const connectedChainId = network.chain?.id
-  const connected =
-    connectedChainId && CHAINS.some(({ id }) => id === connectedChainId)
+  const connected = chainId && CHAINS.some(({ id }) => id === chainId)
 
   const depositPeriodOngoing = config.depositDeadline.getTime() > Date.now()
   const lockPeriodOngoing =
@@ -84,7 +82,7 @@ const Home: NextPage = () => {
         <div className={styles.footerContainer}>
           <div className={styles.left}>
             <span>LGNO contract: </span>
-            {connectedChainId === 100 ? (
+            {chainId === 100 ? (
               <a
                 href="https://blockscout.com/xdai/mainnet/address/0xd4Ca39f78Bf14BfaB75226AC833b1858dB16f9a1"
                 target="_blank"
@@ -175,5 +173,3 @@ const Home: NextPage = () => {
     </div>
   )
 }
-
-export default Home

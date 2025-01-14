@@ -1,6 +1,6 @@
+"use client"
 import { useEffect, useState } from "react"
 import { COINGECKO_TOKEN_ID } from "../config"
-import useTokenLockConfig from "./useTokenLockConfig"
 
 let resolvedTokenPrice = 0
 const tokenPricePromise = fetch(

@@ -1,22 +1,23 @@
+"use client"
 import { useRef, useState } from "react"
 import useOnClickOutside from "use-onclickoutside"
 import copy from "copy-to-clipboard"
-import { useAccount, useDisconnect, useEnsName, useNetwork } from "wagmi"
+import { useAccount, useDisconnect, useEnsName, usePublicClient } from "wagmi"
 import truncateEthAddress from "truncate-eth-address"
 import Identicon from "./Identicon"
 import Button from "../Button"
 import cls from "./index.module.css"
 import IconButton, { IconLinkButton } from "../IconButton"
-import { useWeb3Modal } from "@web3modal/wagmi/react"
+import { useAppKit } from "@reown/appkit/react"
 
 const Connect: React.FC = () => {
-  const network = useNetwork()
+  const publicClient = usePublicClient()
   const { address, isConnected, connector } = useAccount()
   const { data: ensName } = useEnsName({
     address,
   })
 
-  const { open } = useWeb3Modal()
+  const { open } = useAppKit()
 
   const { disconnect } = useDisconnect()
 
@@ -24,8 +25,7 @@ const Connect: React.FC = () => {
   const ref = useRef(null)
   useOnClickOutside(ref, () => setShowDropdown(false))
 
-  const explorer =
-    network.chain?.blockExplorers && network.chain?.blockExplorers.default
+  const explorer = publicClient?.chain?.blockExplorers?.default
 
   return (
     <>
@@ -89,7 +89,7 @@ const Connect: React.FC = () => {
                   Network
                   <div className={cls.dropdownListFlex}>
                     <div className={cls.dropdownNetworkJewel} />
-                    {network.chain?.name || "Unsupported network"}
+                    {publicClient?.chain?.name || "Unsupported network"}
                   </div>
                 </div>
                 {connector?.id !== "gnosisSafe" && (

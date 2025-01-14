@@ -1,18 +1,23 @@
 import { BigNumber } from "ethers"
 import { useEffect, useMemo, useState } from "react"
-import { useAccount, useWaitForTransaction } from "wagmi"
+import {
+  useAccount,
+  useChainId,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi"
 import { CONTRACT_ADDRESSES } from "../config"
 import Balance from "./Balance"
 import Button from "./Button"
 import Card from "./Card"
 import AmountInput from "./AmountInput"
 import Spinner from "./Spinner"
-import { useTokenContractRead, useTokenContractWrite } from "./tokenContract"
-import { useTokenLockContractWrite } from "./tokenLockContract"
-import useChainId from "./useChainId"
+import { useTokenContractRead } from "./tokenContract"
 import useTokenLockConfig from "./useTokenLockConfig"
 import utility from "../styles/utility.module.css"
 import Notice from "./Notice"
+import { erc20Abi } from "viem"
+import { TOKEN_LOCK_ABI } from "../abi/tokenLock"
 
 const Deposit: React.FC = () => {
   const [amount, setAmount] = useState<BigNumber | undefined>(undefined)
@@ -43,33 +48,46 @@ const Deposit: React.FC = () => {
   })
 
   const {
-    isLoading: approveLoading,
-    write: approve,
-    data: approveData,
-    error: approveError,
-  } = useTokenContractWrite("approve", [contractAddress, amount?.toBigInt()])
-  const approveWait = useWaitForTransaction({
-    hash: approveData?.hash,
+    data: hash,
+    error: txError,
+    isPending,
+    writeContract,
+  } = useWriteContract()
+  const { tokenAddress } = useTokenLockConfig()
+
+  function approve() {
+    writeContract({
+      address: tokenAddress as `0x${string}`,
+      abi: erc20Abi,
+      functionName: "approve",
+      args: [contractAddress as `0x${string}`, amount?.toBigInt() || BigInt(0)],
+    })
+  }
+
+  const approveWait = useWaitForTransactionReceipt({
+    hash: hash,
   })
-  const {
-    isLoading: depositLoading,
-    write: deposit,
-    writeAsync: depositAsync,
-    data: depositData,
-    error: depositError,
-  } = useTokenLockContractWrite("deposit", [amount?.toBigInt()])
-  const depositWait = useWaitForTransaction({
-    hash: depositData?.hash,
+
+  function deposit() {
+    writeContract({
+      address: CONTRACT_ADDRESSES[chainId] as `0x${string}`,
+      abi: TOKEN_LOCK_ABI,
+      functionName: "deposit",
+      args: [amount?.toBigInt()],
+    })
+  }
+
+  const depositWait = useWaitForTransactionReceipt({
+    hash: hash,
   })
 
   const needsAllowance =
     amount && amount.gt(0) && allowance && BigNumber.from(allowance).lt(amount)
 
-  const approvePending = approveLoading || approveWait.isLoading
-  const depositPending = depositLoading || depositWait.isLoading
+  const approvePending = isPending || approveWait.isLoading
+  const depositPending = isPending || depositWait.isLoading
 
-  const error =
-    approveError || approveWait.error || depositError || depositWait.error
+  const error = txError || approveWait.error || depositWait.error
 
   // clear input after successful deposit
   const depositedBlock = depositWait.data?.blockHash

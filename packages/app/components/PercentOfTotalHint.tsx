@@ -1,7 +1,5 @@
 import { BigNumber } from "ethers"
-import { formatToken } from "./stats/formatToken"
 import cls from "./PercentOfTotal.module.css"
-import useTokenLockConfig from "./useTokenLockConfig"
 import useTotalLocked from "./useTotalLocked"
 
 const SUPPLY_OF_COW = 50000000

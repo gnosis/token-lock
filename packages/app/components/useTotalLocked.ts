@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers"
-import { erc20ABI, useContractRead } from "wagmi"
-import { CHAINS, CONTRACT_ADDRESSES } from "../config"
+import { useReadContract } from "wagmi"
+import { CONTRACT_ADDRESSES } from "../config"
+import { erc20Abi } from "viem"
 
 interface Breakdown {
   mainnet?: BigNumber
@@ -13,25 +14,25 @@ const GNO_ON_GNOSIS_CHAIN = "0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb"
 const GNO_TO_MGNO = "0x647507A70Ff598F386CB96ae5046486389368C66"
 
 const useTotalLocked = (): [BigNumber | undefined, Breakdown] => {
-  const { data: gnoLockedOnMainnetData } = useContractRead({
+  const { data: gnoLockedOnMainnetData } = useReadContract({
     address: GNO_ON_MAINNET,
-    abi: erc20ABI,
+    abi: erc20Abi,
     chainId: 1,
     functionName: "balanceOf",
     args: [CONTRACT_ADDRESSES[1] as `0x${string}`],
   })
 
-  const { data: gnoLockedOnGnosisChainData } = useContractRead({
+  const { data: gnoLockedOnGnosisChainData } = useReadContract({
     address: GNO_ON_GNOSIS_CHAIN,
-    abi: erc20ABI,
+    abi: erc20Abi,
     chainId: 100,
     functionName: "balanceOf",
     args: [CONTRACT_ADDRESSES[100] as `0x${string}`],
   })
 
-  const { data: gnoStakedData } = useContractRead({
+  const { data: gnoStakedData } = useReadContract({
     address: GNO_ON_GNOSIS_CHAIN,
-    abi: erc20ABI,
+    abi: erc20Abi,
     chainId: 100,
     functionName: "balanceOf",
     args: [GNO_TO_MGNO as `0x${string}`],
