@@ -252,7 +252,7 @@ describe("TokenLock", () => {
 
       await expect(tokenLock.connect(user).deposit(ONE))
         .to.emit(tokenLock, "Transfer")
-        .withArgs(user.address, tokenLock.address, ONE)
+        .withArgs(tokenLock.address, user.address, ONE)
     })
   })
 
@@ -342,7 +342,7 @@ describe("TokenLock", () => {
 
       await expect(tokenLock.connect(user).withdraw(ONE))
         .to.emit(tokenLock, "Transfer")
-        .withArgs(tokenLock.address, user.address, ONE)
+        .withArgs(user.address, tokenLock.address, ONE)
     })
 
     it("allows withdrawals during the deposit period", async () => {
@@ -351,7 +351,7 @@ describe("TokenLock", () => {
 
       await expect(tokenLock.connect(user).withdraw(ONE))
         .to.emit(tokenLock, "Transfer")
-        .withArgs(tokenLock.address, user.address, ONE)
+        .withArgs(user.address, tokenLock.address, ONE)
     })
   })
 

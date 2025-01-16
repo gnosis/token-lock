@@ -58,7 +58,7 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
       revert TransferFailed();
     }
 
-    emit Transfer(msg.sender, address(this), amount);
+    emit Transfer(address(this), msg.sender, amount);
   }
 
   /// @dev Withdraw tokens after the end of the locking period or during the deposit period
@@ -81,7 +81,7 @@ contract TokenLock is OwnableUpgradeable, IERC20 {
       revert TransferFailed();
     }
 
-    emit Transfer(address(this), msg.sender, amount);
+    emit Transfer(msg.sender, address(this), amount);
   }
 
   /// @dev Returns the number of decimals of the locked token
